@@ -6,7 +6,7 @@
 } 
 
 .navbar {
-    background: #131313;
+    background: #585050;
     height: 80px;
     display: flex;
     justify-content: center;
@@ -28,8 +28,8 @@
 }
 
 #navbar__logo {
-    background-color: #ff8177;
-    background-image: linear-gradient(to top, #ff0844 0%, #ffb199 100%);
+    background-color: #feefff;
+    /* background-image: linear-gradient(to top, #ff0844 0%, #ffb199 100%); */
     background-size: 100%;
     -webkit-background-clip: text;
     -moz-background-clip: text;
@@ -200,26 +200,26 @@
 /* Hero Section CSS */
 
 .main {
-    background-color: #141414;
+    background-color: #585050;
 }
 
 .main__container{
     display: grid;
     grid-template-columns: 1fr 1fr;
-    align-items: center;
+    align-items: normal;
     margin: 0 auto;
-    height: 90vh;
-    background-color: #141414;
+    height: 100vh;
+    background-color: #ffffff;
     z-index: 1;
     width: 100%;
-    max-width: 1300px;
-    padding: 0 50px;
+    max-width: 1500px;
+    padding: 0 40px;
 }
 
 .main__content h1 {
-    font-size: 4rem;
-    background-color: #ff8177;
-    background-image: linear-gradient(to top, #ff0844 0%, #ffb199 100%);
+    font-size: 3rem;
+    background-color: #000000;
+    /* background-image: linear-gradient(to top, #ff0844 0%, #ffb199 100%); */
     background-size: 100%;
     -webkit-background-clip: text;
     -moz-background-clip: text;
@@ -240,14 +240,16 @@
 
 .main__content p {
     margin-top: 1rem;
-    font-size: 2rem;
-    font-weight: 700;
-    color:rgb(255, 255, 255);
+    font-size: 1 rem;
+    font-weight: 500;
+    color:rgb(17, 15, 15);
 }
 
 .main__btn {
     font-size: 1rem;
-    background-image: linear-gradient(to top, #f77062 0%, #fe5196 100%);
+    background-color: #695d51;
+
+    /* background-image: linear-gradient(to top, #f77062 0%, #fe5196 100%); */
     padding: 14px 32px;
     border: none;
     border-radius: 4px;
@@ -273,7 +275,7 @@
     left: 0;
     width: 0;
     height: 100%;
-    background: #4837ff;
+    background: #1c1c18;
     transition: all 0.35s;
     border-radius: 4px;
 }
@@ -291,8 +293,8 @@
 }
 
 #main__img {
-    height: 60%;
-    width: 60%;
+    height: 10%;
+    width: 10%;
 }
 
 /* Mobile Responsive */
@@ -352,7 +354,7 @@
 /* services section */
 
 .services {
-    background: #141414;
+    background: #585050;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -501,7 +503,7 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    margin: 16px;
+    margin: 1px;
     text-align: left;
     width:160px;
     box-sizing: border-box;
