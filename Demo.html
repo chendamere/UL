@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Way Of Machine Thinking</title>
+    <link rel="stylesheet" href="style.css">
+    
+    <script src="https://kit.fontawesome.com/ae4c4c26f7.js" crossorigin="anonymous"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <script type="module">
+
+        import {UL_kernel} from "./UL_kernel.js";
+            
+        var UL;
+        var temp;
+
+        const parsedRules = await doGET("/UL_eq.txt").then(handleFileData);
+
+        function init() {
+            const canvas = document.getElementById('UL_kernel');
+            UL = new UL_kernel(canvas, parsedRules);
+            setInterval(update, 0);
+            // Do the request
+        }
+
+        async function doGET(path) {
+            const promise = new Promise((resolve, reject) => {
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", path);
+
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState == 4) {
+                        // The request is done; did it work?
+                        if (xhr.status == 200) {
+                            // ***Yes, use `xhr.responseText` here***
+                            xhr.onload = () => {
+                                resolve(xhr.responseText)
+                            }
+                            //var a = callback(xhr.responseText);                        
+                        } else {
+                            // ***No, tell the callback the call failed***
+                            //callback(null);
+                        }
+                    }
+                };
+                
+                xhr.send();
+            })
+            return promise;
+        }
+
+        function handleFileData(fileData) {
+            console.log("handling data")
+            if (!fileData) {
+                // Show error
+                return;
+            }
+            const tempTable = []
+            const theorems = fileData.split('\n')
+            for(const line of theorems) {
+                // console.log(line.length)
+                if(line.length <= 1) {continue}
+                else{
+                    tempTable.push(line)
+                }
+            }
+            
+            return tempTable;
+        }
+        
+        function update() {
+            //const start = performance.now();
+            UL.mainLoop();
+            //const elapsed = performance.now() - start;
+            //console.log("Draw() took " + elapsed + "ms");
+        }
+
+        window.onload = init;
+    </script>
+</head>
+     
+    <body>
+        <nav class="navbar">
+            <div class="navbar__container">
+                <!-- <a href="/" id="navbar__logo"></i>UNIVERSAL LANGUAGE</a> -->
+                <div class="navbar__toggle" id="mobile-menu">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+                <ul class="navbar__menu">
+                    <li class="navbar__item">
+                        <a href="https://chendamere.github.io" class="navbar__links">About</a>
+                    </li>
+                    <li class="navbar__item">
+                        <a href="/Demo.html" class="navbar__links">Demo</a>
+                    </li>
+                    <li class="navbar__item">
+                        <a href="https://github.com/chendamere/chendamere.github.io" class="navbar__links">GitHub</a>
+                    </li>
+                    <!-- <li class="navbar__btn">
+                        <a href="/" class="button"></a>
+                    </li> -->
+                </ul>
+            </div>
+        </nav>
+
+        <div class="main">
+            <div class="main__container">
+                <div class="main__content">
+                    <h1>Demo</h1>
+                    <div  class="smaller_box">
+                        <canvas style="image-rendering:pixelated; border:1px solid black" id="UL_kernel"></canvas>
+                        <img id="UL_oe" src="./images/Op/UL_oe.png" width="300" height="227" />
+                    </div>
+                   
+                    <p id="div1"></p>
+                </div>
+                <!-- <div class="main__img--container">
+                    <img src="images/pic1.svg" alt="pic" id="main__img">
+                    
+                </div> -->
+            </div>
+        </div>
+
+        <!-- <img id="grass" src="grass.jpg" hidden/>
+        <img id="white" src="white.png" hidden/> -->
+
+    </body>
+</body>
+</html>

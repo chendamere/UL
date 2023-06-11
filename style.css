@@ -206,14 +206,14 @@
 .main__container{
     display: grid;
     grid-template-columns: 1fr 1fr;
-    align-items: normal;
+    align-items: center;
     margin: 0 auto;
     height: 100vh;
     background-color: #ffffff;
     z-index: 1;
     width: 100%;
     max-width: 1500px;
-    padding: 0 40px;
+    padding: 200px;
 }
 
 .main__content h1 {
@@ -240,7 +240,7 @@
 
 .main__content p {
     margin-top: 1rem;
-    font-size: 1 rem;
+    font-size: 1rem;
     font-weight: 500;
     color:rgb(17, 15, 15);
 }
@@ -289,7 +289,7 @@
 }
 
 .main__img--container {
-    text-align: center;
+    text-align: normal;
 }
 
 #main__img {
@@ -601,3 +601,7 @@
         width: 100%;
     }
 }
+
+.smaller_box{ overflow:scroll; width:700px; height:700px; border:2px solid blue; }
+
+.symbol_display{width: 100px; height: 100px;}
