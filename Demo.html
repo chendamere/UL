@@ -19,11 +19,22 @@
         var UL;
         var temp;
 
-        const parsedRules = await doGET("/UL_eq.txt").then(handleFileData);
+        const parsedRules = await doGET("./UL_eq.txt").then(handleFileData);
 
         function init() {
             const canvas = document.getElementById('UL_kernel');
-            UL = new UL_kernel(canvas, parsedRules);
+            var symbols = ["\\Oa"
+                    ,"\\Ob"
+                    ,"\\Oc"
+                    ,"\\Od"
+                    ,"\\Oe"
+                    ,"\\Og"
+                    ,"\\On"
+                    ,"\\Op"
+                    ,"\\Or"
+                    ,"\\Os"
+                    ,"\\Ot"]
+            UL = new UL_kernel(canvas, parsedRules,symbols);
             setInterval(update, 0);
             // Do the request
         }
@@ -116,7 +127,19 @@
                     <h1>Demo</h1>
                     <div  class="smaller_box">
                         <canvas style="image-rendering:pixelated; border:1px solid black" id="UL_kernel"></canvas>
-                        <img id="UL_oe" src="./images/Op/UL_oe.png" width="300" height="227" />
+                        <img id='UL_Oa' alt="UL_Oa" hidden="hidden" src ="./images/Op/UL_Oa.png" width="300" height="240" />
+                        <img id='UL_Ob' alt="UL_Ob" hidden="hidden" src="./images/Op/UL_Ob.png" width="300" height="240" />
+                        <img id='UL_Oc' alt="UL_Oc" hidden="hidden" src="./images/Op/UL_Oc.png" width="300" height="240" />
+                        <img id='UL_Od' alt="UL_Od" hidden="hidden" src="./images/Op/UL_Od.png" width="300" height="240" />
+                        <img id='UL_Oe' alt="UL_Oe" hidden="hidden" src="./images/Op/UL_Oe.png" width="300" height="240" />
+                        <img id='UL_Og' alt="UL_Og" hidden="hidden" src="./images/Op/UL_Og.png" width="300" height="240" />
+                        <img id='UL_On' alt="UL_On" hidden="hidden" src="./images/Op/UL_On.png" width="300" height="240" />
+                        <img id='UL_Op' alt="UL_Op" hidden="hidden" src="./images/Op/UL_Op.png" width="300" height="240" />
+                        <img id='UL_Or' alt="UL_Or" hidden="hidden" src="./images/Op/UL_Or.png" width="300" height="240" />
+                        <img id='UL_Os' alt="UL_Os" hidden="hidden" src="./images/Op/UL_Os.png" width="300" height="240" />
+                        <img id='UL_Ot' alt="UL_Ot" hidden="hidden" src="./images/Op/UL_Ot.png" width="300" height="240" />
+                        <img id='UL_Rq' alt="UL_Rq" hidden="hidden" src="./images/Op/UL_Rq.png" width="300" height="240" />
+
                     </div>
                    
                     <p id="div1"></p>

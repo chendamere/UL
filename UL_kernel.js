@@ -1,23 +1,59 @@
 
 import {Axiom, Expression} from "./UL_dataType.js"
 const SIZE = 50;
+
 function isChar(str) {
     return str.length === 1 && str.match(/[a-z]/i);
 }
+function drawLine(ctx, begin, end, stroke = 'black', width = 1) {
+    if (stroke) {
+        ctx.strokeStyle = stroke;
+    }
+
+    if (width) {
+        ctx.lineWidth = width;
+    }
+
+    ctx.beginPath();
+    ctx.moveTo(...begin);
+    ctx.lineTo(...end);
+    ctx.stroke();
+}
 export class UL_kernel {
 
-    constructor(canvas, parsedRules){
+    constructor(canvas, parsedRules, symbols){
         // global camera variables
         this.canvas = canvas;
-        this.canvas.width = 700;
-        this.canvas.height = 1280;
-        this.canvas.style.width = "700px";
-        this.canvas.style.height = "1280px";
+        this.canvas.width = 1400;
+        this.canvas.height = 2560;
+        this.canvas.style.width = "1400px";
+        this.canvas.style.height = "2560px";
 
         this.var_table;
         this.name_table;
         this.StringTable = parsedRules;
         this.axiomTable;
+        this.symbols = symbols
+        this.images = {}
+
+        //display
+        this.beginLine = true;
+        this.context = this.canvas.getContext("2d");
+        this.height = 0;
+        this.pos = 20;
+        this.botSplit = true
+        this.bracketSize = 1.0
+        this.returnY;
+        this.textScale = 1.0
+
+        //handling image src
+        for(const symbol of this.symbols){
+            const id = "UL_" + String(symbol).slice(-2)
+            //console.log(id)
+            var image = document.getElementById(id);
+            this.images[symbol] = image
+        }
+        console.log(this.images)
         
         // global drawing variables
         //global position data variable 
@@ -128,12 +164,28 @@ export class UL_kernel {
                             op+=c
                             
                             if(op === "\\eq"){
+                                var left = true;
+                                
                                 while(c != '}'){
                                     c = expr[++n]
-                                    op+=c
+                                    if(isChar(c) && left){
+                                        newExpr.LeftOperand = c
+                                        left = false
+                                    }else if(isChar(c) && !left) {
+                                        newExpr.RightOperand = c
+                                    }
+                                    if(c === "\\"){
+                                        op+=c
+                                        c = expr[++n]
+                                        op+=c
+                                        c = expr[++n]
+                                        op+=c
+                                        newExpr.Op = op;
+                                    }
                                 }
+
+                                //signal for next expression to be top
                                 eqTable.push(newExpr)
-                                newExpr.Op = op;
                                 mid = true;
                                 break;
                             }
@@ -186,9 +238,9 @@ export class UL_kernel {
                 leftExprs = false;
 
             }
-            // if(debug) {
-            //     console.log(newAxiom)
-            // }
+            if(debug) {
+                console.log(newAxiom)
+            }
 
             axiomTable.push(newAxiom)
         }
@@ -200,41 +252,165 @@ export class UL_kernel {
     }   
 
     display(){
+
         for(let i = 0; i < this.axiomTable.length; i++) {
-            var context = this.canvas.getContext("2d");
-            context.font = "30px Helvetica, sans-serif ";
+            let context = this.context
+            let size = String(this.textScale * 30)
+            context.font = size+ "px Helvetica, sans-serif ";
             context.textAlign = "start";
             context.textBaseline = "bottom";
             context.fillStyle = "#000000"; //color
-
-            //render symbols
-            const image = document.getElementById('UL_oe');
-            image.addEventListener("load", (e) => {
-                context.drawImage(image, 33, 71, 104, 124, 21, 20, 87, 104);
-            });
             
-            var message = ""
-            for(const o of this.axiomTable[i].left){
-                if(o.LeftOperand !== undefined){
-                    message = o.LeftOperand + " "
-                    context.fillText(message, 10, i*50);
-                }
-                console.log(o.Op)
+            var leftExp = true;
+            this.adjust = true;
+
+            //resset x pos every line
+            this.pos = 20*this.textScale
+            for(const EXPS of [this.axiomTable[i].left, this.axiomTable[i].right]){
+                this.bracketSize = 1.0
                 
-                if(o.Op === '\\Oe'){
-                    //console.log("display")
-                    context.drawImage(image,20,i*50, 80,60);
+                for(const o of EXPS){
+                    //parse line if expression has \eq
+                    //console.log(o,pos,height)
+                    this.displayExpression(o)
+                    //console.log(this.height)
                 }
 
-                if(o.RightOperand !== undefined){
-                    message = o.RightOperand
-                    context.fillText(message, 100, i*50);
+                if(leftExp){
+                    //display REQ
+                    this.displayREQ();
+                    leftExp = false
                 }
-                
             }
 
-            
+            this.beginLine = true;
+            this.height += 50*this.textScale
         }
+    }
+
+    displayREQ(){
+        const id = "UL_Rq"
+        const image = document.getElementById(id);
+        //console.log(image)
+        if(this.returnY !== undefined){ this.height = this.returnY}
+        
+        this.context.drawImage(image, this.pos,  this.height + 15 * this.textScale,  this.textScale * 48,this.textScale * 36);
+        this.pos += 70 * this.textScale
+        this.context.fillText(",", this.pos, this.height + 50*this.textScale);
+        this.pos += 20 * this.textScale
+
+
+    }
+    displayTB(o) {
+        this.pos+=20*this.textScale
+        var context = this.canvas.getContext("2d");
+
+        var tempX = this.pos
+        var tempY = this.height
+        var tempSize = this.bracketSize
+        //top
+
+        this.height -= 50 * this.bracketSize*this.textScale
+        context.fillText(",", this.pos, this.height + 50*this.textScale);
+        this.pos += 20*this.textScale
+
+        this.bracketSize *= 0.5
+        this.displayExpression(o.top)        
+
+        //bot
+        this.pos = tempX
+        this.height =tempY
+        this.bracketSize = tempSize 
+
+        this.height += 50 * this.bracketSize*this.textScale
+        context.fillText(",", this.pos, this.height + 50*this.textScale);
+        this.pos += 20*this.textScale
+
+        this.bracketSize *= 0.5
+        this.displayExpression(o.top)
+
+    }
+
+    displayExpression(o){
+        //console.log(o)
+        //console.log(this.pos, this.height)
+        var context = this.context
+        let OP = o.Op;
+        let leftOperand = o.LeftOperand 
+        let rightOperand = o.RightOperand
+        var message = ""
+        var left = true;
+        let bracket = false
+    
+        if(String(o.Op).includes('\\eq')){
+            OP = o.Op.slice(3)
+            if(this.adjust) {
+                if(this.botSplit ){
+                    this.height += 70*this.textScale
+                    this.botSplit = false
+                }
+                else{
+                    this.height -= 70*this.textScale
+                }
+                this.adjust = false
+                this.returnY = this.height;
+            }
+
+            bracket = true
+        }
+        if(this.beginLine){
+            context.fillText(",", this.pos, this.height + 50*this.textScale);
+            this.beginLine = false
+            this.pos += 20*this.textScale
+        }
+        if(leftOperand !== undefined){
+            message = o.LeftOperand + " "
+            //console.log(message)
+            context.fillText(message, this.pos, this.height + 50*this.textScale);
+            left = false;
+        }
+        //display operator
+        for(const symbol of this.symbols){
+            if(OP === symbol){
+                var image = this.images[OP]
+                this.pos += 15*this.textScale
+                context.drawImage(image, this.pos, this.height + 15 * this.textScale, 48 * this.textScale, 36 * this.textScale);
+                break;
+            }
+        }
+
+        //display right operand
+        if(rightOperand !== undefined){
+            message = o.RightOperand
+            this.pos += 50*this.textScale
+            //console.log(message)
+            context.fillText(message, this.pos, this.height + 50*this.textScale);
+            left = true
+        }
+
+        if(!left){
+            this.pos+=20*this.textScale
+        }
+        this.pos += 40*this.textScale
+        if(bracket){
+            this.drawBracket(this.pos, this.height + 45*this.textScale, this.bracketSize);
+            //console.log(this.pos, this.height)
+            this.displayTB(o);
+            this.botSplit = false;
+        }
+        else {
+            context.fillText(",", this.pos, this.height + 50*this.textScale);
+            this.pos += 35*this.textScale
+        }
+        this.pos += 20*this.textScale
+    }
+
+    drawBracket(x, y, size) {
+        var context = this.canvas.getContext("2d");
+        drawLine(context, [x, y+ size*(-10)*this.textScale],    [x-10, y+size*(-10)*this.textScale], 'black', 2 * this.textScale);
+        drawLine(context, [x, y+ size*(-10+60)*this.textScale], [x,    y+size*(-10-60)*this.textScale], 'black', 2* this.textScale);
+        drawLine(context, [x, y+ size*(-10-60)*this.textScale], [x+10, y+size*(-10-60)*this.textScale], 'black', 2* this.textScale);
+        drawLine(context, [x, y+ size*(-10+60)*this.textScale], [x+10, y+size*(-10+60)*this.textScale], 'black', 2* this.textScale);
     }
 
     mainLoop(){

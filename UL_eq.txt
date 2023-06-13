@@ -1,5 +1,3 @@
-,\eq{i=j}{,\eq{m=n}{,x \Og y,}{,i \Ot j,},}{,a \Oc d,}, q \Oe p, <=> ,
-
 ,i \Od m, j \Op, <=> , j \Op, i \Od m,
 ,i \Ot m, j \Op, <=> , j \Op, i \Ot m,
 ,i \Ob m, j \Op, <=> , j \Op, i \Ob m,
@@ -12,3 +10,5 @@
 ,i \Op , j \Op, <=> , j \Op, i \Op,
 ,i \Op , \Or, <=> , \Or , 
 ,i \Op , i \Os, <=> , i \Os,
+
+,\eq{q \Oe p}{,\eq{q \Oe p}{,a \Od d,}{,a \Oc d,},}{,a \Oc d,}, <=> ,\eq{q \Oe p}{,\eq{q \Oe p}{,a \Od d,}{,a \Oc d,},}{,a \Oc d,},
