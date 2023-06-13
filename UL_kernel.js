@@ -65,6 +65,9 @@ export class UL_kernel {
         
         this.parse_all_axiom_from_table(false)
         this.print_all_axiom()
+        console.log(this.axiomTable)
+        let ret = this.Ruletext_equal(this.axiomTable[6].left, this.axiomTable[6].right, true)
+        console.log(ret)
     } 
     
     print_all_axiom() {
@@ -73,7 +76,93 @@ export class UL_kernel {
             console.log(this.axiomTable[i]);        
         }
     }
+
+
+    Ruletext_equal(r1, r2, debug){
+        //has to check entired rule text because need to consider naming conflict of entire rule text
+        let e1_var_sequence = []
+        let e2_var_sequence = []
+
+        let NameTable1 = {}
+        let NameTable2 = {}
+
+        if(debug){
+            console.log("begin checking expression")
+        }
+
+        for(let i = 0; i < r1.length; i++) {
+            if(r1[i] == undefined || r1[i] === null) continue;
+            else if(r1[i].Op !== r2[i].Op) {
+                console.log(r1[i].Op, " is different from ", r2[i].Op)
+                return false
+            }
+        }
+
+        if(debug) console.log("Operators are the same")
+
+        //left expression variables
+        let varCount = 0
+        for(let i = 0; i < r1.length; i ++) {
+            if(r1[i].Op === undefined) continue;
+            var exp = r1[i]
+            var left = exp.LeftOperand
+            var right = exp.RightOperand
+
+            if(NameTable1[left] === undefined) {
+                varCount ++;
+                NameTable1[left] = varCount;
+            } 
+            e1_var_sequence.push(NameTable1[left]);
     
+            if(NameTable1[right] === undefined) {
+                varCount ++;
+                NameTable1[right] = varCount;
+            }
+            e1_var_sequence.push(NameTable1[right]);
+        }
+
+        //right expression variables
+        varCount = 0
+        for(let i = 0; i < r2.length; i ++) {
+            if(r2[i].Op === undefined) continue;
+            var exp = r2[i]
+            var left = exp.LeftOperand
+            var right = exp.RightOperand
+
+            if(NameTable2[left] === undefined) {
+                varCount ++;
+                NameTable2[left] = varCount;
+            } 
+            e2_var_sequence.push(NameTable2[left]);
+    
+            if(NameTable2[right] === undefined) {
+                varCount ++;
+                NameTable2[right] = varCount;
+            }
+            e2_var_sequence.push(NameTable2[right]);
+        }
+        if(debug) {
+            console.log("Comparing variable sequence: ")
+        }
+        for(let i = 0; i < e1_var_sequence.length; i++) {
+            if(debug) {
+                console.log(e1_var_sequence[i]," ",e2_var_sequence[i]);
+            }
+            if(e1_var_sequence[i] != e2_var_sequence[i]) {
+                console.log("FAIL! Expressions are not equivalent")
+                return false;
+            }
+            if((e1_var_sequence[i] == e2_var_sequence[i]) && (e1_var_sequence[i] == 0))
+            {
+                if (debug) {
+                    console.log("PASS! Expressions are equivalent")
+                }
+                return true;
+            } 
+        }
+        return true;
+    }
+
     parse_all_axiom_from_table(debug) {
 
         const axiomTable = [];
