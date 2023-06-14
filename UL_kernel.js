@@ -66,7 +66,7 @@ export class UL_kernel {
         this.parse_all_axiom_from_table(false)
         this.print_all_axiom()
         console.log(this.axiomTable)
-        let ret = this.Ruletext_equal(this.axiomTable[6].left, this.axiomTable[6].right, true)
+        let ret = this.Ruletext_equal(this.axiomTable[6].left, this.axiomTable[6].right, false)
         console.log(ret)
     } 
     
@@ -146,7 +146,7 @@ export class UL_kernel {
         }
         for(let i = 0; i < e1_var_sequence.length; i++) {
             if(debug) {
-                console.log(e1_var_sequence[i]," ",e2_var_sequence[i]);
+                console.log(e1_var_sequence[i], e2_var_sequence[i]);
             }
             if(e1_var_sequence[i] != e2_var_sequence[i]) {
                 console.log("FAIL! Expressions are not equivalent")
@@ -312,6 +312,7 @@ export class UL_kernel {
                         top = false
                     }
                     else if(bot) {
+                        newExpr.prev = eqTable[eqTable.length-1]
                         eqTable[eqTable.length-1].bot = newExpr
                         bot = false
                     }
@@ -397,16 +398,28 @@ export class UL_kernel {
         var tempX = this.pos
         var tempY = this.height
         var tempSize = this.bracketSize
-        //top
+        var maxXpos = this.pos;
+        //top expressions
 
         this.height -= 50 * this.bracketSize*this.textScale
         context.fillText(",", this.pos, this.height + 50*this.textScale);
         this.pos += 20*this.textScale
 
         this.bracketSize *= 0.5
-        this.displayExpression(o.top)        
+        let expression = o.top
+        this.displayExpression(expression)
+        while(expression.next !== undefined){
+            expression = expression.next
+            console.log(expression)
+            this.displayExpression(expression)
+        }
+        if(this.pos > maxXpos){
+            maxXpos = this.pos
+        }
 
-        //bot
+        //bot expressions
+
+        expression = o.bot
         this.pos = tempX
         this.height =tempY
         this.bracketSize = tempSize 
@@ -416,7 +429,13 @@ export class UL_kernel {
         this.pos += 20*this.textScale
 
         this.bracketSize *= 0.5
-        this.displayExpression(o.top)
+        this.displayExpression(expression)
+        while(expression.next !== undefined){
+            expression = expression.next
+            console.log(expression)
+            this.displayExpression(expression)
+        }
+        this.pos = maxXpos
 
     }
 
@@ -452,6 +471,8 @@ export class UL_kernel {
             this.beginLine = false
             this.pos += 20*this.textScale
         }
+
+        //display left operand
         if(leftOperand !== undefined){
             message = o.LeftOperand + " "
             //console.log(message)
@@ -484,6 +505,8 @@ export class UL_kernel {
         if(bracket){
             this.drawBracket(this.pos, this.height + 45*this.textScale, this.bracketSize);
             //console.log(this.pos, this.height)
+
+            //display top and bot expression
             this.displayTB(o);
             this.botSplit = false;
         }
