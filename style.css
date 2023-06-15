@@ -602,6 +602,6 @@
     }
 }
 
-.smaller_box{ overflow:scroll; width:700px; height:700px; border:2px solid blue; }
+.smaller_box{ overflow:scroll; width:900px; height:700px; border:10px solid rgb(67, 67, 81); }
 
 .symbol_display{width: 100px; height: 100px;}

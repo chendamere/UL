@@ -18,11 +18,16 @@
             
         var UL;
         var temp;
+        var symbol_width = 100, symbol_height = 100;
 
-        const parsedRules = await doGET("./UL_eq.txt").then(handleFileData);
+        const parsedRules = await doGET("./database/UL_eq.txt").then(handleFileData);
+        const rule_of_operator = await doGET("./database/rule_of_operator.txt").then(handleFileData);
 
         function init() {
             const canvas = document.getElementById('UL_kernel');
+            const sym = document.getElementById('UL_oa');
+            console.log(sym)
+
             var symbols = ["\\Oa"
                     ,"\\Ob"
                     ,"\\Oc"
@@ -34,7 +39,7 @@
                     ,"\\Or"
                     ,"\\Os"
                     ,"\\Ot"]
-            UL = new UL_kernel(canvas, parsedRules,symbols);
+            UL = new UL_kernel(canvas, rule_of_operator, symbols);
             setInterval(update, 0);
             // Do the request
         }
@@ -125,24 +130,23 @@
             <div class="main__container">
                 <div class="main__content">
                     <h1>Demo</h1>
-                    <div  class="smaller_box">
+                    <div class="smaller_box">
                         <canvas style="image-rendering:pixelated; border:1px solid black" id="UL_kernel"></canvas>
-                        <img id='UL_Oa' alt="UL_Oa" hidden="hidden" src ="./images/Op/UL_Oa.png" width="300" height="240" />
-                        <img id='UL_Ob' alt="UL_Ob" hidden="hidden" src="./images/Op/UL_Ob.png" width="300" height="240" />
-                        <img id='UL_Oc' alt="UL_Oc" hidden="hidden" src="./images/Op/UL_Oc.png" width="300" height="240" />
-                        <img id='UL_Od' alt="UL_Od" hidden="hidden" src="./images/Op/UL_Od.png" width="300" height="240" />
-                        <img id='UL_Oe' alt="UL_Oe" hidden="hidden" src="./images/Op/UL_Oe.png" width="300" height="240" />
-                        <img id='UL_Og' alt="UL_Og" hidden="hidden" src="./images/Op/UL_Og.png" width="300" height="240" />
-                        <img id='UL_On' alt="UL_On" hidden="hidden" src="./images/Op/UL_On.png" width="300" height="240" />
-                        <img id='UL_Op' alt="UL_Op" hidden="hidden" src="./images/Op/UL_Op.png" width="300" height="240" />
-                        <img id='UL_Or' alt="UL_Or" hidden="hidden" src="./images/Op/UL_Or.png" width="300" height="240" />
-                        <img id='UL_Os' alt="UL_Os" hidden="hidden" src="./images/Op/UL_Os.png" width="300" height="240" />
-                        <img id='UL_Ot' alt="UL_Ot" hidden="hidden" src="./images/Op/UL_Ot.png" width="300" height="240" />
-                        <img id='UL_Rq' alt="UL_Rq" hidden="hidden" src="./images/Op/UL_Rq.png" width="300" height="240" />
+                        <img id='UL_Oa' alt="UL_Oa" hidden="hidden" src="./images/Op_svg/UL_Oa.svg" width="100" height="100" />
+                        <img id='UL_Ob' alt="UL_Ob" hidden="hidden" src="./images/Op_svg/UL_Ob.svg" width="100" height="100" />
+                        <img id='UL_Oc' alt="UL_Oc" hidden="hidden" src="./images/Op_svg/UL_Oc.svg" width="100" height="100" />
+                        <img id='UL_Od' alt="UL_Od" hidden="hidden" src="./images/Op_svg/UL_Od.svg" width="100" height="100" />
+                        <img id='UL_Oe' alt="UL_Oe" hidden="hidden" src="./images/Op_svg/UL_Oe.svg" width="100" height="100" />
+                        <img id='UL_Og' alt="UL_Og" hidden="hidden" src="./images/Op_svg/UL_Og.svg" width="100" height="100" />
+                        <img id='UL_On' alt="UL_On" hidden="hidden" src="./images/Op_svg/UL_On.svg" width="100" height="100" />
+                        <img id='UL_Op' alt="UL_Op" hidden="hidden" src="./images/Op_svg/UL_Op.svg" width="100" height="100" />
+                        <img id='UL_Or' alt="UL_Or" hidden="hidden" src="./images/Op_svg/UL_Or.svg" width="100" height="100" />
+                        <img id='UL_Os' alt="UL_Os" hidden="hidden" src="./images/Op_svg/UL_Os.svg" width="100" height="100" />
+                        <img id='UL_Ot' alt="UL_Ot" hidden="hidden" src="./images/Op_svg/UL_Ot.svg" width="100" height="100" />
+                        <img id='UL_Rq' alt="UL_Rq" hidden="hidden" src="./images/Op_svg/UL_Rq.svg" width="100" height="100" />
 
                     </div>
                    
-                    <p id="div1"></p>
                 </div>
                 <!-- <div class="main__img--container">
                     <img src="images/pic1.svg" alt="pic" id="main__img">

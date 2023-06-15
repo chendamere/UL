@@ -24,10 +24,10 @@ export class UL_kernel {
     constructor(canvas, parsedRules, symbols){
         // global camera variables
         this.canvas = canvas;
-        this.canvas.width = 1400;
-        this.canvas.height = 2560;
-        this.canvas.style.width = "1400px";
-        this.canvas.style.height = "2560px";
+        this.canvas.width = 5120;
+        this.canvas.height = 5120;
+        this.canvas.style.width = "5120px";
+        this.canvas.style.height = "5120px";
 
         this.var_table;
         this.name_table;
@@ -44,7 +44,9 @@ export class UL_kernel {
         this.botSplit = true
         this.bracketSize = 1.0
         this.returnY;
-        this.textScale = 1.0
+        this.textScale = 0.5
+        this.numEq = 0;
+        this.maxXpos = 0;
 
         //handling image src
         for(const symbol of this.symbols){
@@ -53,7 +55,6 @@ export class UL_kernel {
             var image = document.getElementById(id);
             this.images[symbol] = image
         }
-        console.log(this.images)
         
         // global drawing variables
         //global position data variable 
@@ -62,12 +63,12 @@ export class UL_kernel {
     }
     init() {
         console.log("Universal Language ")
-        
+        //console.log(this.StringTable)
         this.parse_all_axiom_from_table(false)
-        this.print_all_axiom()
-        console.log(this.axiomTable)
-        let ret = this.Ruletext_equal(this.axiomTable[6].left, this.axiomTable[6].right, false)
-        console.log(ret)
+        //sthis.print_all_axiom()
+        //console.log(this.axiomTable)
+        // let ret = this.Ruletext_equal(this.axiomTable[6].left, this.axiomTable[6].right, false)
+        // console.log(ret)
     } 
     
     print_all_axiom() {
@@ -172,7 +173,7 @@ export class UL_kernel {
             if(this.StringTable[i] === ''){continue;}
 
             const newAxiom = new Axiom()
-            const [leftExps, rightExps] = this.StringTable[i].split("<=>");
+            const [leftExps, rightExps] = this.StringTable[i].split("\\Rq");
             var PleftExps = leftExps.split(',')
             var PrightExps = rightExps.split(',')
 
@@ -342,39 +343,58 @@ export class UL_kernel {
     }   
 
     display(){
+        //console.log(this.axiomTable.length)
+        let context = this.context
+        let size = String(this.textScale * 30)
+        context.font = size+ "px Helvetica, sans-serif ";
+        context.textAlign = "start";
+        context.textBaseline = "bottom";
+        context.fillStyle = "#000000"; //color
 
         for(let i = 0; i < this.axiomTable.length; i++) {
-            let context = this.context
-            let size = String(this.textScale * 30)
-            context.font = size+ "px Helvetica, sans-serif ";
-            context.textAlign = "start";
-            context.textBaseline = "bottom";
-            context.fillStyle = "#000000"; //color
+            this.returnY = undefined
+            this.numEq = 0;
             
             var leftExp = true;
             this.adjust = true;
+            var eqSkipLine = true
 
+            
             //resset x pos every line
             this.pos = 20*this.textScale
             for(const EXPS of [this.axiomTable[i].left, this.axiomTable[i].right]){
                 this.bracketSize = 1.0
+                for(const o of EXPS){
+                    if(String(o.Op).includes('\\eq') && eqSkipLine){
+                        this.height += 50 * this.textScale
+                        eqSkipLine = false
+                        break
+                    }
+                }
                 
                 for(const o of EXPS){
+                    
                     //parse line if expression has \eq
                     //console.log(o,pos,height)
-                    this.displayExpression(o)
+                    // console.log(this.height, o )
+
+                    if(o === undefined) continue;
+                    //console.log(this.height,o)//------------------ 180
+                    this.displayExpression(o) //--------------- 145
+                    //console.log(this.height,o)
                     //console.log(this.height)
                 }
 
                 if(leftExp){
                     //display REQ
-                    this.displayREQ();
+                    
+                    this.displayREQ(); 
                     leftExp = false
                 }
             }
 
             this.beginLine = true;
-            this.height += 50*this.textScale
+            this.height += 50*this.textScale+this.numEq*30
         }
     }
 
@@ -382,9 +402,10 @@ export class UL_kernel {
         const id = "UL_Rq"
         const image = document.getElementById(id);
         //console.log(image)
-        if(this.returnY !== undefined){ this.height = this.returnY}
+        if(this.returnY !== undefined){
+        this.height = this.returnY}
         
-        this.context.drawImage(image, this.pos,  this.height + 15 * this.textScale,  this.textScale * 48,this.textScale * 36);
+        this.context.drawImage(image, this.pos,  this.height + 15 * this.textScale,  this.textScale * 36,this.textScale * 36);
         this.pos += 70 * this.textScale
         this.context.fillText(",", this.pos, this.height + 50*this.textScale);
         this.pos += 20 * this.textScale
@@ -395,26 +416,27 @@ export class UL_kernel {
         this.pos+=20*this.textScale
         var context = this.canvas.getContext("2d");
 
-        var tempX = this.pos
-        var tempY = this.height
+        const tempX = this.pos
+        const tempY = this.height
         var tempSize = this.bracketSize
-        var maxXpos = this.pos;
+        this.maxXpos = this.pos;
+        
         //top expressions
-
         this.height -= 50 * this.bracketSize*this.textScale
         context.fillText(",", this.pos, this.height + 50*this.textScale);
         this.pos += 20*this.textScale
 
         this.bracketSize *= 0.5
         let expression = o.top
-        this.displayExpression(expression)
-        while(expression.next !== undefined){
-            expression = expression.next
-            console.log(expression)
+        if(expression !== undefined){
             this.displayExpression(expression)
-        }
-        if(this.pos > maxXpos){
-            maxXpos = this.pos
+            while(expression.next !== undefined){
+                expression = expression.next
+                this.displayExpression(expression)
+            }
+            if(this.pos > this.maxXpos){
+                this.maxXpos = this.pos
+            }
         }
 
         //bot expressions
@@ -427,20 +449,26 @@ export class UL_kernel {
         this.height += 50 * this.bracketSize*this.textScale
         context.fillText(",", this.pos, this.height + 50*this.textScale);
         this.pos += 20*this.textScale
-
-        this.bracketSize *= 0.5
-        this.displayExpression(expression)
-        while(expression.next !== undefined){
-            expression = expression.next
-            console.log(expression)
+        if(expression !== undefined){
+            this.bracketSize *= 0.5
             this.displayExpression(expression)
+            while(expression.next !== undefined){
+                expression = expression.next
+                console.log(expression)
+                console.log(this.height)
+                this.displayExpression(expression)
+            }
+            
+            this.pos = this.maxXpos
+            
         }
-        this.pos = maxXpos
+        this.bracketSize = tempSize 
+        this.height =tempY
 
     }
 
     displayExpression(o){
-        //console.log(o)
+        if(o === undefined) return;
         //console.log(this.pos, this.height)
         var context = this.context
         let OP = o.Op;
@@ -449,25 +477,24 @@ export class UL_kernel {
         var message = ""
         var left = true;
         let bracket = false
-    
+        this.botSplit = true
+        
         if(String(o.Op).includes('\\eq')){
             OP = o.Op.slice(3)
+            //sconsole.log(this.adjust)
             if(this.adjust) {
-                if(this.botSplit ){
-                    this.height += 70*this.textScale
-                    this.botSplit = false
-                }
-                else{
-                    this.height -= 70*this.textScale
-                }
+
                 this.adjust = false
                 this.returnY = this.height;
+                this.numEq += 1;
             }
 
             bracket = true
         }
+
+        
         if(this.beginLine){
-            context.fillText(",", this.pos, this.height + 50*this.textScale);
+            context.fillText(",", this.pos, this.height + 50 * this.textScale);
             this.beginLine = false
             this.pos += 20*this.textScale
         }
@@ -484,7 +511,7 @@ export class UL_kernel {
             if(OP === symbol){
                 var image = this.images[OP]
                 this.pos += 15*this.textScale
-                context.drawImage(image, this.pos, this.height + 15 * this.textScale, 48 * this.textScale, 36 * this.textScale);
+                context.drawImage(image, this.pos, this.height + 15 * this.textScale, 36 * this.textScale, 36 * this.textScale);
                 break;
             }
         }
@@ -508,13 +535,16 @@ export class UL_kernel {
 
             //display top and bot expression
             this.displayTB(o);
-            this.botSplit = false;
+            // this.botSplit = false;
         }
         else {
             context.fillText(",", this.pos, this.height + 50*this.textScale);
             this.pos += 35*this.textScale
         }
         this.pos += 20*this.textScale
+        if(this.pos > this.maxXpos){
+            this.maxXpos = this.pos
+        }
     }
 
     drawBracket(x, y, size) {
