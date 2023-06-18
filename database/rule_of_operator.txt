@@ -1,48 +1,55 @@
-,i \Od m, i \Od n, \Rq ,i \Od n, i \Od m,
-,i \Od m, j \Od n, \Rq ,j \Od n, i \Od m,
-,i \Od m, j \Oc n, \Rq ,j \Oc n, i \Od m,
-,i \Od m, j \Ob n, \Rq ,j \Ob n, i \Od m,
-,i \Od m,  \Og n, \Rq , \Og n, i \Od m,
-,i \Od m,  \Ot n, \Rq , \Ot n, i \Od m,
-,i \Od m, j \On, \Rq , j \On, i \Od m,
-,i \Od m, j \Os, \Rq , j \Os, i \Od m,
-,i \Od m, \eq{j \Oe t}{,i \Od m,i \Od m,}{,}, \Rq , \eq{j \Oe t}{,i \Od m,i \Od m,i \Od m,}{,i \Od m,},
-,i \Oc m, j \Oc n, \Rq ,j \Oc n, i \Oc m,
-,i \Oc m, j \Ob n, \Rq ,j \Ob n, i \Oc m,
-,i \Oc m,  \Og n, \Rq , \Og n, i \Oc m,
-,i \Oc m,  \Ot n, \Rq , \Ot n, i \Oc m,
-,i \Oc m, j \On, \Rq , j \On, i \Oc m,
-,i \Oc m, j \Os, \Rq , j \Os, i \Oc m,
-,i \Oc m, \eq{j \Oe t}{,}{,}, \Rq , \eq{j \Oe t}{,i \Oc m,}{,i \Oc m,},
-,i \Ob m, j \Ob n, \Rq ,j \Ob n, i \Ob m,
-,i \Ob m,  \Og n, \Rq , \Og n, i \Ob m,
-,i \Ob m,  \Ot n, \Rq , \Ot n, i \Ob m,
-,i \Ob m, j \On, \Rq , j \On, i \Ob m,
-,i \Ob m, j \Os, \Rq , j \Os, i \Ob m,
-,i \Ob m, \eq{j \Oe t}{,}{,}, \Rq , \eq{j \Oe t}{,i \Ob m,}{,i \Ob m,},
-, \Ot m,  \Ot n, \Rq , \Ot n, \Ot m,
-, \Ot m,  \Og n, \Rq , \Og n, \Ot m,
-, \Ot m, j \On, \Rq , j \On,  \Ot m,
-, \Ot m, j \Os, \Rq , j \Os,  \Ot m,
-, \Ot m, \eq{j \Oe t}{,}{,}, \Rq , \eq{j \Oe t}{, \Ot m,}{, \Ot m,},
-, \Og m,  \Og n, \Rq , \Og n, \Og m,
-, \Og m, j \On, \Rq , j \On,  \Og m,
-, \Og m, j \Os, \Rq , j \Os,  \Og m,
-, \Og m, \eq{j \Oe t}{,}{,}, \Rq , \eq{j \Oe t}{, \Og m,}{, \Og m,}
-,i \On, j \On, \Rq , j \On, i \On,
-,i \On, i \Op, \Rq , i \Op, i \On,
-,i \On, j \Os, \Rq , j \Os ,i \On,
-,i \On, \eq{j \Oe t}{,}{,}, \Rq , \eq{j \Oe t}{,i \On,}{,i \On,},
-,i \Os, j \Os, \Rq , j \Os,i \Os,
-,i \Os, \eq{j \Oe t}{,}{,}, \Rq , \eq{j \Oe t}{,i \Os,}{,i \Os,},
-,i \Os, \eq{j \Oe j}{,}{,}, \Rq , \eq{j \Oe j}{,i \Os,}{,i \Os,},
-,i \On, \Or, \Rq ,\Or,
-,i \Os, \Or, \Rq ,\Or,
-,i \Oa j, \Or, \Rq ,\Or,
-, \eq{i \Oe i}{,}{,}, \Rq , \eq{i \Oe i}{,}{, \Or,},
-, \eq{i \Oe j}{,}{,}, \Rq , \eq{j \Oe i}{,}{,},
-, \eq{i \Oe j}{ \eq{i \Oe m}{,}{,}}{,}, \Rq , \eq{i \Oe j}{, \eq{j \Oe m}{,}{,}}{,}, 
-,i \On ,i \Os , \Rq ,i \Os,
-,i \Od m, j \Op, \Rq , j \Op, i \Od m,
-
-
+\[,i \Od m, i \Od n, \Rq ,i \Od n, i \Od m,\]
+\[,i \Od m, j \Od n, \Rq ,j \Od n, i \Od m,\]
+\[,i \Od m, j \Oc n, \Rq ,j \Oc n, i \Od m,\]
+\[,i \Od m, j \Ob n, \Rq ,j \Ob n, i \Od m,\]
+\[,i \Od m,  \Og n, \Rq , \Og n, i \Od m,\]
+\[,i \Od m,  \Ot n, \Rq , \Ot n, i \Od m,\]
+\[,i \Od m, j \On, \Rq , j \On, i \Od m,\]
+\[,i \Od m, j \Os, \Rq , j \Os, i \Od m,\]
+\[,i \Od m, \eq{j \Oe t}{,}{,}, \Rq , \eq{j \Oe t}{,i \Od m,}{,,i \Od m,},\]
+\[,i \Oc m, j \Oc n, \Rq ,j \Oc n, i \Oc m,\]
+\[,i \Oc m, j \Ob n, \Rq ,j \Ob n, i \Oc m,\]
+\[,i \Oc m,  \Og n, \Rq , \Og n, i \Oc m,\]
+\[,i \Oc m,  \Ot n, \Rq , \Ot n, i \Oc m,\]
+\[,i \Oc m, j \On, \Rq , j \On, i \Oc m,\]
+\[,i \Oc m, j \Os, \Rq , j \Os, i \Oc m,\]
+\[,i \Oc m, \eq{j \Oe t}{,}{,}, \Rq , \eq{j \Oe t}{,i \Oc m,}{,i \Oc m,},\]
+\[,i \Ob m, j \Ob n, \Rq ,j \Ob n, i \Ob m,\]
+\[,i \Ob m,  \Og n, \Rq , \Og n, i \Ob m,\]
+\[,i \Ob m,  \Ot n, \Rq , \Ot n, i \Ob m,\]
+\[,i \Ob m, j \On, \Rq , j \On, i \Ob m,\]
+\[,i \Ob m, j \Os, \Rq , j \Os, i \Ob m,\]
+\[,i \Ob m, \eq{j \Oe t}{,}{,}, \Rq , \eq{j \Oe t}{,i \Ob m,}{,i \Ob m,},\]
+\[, \Ot m,  \Ot n, \Rq , \Ot n, \Ot m,\]
+\[, \Ot m,  \Og n, \Rq , \Og n, \Ot m,\]
+\[, \Ot m, j \On, \Rq , j \On,  \Ot m,\]
+\[, \Ot m, j \Os, \Rq , j \Os,  \Ot m,\]
+\[, \Ot m, \eq{j \Oe t}{,}{,}, \Rq , \eq{j \Oe t}{, \Ot m,}{, \Ot m,},\]
+\[, \Og m,  \Og n, \Rq , \Og n, \Og m,\]
+\[, \Og m, j \On, \Rq , j \On,  \Og m,\]
+\[, \Og m, j \Os, \Rq , j \Os,  \Og m,\]
+\[, \Og m, \eq{j \Oe t}{,}{,}, \Rq , \eq{j \Oe t}{, \Og m,}{, \Og m,},\]
+\[,i \On, j \On, \Rq , j \On, i \On,\]
+\[,i \On, i \Op, \Rq , i \Op, i \On,\]
+\[,i \On, j \Os, \Rq , j \Os,i \On,\]
+\[,i \On, \eq{j \Oe t}{,}{,}, \Rq , \eq{j \Oe t}{,i \On,}{,i \On,},\]
+\[,i \Os, j \Os, \Rq , j \Os,i \Os,\]
+\[,i \Os, \eq{j \Oe t}{,}{,}, \Rq , \eq{j \Oe t}{,i \Os,}{,i \Os,},\]
+\[,i \Os, \eq{j \Oe j}{,}{,}, \Rq , \eq{j \Oe j}{,i \Os,}{,i \Os,},\]
+\[,\Or, \Rq ,\Or, \Tc c,\]
+\[,i \On, \Or, \Rq ,\Or,\]
+\[,i \Os, \Or, \Rq ,\Or,\]
+\[,i \Oa j, \Or, \Rq ,\Or,\]
+\[, \eq{i \Oe i}{,}{,}, \Rq , \eq{i \Oe i}{,}{, \Or,},\]
+\[, \eq{i \Oe j}{,}{,}, \Rq , \eq{j \Oe i}{,}{,},\]
+\[, \eq{i \Oe j}{ \eq{i \Oe m}{,}{,}}{,}, \Rq , \eq{i \Oe j}{, \eq{j \Oe m}{,}{,}}{,},\]
+\[,i \On ,i \Os , \Rq ,i \Os,\]
+\[, \Rq , \eq{i \Oe j}{,}{,} ,\]
+\[, \Rq ,i \Oc m ,m \Os,\]
+\[, \Rq ,i \Od m ,m \Os,\]
+\[, \Rq ,i \Ob m ,m \Os,\]
+\[, \Rq ,\Og m ,m \Os,\]
+\[, \Rq ,\Ot m ,m \Os,\]
+\[, \Rq ,i \On ,i \Op,\]
+\[, \Rq , ,\]
+\[,i \Od m, j \Op, \Rq , j \Op, i \Od m,\]

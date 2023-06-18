@@ -56,19 +56,15 @@ export class UL_kernel {
             this.images[symbol] = image
         }
         
-        // global drawing variables
-        //global position data variable 
         this.init();
-        this.display();
+        this.display_from_table();
     }
     init() {
         console.log("Universal Language ")
-        //console.log(this.StringTable)
         this.parse_all_axiom_from_table(false)
-        //sthis.print_all_axiom()
-        //console.log(this.axiomTable)
-        // let ret = this.Ruletext_equal(this.axiomTable[6].left, this.axiomTable[6].right, false)
-        // console.log(ret)
+        this.communtative_induction(this.axiomTable[this.axiomTable.length-1])
+        this.transitive_induction(this.axiomTable[this.axiomTable.length-1], this.axiomTable[this.axiomTable.length-2])
+        this.substitution_induction(this.axiomTable[this.axiomTable.length-2],this.axiomTable[this.axiomTable.length-1], 1)
     } 
     
     print_all_axiom() {
@@ -78,8 +74,62 @@ export class UL_kernel {
         }
     }
 
+    communtative_induction(r, debug){
 
-    Ruletext_equal(r1, r2, debug){
+        const newRule = new Axiom()
+        newRule.left = r.right
+        newRule.right = r.left
+    
+        this.axiomTable.push(newRule)
+        if(debug){
+            console.log(newRule, r)
+        }
+    }
+
+    transitive_induction(r1, r2, debug){
+        if(!this.Ruletext_equal(r1.right, r2.left, true)) {
+            if(debug) {
+                cout << "Tran_induction: r1.right and r2.left does not match" << endl;
+            }
+            return;
+        }
+
+        const newRule = new Axiom()
+        newRule.left = r1.left;
+        newRule.right = r2.right;
+        this.axiomTable.push(newRule)
+        if(debug){
+            console.log(newRule, r1,r2)
+        }
+    }
+
+    substitution_induction(r1, r2, offset, debug){
+        //r2 must be generated through reflexivity 
+        //which can be done with commutative induction follow by transitive induction to generate left right equivalent rule
+
+        console.log(r2.right, r2.left)
+        if(!this.Ruletext_equal(r2.right, r2.left)){
+            console.log("r2 is not left-right equivalent")
+            return
+        }
+        let L_leftSlice = r2.left.slice(0,offset)
+        let L_insertSlice = r1.left
+        let L_rightSlice = r2.left.slice(offset, r1.left.length)
+        let newLeft = [].concat(L_leftSlice,L_insertSlice,L_rightSlice)
+        
+        let R_leftSlice = r2.right.slice(0,offset)
+        let R_insertSlice = r1.right
+        let R_rightSlice  = r2.right.slice(offset, r2.right.length)
+
+        let newRight = [].concat(R_leftSlice,R_insertSlice,R_rightSlice)
+
+        var newRule = new Axiom()
+        newRule.left = newLeft
+        newRule.right = newRight
+        this.axiomTable.push(newRule)
+    }
+    
+    Ruletext_equal(rt1, rt2, debug){
         //has to check entired rule text because need to consider naming conflict of entire rule text
         let e1_var_sequence = []
         let e2_var_sequence = []
@@ -91,10 +141,10 @@ export class UL_kernel {
             console.log("begin checking expression")
         }
 
-        for(let i = 0; i < r1.length; i++) {
-            if(r1[i] == undefined || r1[i] === null) continue;
-            else if(r1[i].Op !== r2[i].Op) {
-                console.log(r1[i].Op, " is different from ", r2[i].Op)
+        for(let i = 0; i < rt1.length; i++) {
+            if(rt1[i] == undefined || rt1[i] === null) continue;
+            else if(rt1[i].Op !== rt2[i].Op) {
+                console.log(rt1[i].Op, " is different from ", rt2[i].Op)
                 return false
             }
         }
@@ -103,9 +153,9 @@ export class UL_kernel {
 
         //left expression variables
         let varCount = 0
-        for(let i = 0; i < r1.length; i ++) {
-            if(r1[i].Op === undefined) continue;
-            var exp = r1[i]
+        for(let i = 0; i < rt1.length; i ++) {
+            if(rt1[i].Op === undefined) continue;
+            var exp = rt1[i]
             var left = exp.LeftOperand
             var right = exp.RightOperand
 
@@ -124,9 +174,9 @@ export class UL_kernel {
 
         //right expression variables
         varCount = 0
-        for(let i = 0; i < r2.length; i ++) {
-            if(r2[i].Op === undefined) continue;
-            var exp = r2[i]
+        for(let i = 0; i < rt2.length; i ++) {
+            if(rt2[i].Op === undefined) continue;
+            var exp = rt2[i]
             var left = exp.LeftOperand
             var right = exp.RightOperand
 
@@ -170,10 +220,18 @@ export class UL_kernel {
 
         console.log("Begin parsing axioms from file: ")
         for(let i = 0; i < this.StringTable.length; i++){
-            if(this.StringTable[i] === ''){continue;}
+            var line = this.StringTable[i]
+            if(line === ''){continue}
+            
+            //if line does not have contain \[\] skip it
+            if(!line.includes('\[') && !line.includes('\]')){
+                continue
+            }
+            //ignore \[ \]
+            line = line.replace('\\[','').replace('\\]','')
 
             const newAxiom = new Axiom()
-            const [leftExps, rightExps] = this.StringTable[i].split("\\Rq");
+            const [leftExps, rightExps] = line.split("\\Rq");
             var PleftExps = leftExps.split(',')
             var PrightExps = rightExps.split(',')
 
@@ -203,10 +261,6 @@ export class UL_kernel {
                         add = true;
                     }
                     const expr = ExprString[j];
-                    
-                    // if(debug){
-                    //     console.log(expr)
-                    // }
     
                     var left = true;
                     if(expr === '') {
@@ -216,7 +270,6 @@ export class UL_kernel {
                     if(expr === '}{'){
                         bot = true;
                         continue;
-                        //console.log("skip")
                     }
 
                     if(expr === '}'){
@@ -247,12 +300,10 @@ export class UL_kernel {
                         //detect operator
                         if(c === '\\') {
                             var op = ""
-                            op+=c
-                            c = expr[++n]
-                            op+=c
-                            c = expr[++n]
-                            op+=c
-                            
+                            while(c !== undefined && c !== ' ' && c !== '{'){
+                                op += c
+                                c = expr[++n]
+                            }
                             if(op === "\\eq"){
                                 var left = true;
                                 
@@ -265,11 +316,11 @@ export class UL_kernel {
                                         newExpr.RightOperand = c
                                     }
                                     if(c === "\\"){
-                                        op+=c
-                                        c = expr[++n]
-                                        op+=c
-                                        c = expr[++n]
-                                        op+=c
+                                        while(c !== undefined && c !== ' ' && c !== '}'){
+                                            op += c
+                                            c = expr[++n]
+                                        }
+                                        //console.log(op)
                                         newExpr.Op = op;
                                     }
                                 }
@@ -342,7 +393,7 @@ export class UL_kernel {
         }
     }   
 
-    display(){
+    display_from_table(){
         //console.log(this.axiomTable.length)
         let context = this.context
         let size = String(this.textScale * 30)
@@ -454,14 +505,14 @@ export class UL_kernel {
             this.displayExpression(expression)
             while(expression.next !== undefined){
                 expression = expression.next
-                console.log(expression)
-                console.log(this.height)
+                //console.log(expression)
+                //console.log(this.pos)
                 this.displayExpression(expression)
             }
-            
-            this.pos = this.maxXpos
-            
+                        
         }
+        this.pos = this.maxXpos
+
         this.bracketSize = tempSize 
         this.height =tempY
 
