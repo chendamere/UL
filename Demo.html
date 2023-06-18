@@ -15,8 +15,10 @@
     <script type="module">
 
         import {UL_kernel} from "./UL_kernel.js";
+        import {Display} from "./Display.js"
             
         var UL;
+        var display;
         var temp;
         var symbol_width = 100, symbol_height = 100;
 
@@ -46,7 +48,8 @@
                     ,"\\Tc"
                     ,"\\Tt"
                 ]
-            UL = new UL_kernel(canvas, rule_of_operator, symbols);
+            UL = new UL_kernel(rule_of_operator);
+            display = new Display(UL, canvas, symbols)
             setInterval(update, 0);
             // Do the request
         }
@@ -98,7 +101,7 @@
         
         function update() {
             //const start = performance.now();
-            UL.mainLoop();
+            //UL.mainLoop();
             //const elapsed = performance.now() - start;
             //console.log("Draw() took " + elapsed + "ms");
         }
@@ -157,6 +160,12 @@
                         <img id='UL_Or' alt="UL_Or" hidden="hidden" src="./images/Op_svg/UL_Or.svg" width="100" height="100" />
                         <img id='UL_Os' alt="UL_Os" hidden="hidden" src="./images/Op_svg/UL_Os.svg" width="100" height="100" />
                         <img id='UL_Ot' alt="UL_Ot" hidden="hidden" src="./images/Op_svg/UL_Ot.svg" width="100" height="100" />
+                        <img id='UL_Tt' alt="UL_Tt" hidden="hidden" src="./images/Op_svg/UL_Tt.svg" width="100" height="100" />
+                        <img id='UL_Tc' alt="UL_Tc" hidden="hidden" src="./images/Op_svg/UL_Tc.svg" width="100" height="100" />
+                        <img id='UL_Pne' alt="UL_Pne" hidden="hidden" src="./images/Op_svg/UL_Pne.svg" width="100" height="100" />
+                        <img id='UL_Pnl' alt="UL_Pnl" hidden="hidden" src="./images/Op_svg/UL_Pnl.svg" width="100" height="100" />
+                        <img id='UL_Pu' alt="UL_Pu" hidden="hidden" src="./images/Op_svg/UL_Pu.svg" width="100" height="100" />
+                        <img id='UL_Ps' alt="UL_Ps" hidden="hidden" src="./images/Op_svg/UL_Ps.svg" width="100" height="100" />
                         <img id='UL_Rq' alt="UL_Rq" hidden="hidden" src="./images/Op_svg/UL_Rq.svg" width="100" height="100" />
 
 
@@ -164,16 +173,8 @@
                     
                    
                 </div>
-                <!-- <div class="main__img--container">
-                    <img src="images/pic1.svg" alt="pic" id="main__img">
-                    
-                </div> -->
             </div>
         </div>
-
-        <!-- <img id="grass" src="grass.jpg" hidden/>
-        <img id="white" src="white.png" hidden/> -->
-
     </body>
 </body>
 </html>
