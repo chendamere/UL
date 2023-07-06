@@ -16,24 +16,38 @@ function drawLine(ctx, begin, end, stroke = 'black', width = 1) {
 }
 export class Display {
 
-    constructor(UL_kernel, canvas, symbols){
+    constructor(UL_kernel, canvas){
 
         this.kernel = UL_kernel
         this.canvas = canvas;
-        this.symbols = symbols
+        //this.StringTable = this.kernel.parsedRules;
+        this.axiomTable = this.kernel.axiomTable;
+        this.proof = this.kernel.proofTable
+
+        this.symbols = ["\\Oa"
+            ,"\\Ob"
+            ,"\\Oc"
+            ,"\\Od"
+            ,"\\Oe"
+            ,"\\Og"
+            ,"\\On"
+            ,"\\Op"
+            ,"\\Or"
+            ,"\\Os"
+            ,"\\Ot"
+            ,"\\Pne"
+            ,"\\Pnl"
+            ,"\\Pu"
+            ,"\\Ps"
+            ,"\\Tc"
+            ,"\\Tt"
+        ]
 
         this.canvas.width = 5120;
         this.canvas.height = 5120;
         this.canvas.style.width = "5120px";
         this.canvas.style.height = "5120px";
-
-        this.var_table = this.kernel.var_table;
-        this.name_table = this.kernel.name_table;
-        this.StringTable = this.kernel.parsedRules;
-        this.axiomTable = this.kernel.axiomTable;
         this.images = {}
-
-        //display
         this.beginLine = true;
         this.context = this.canvas.getContext("2d");
         this.height = 0;
@@ -49,7 +63,7 @@ export class Display {
         //handling image src
         for(const symbol of this.symbols){
             const id = "UL_" + String(symbol).slice(-2)
-            console.log(id)
+            //console.log(id)
             var image = document.getElementById(id);
             this.images[symbol] = image
         }
@@ -58,7 +72,14 @@ export class Display {
     }
 
     init() {
-        this.display_from_table();
+        // if(this.axiomTable.length !== 0) {
+        //     this.display_from_table();
+        // }
+
+        if(this.proof.length !== 0) {
+            console.log(this.proof)
+            this.display_from_proof()
+        }
     }
 
     display_from_table(){
@@ -79,7 +100,6 @@ export class Display {
             this.adjust = true;
             var eqSkipLine = true
 
-            
             //resset x pos every line
             this.pos = 20*this.textScale
             
@@ -93,7 +113,7 @@ export class Display {
                     }
                 }
                 if(this.beginLine){
-                    context.fillText(String(i)+": ", this.pos, this.height + 50 * this.textScale);
+                    context.fillText(String(i+1)+": ", this.pos, this.height + 50 * this.textScale);
                     this.pos += 60* this.textScale
                     context.fillText(",", this.pos, this.height + 50 * this.textScale);
                     this.beginLine = false
@@ -103,29 +123,76 @@ export class Display {
                 for(const o of EXPS){
                     
                     //parse line if expression has \eq
-                    //console.log(o,pos,height)
-                    // console.log(this.height, o )
-
                     if(o === undefined) continue;
-                    //console.log(this.height,o)//------------------ 180
                     if(String(o.Op).includes('\\eq')){
-                        //sconsole.log(this.adjust)
                         if(this.adjust) {
                             this.adjust = false
                             this.returnY = this.height;
                             this.numEq += 1;
                         }
                     }
-                    this.displayExpression(o) //--------------- 145
-                    //console.log(this.height,o)
-                    //console.log(this.height)
+                    this.displayExpression(o)
                 }
 
                 if(leftExp){
-                    //display REQ
-                    
+                    //display REQ  
                     this.displayRQ(); 
                     leftExp = false
+                }
+            }
+
+            this.beginLine = true;
+            this.height += 50*this.textScale+this.numEq*30
+        }
+    }
+
+    display_from_proof(){
+        //console.log(this.axiomTable.length)
+        let context = this.context
+        let size = String(this.textScale * 30)
+        context.font = size+ "px Helvetica, sans-serif ";
+        context.textAlign = "start";
+        context.textBaseline = "bottom";
+        context.fillStyle = "#000000"; //color
+        
+        for(let i = 0; i < this.proof.length; i++) {
+
+            this.returnY = undefined
+            this.numEq = 0;
+            this.adjust = true;
+            var eqSkipLine = true
+
+            //resset x pos every line
+            this.pos = 20*this.textScale
+
+            for(const EXPS of [this.proof[i]]){
+                this.bracketSize = 1.0
+                for(const o of EXPS){
+                    if((String(o.Op).includes('\\eq')) || (String(o.Op).includes('\\Brs')) && eqSkipLine){
+                        this.height += 50 * this.textScale
+                        eqSkipLine = false
+                        break
+                    }
+                }
+                if(this.beginLine){
+                    context.fillText(String(i+1)+": ", this.pos, this.height + 50 * this.textScale);
+                    this.pos += 60* this.textScale
+                    context.fillText(",", this.pos, this.height + 50 * this.textScale);
+                    this.beginLine = false
+                    this.pos += 20*this.textScale
+                }    
+                for(const o of EXPS){
+                    //parse line if expression has \eq
+                    if(o === undefined) continue;
+                    if((String(o.Op).includes('\\eq')) || (String(o.Op).includes('\\Brs'))){
+                        if(this.adjust) {
+                            this.adjust = false
+                            this.returnY = this.height;
+                            this.numEq += 1;
+                        }
+                    }
+                    console.log(o)
+                    this.displayExpression(o)
                 }
             }
 
@@ -137,7 +204,6 @@ export class Display {
     displayRQ(){
         const id = "UL_Rq"
         const image = document.getElementById(id);
-        //console.log(image)
         if(this.returnY !== undefined){
             this.height = this.returnY
         }
@@ -145,9 +211,8 @@ export class Display {
         this.pos += 70 * this.textScale
         this.context.fillText(",", this.pos, this.height + 50*this.textScale);
         this.pos += 20 * this.textScale
-
-
     }
+
     displayTB(o) {
         this.pos+=20*this.textScale
         var context = this.canvas.getContext("2d");
@@ -168,6 +233,8 @@ export class Display {
             this.displayExpression(expression)
             while(expression.next !== undefined){
                 expression = expression.next
+                //console.log(expression)
+
                 this.displayExpression(expression)
             }
             if(this.pos > this.maxXpos){
@@ -197,7 +264,6 @@ export class Display {
                         
         }
         this.pos = this.maxXpos
-
         this.bracketSize = tempSize 
         this.height =tempY
 
@@ -213,20 +279,31 @@ export class Display {
         let rightOperand = o.RightOperand
         var message = ""
         var left = true;
-        let bracket = false
-        this.botSplit = true
-        
+        let bracket = false       
+        console.log(o.Op)
+ 
         if(String(o.Op).includes('\\eq')){
-            OP = o.Op.slice(3)
+            if(o.Op.length ===3){
+                //just eq
+                console.log(o.Op)
+            }
+            else{
+                OP = o.Op.slice(3)
+            }
             //sconsole.log(this.adjust)
             bracket = true
         }
-        
-        // if(this.beginLine){
-        //     context.fillText(",", this.pos, this.height + 50 * this.textScale);
-        //     this.beginLine = false
-        //     this.pos += 20*this.textScale
-        // }
+
+        if(String(o.Op).includes('\\Brs')){
+            if(o.Op.length === 4){
+
+            }
+            else{
+                OP = o.Op.slice(4)
+            }
+            //sconsole.log(this.adjust)
+            bracket = true
+        }
 
         //display left operand
         if(leftOperand !== undefined){
@@ -240,6 +317,7 @@ export class Display {
         }
         //display operator
         for(const symbol of this.symbols){
+            if(OP === '\\eq' || OP === '\\Brs') break
             if(OP === symbol){
                 var image = this.images[OP]
                 this.pos += 15*this.textScale
@@ -268,10 +346,8 @@ export class Display {
         if(bracket){
             this.drawBracket(this.pos, this.height + 45*this.textScale, this.bracketSize);
             //console.log(this.pos, this.height)
-
             //display top and bot expression
             this.displayTB(o);
-            // this.botSplit = false;
         }
         else {
             context.fillText(",", this.pos, this.height + 50*this.textScale);

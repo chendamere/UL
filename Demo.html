@@ -7,11 +7,11 @@
     <title>The Way Of Machine Thinking</title>
     <link rel="stylesheet" href="style.css">
     
-    <script src="https://kit.fontawesome.com/ae4c4c26f7.js" crossorigin="anonymous"></script>
+    <!-- <script src="https://kit.fontawesome.com/ae4c4c26f7.js" crossorigin="anonymous"></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;700&display=swap" rel="stylesheet"> -->
     <script type="module">
 
         import {UL_kernel} from "./UL_kernel.js";
@@ -22,36 +22,20 @@
         var temp;
         var symbol_width = 100, symbol_height = 100;
 
-        const parsedRules = await doGET("./database/UL_eq.txt").then(handleFileData);
-        const rule_of_operator = await doGET("./database/rule_of_operator.txt").then(handleFileData);
+        //const parsedRules = await doGET("./database/UL_eq.txt").then(handleFileData)
+        //const rule_of_operator = await doGET("./database/rule_of_operator.txt").then(handleFileData)
+        //const rule_of_operator_proof = await doGET("./database/rule_of_operator_proof.txt").then(handleFileData)
+        const testing = await doGET("./database/UL_eq.txt").then(handleFileData)
 
         function init() {
             const canvas = document.getElementById('UL_kernel');
-            const sym = document.getElementById('UL_oa');
-            console.log(sym)
+            UL = new UL_kernel();
+            //UL.StringTable = rule_of_operator
+            UL.proofString = testing
+            UL.init()
+            display = new Display(UL, canvas)
 
-            var symbols = ["\\Oa"
-                    ,"\\Ob"
-                    ,"\\Oc"
-                    ,"\\Od"
-                    ,"\\Oe"
-                    ,"\\Og"
-                    ,"\\On"
-                    ,"\\Op"
-                    ,"\\Or"
-                    ,"\\Os"
-                    ,"\\Ot"
-                    ,"\\Pne"
-                    ,"\\Pnl"
-                    ,"\\Pu"
-                    ,"\\Ps"
-                    ,"\\Tc"
-                    ,"\\Tt"
-                ]
-            UL = new UL_kernel(rule_of_operator);
-            display = new Display(UL, canvas, symbols)
             setInterval(update, 0);
-            // Do the request
         }
 
         async function doGET(path) {
@@ -95,7 +79,7 @@
                     tempTable.push(line)
                 }
             }
-            
+            console.log("done")
             return tempTable;
         }
         
@@ -167,11 +151,8 @@
                         <img id='UL_Pu' alt="UL_Pu" hidden="hidden" src="./images/Op_svg/UL_Pu.svg" width="100" height="100" />
                         <img id='UL_Ps' alt="UL_Ps" hidden="hidden" src="./images/Op_svg/UL_Ps.svg" width="100" height="100" />
                         <img id='UL_Rq' alt="UL_Rq" hidden="hidden" src="./images/Op_svg/UL_Rq.svg" width="100" height="100" />
-
-
                     </div>
-                    
-                   
+
                 </div>
             </div>
         </div>

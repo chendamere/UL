@@ -7,21 +7,96 @@ function isChar(str) {
 
 export class UL_kernel {
 
-    constructor(parsedRules){
-        this.var_table;
-        this.name_table;
-        this.StringTable = parsedRules;
+    constructor(){
+        this.StringTable=[];
+        this.proofString = [];
+        this.proofTable;
         this.axiomTable;
-        
-        this.init();
+        this.functionTable;
+        this.intermediate_theorems=[]
+        //this.init() 
     }
     init() {
         console.log("Universal Language ")
-        this.parse_all_axiom_from_table(false)
-        this.communtative_induction(this.axiomTable[this.axiomTable.length-1])
-        this.transitive_induction(this.axiomTable[this.axiomTable.length-1], this.axiomTable[this.axiomTable.length-2])
-        this.substitution_induction(this.axiomTable[this.axiomTable.length-2],this.axiomTable[this.axiomTable.length-1], 1)
+        //this.parse_all_axiom_from_table(false)
+        //console.log(this.proof)
+        //console.log(this.proofString)
+        this.parse_all_proof_from_table(false)
+        // this.communtative_induction(this.axiomTable[this.axiomTable.length-1], false)
+        // this.transitive_induction(this.axiomTable[this.axiomTable.length-1], this.axiomTable[this.axiomTable.length-2], false)
+        // this.substitution_induction(this.axiomTable[this.axiomTable.length-2],this.axiomTable[this.axiomTable.length-1], 1, false)
     } 
+
+    generate_intermediate_rules(RuleTexts){
+
+        //require database to have all necessary axioms
+        // format: from premises ==> conclusion: output all intermediate rules
+
+        console.log("generating intermediate rules")
+        let allNewRules = []
+
+        let i = 0
+        var done = false
+        while(i < RuleTexts.length) {
+            var newRule = new Axiom();
+            
+            const curRuletext = RuleTexts[i]
+            var targetRuleText = RuleTexts[i+1]
+            // try all strategies to see if if same_expression return true
+
+            for(const rule of this.axiomTable) {
+
+                if(this.Ruletext_equal(rule.left, curRuletext, false)) {
+                    if(this.Ruletext_equal(rule.right, targetRuleText, false)){
+                        allNewRules.push(rule.right)
+                        break;
+                    }
+                    for(const rule2 of this.axiomTable) {
+                        if(this.Ruletext_equal(rule.left , rule2.right, false)){
+                            newRule = this.transitive_induction(rule, rule2)
+                            if(this.Ruletext_equal(newRule.right, targetRuleText)){
+                                allNewRules.push(rule.right)
+                                break; 
+                            }
+                        }
+                        let maxOffsetLeft = rule2.left.length - 1
+                        let left = rule2.left
+                        let selfRule1 = new Axiom()
+                        selfRule1.left = left
+                        selfRule1.right = left
+
+                        let maxOffsetRight = rule2.right.length - 1
+                        let right = rule2.right
+                        let selfRule2 = new Axiom()
+                        selfRule2.left = right
+                        selfRule2.right = right
+
+                        for(let i = 0; i < maxOffsetLeft; i++) {
+                            newRule = this.substitution_induction(rule, selfRule1, false)
+                            if(this.Ruletext_equal(newRule.right, targetRuleText)){
+                                allNewRules.push(rule.right)
+                                done = true;
+                                break; 
+                            }
+                        }
+                        if(done){
+                            done = false 
+                            break;
+                        }
+                        for(let i = 0; i < maxOffsetRight; i++) {
+                            newRule = this.substitution_induction(rule, selfRule2, false)
+                            if(this.Ruletext_equal(newRule.right, targetRuleText)){
+                                allNewRules.push(rule.right)
+                                break; 
+                            }
+                        }
+                    }
+                }
+            }
+            i++
+        }
+        console.log(allNewRules)
+    }  
     
     print_all_axiom() {
         let i = 0;
@@ -34,15 +109,15 @@ export class UL_kernel {
         const newRule = new Axiom()
         newRule.left = r.right
         newRule.right = r.left
-    
         this.axiomTable.push(newRule)
         if(debug){
             console.log(newRule, r)
         }
+        return newRule
     }
 
     transitive_induction(r1, r2, debug){
-        if(!this.Ruletext_equal(r1.right, r2.left, true)) {
+        if(!this.Ruletext_equal(r1.right, r2.left, false)) {
             if(debug) {
                 cout << "Tran_induction: r1.right and r2.left does not match" << endl;
             }
@@ -56,13 +131,18 @@ export class UL_kernel {
         if(debug){
             console.log(newRule, r1,r2)
         }
+        return newRule
+
     }
 
     substitution_induction(r1, r2, offset, debug){
         //r2 must be generated through reflexivity 
         //which can be done with commutative induction follow by transitive induction to generate left right equivalent rule
 
-        console.log(r2.right, r2.left)
+        if(debug){
+            console.log(r2.right, r2.left)
+        }
+
         if(!this.Ruletext_equal(r2.right, r2.left)){
             console.log("r2 is not left-right equivalent")
             return
@@ -82,6 +162,8 @@ export class UL_kernel {
         newRule.left = newLeft
         newRule.right = newRight
         this.axiomTable.push(newRule)
+        return newRule
+
     }
     
     Ruletext_equal(rt1, rt2, debug){
@@ -97,7 +179,7 @@ export class UL_kernel {
         }
 
         for(let i = 0; i < rt1.length; i++) {
-            if(rt1[i] == undefined || rt1[i] === null) continue;
+            if(rt1[i] === undefined || rt1[i] === null) continue;
             else if(rt1[i].Op !== rt2[i].Op) {
                 console.log(rt1[i].Op, " is different from ", rt2[i].Op)
                 return false
@@ -169,11 +251,58 @@ export class UL_kernel {
         return true;
     }
 
+    parse_all_proof_from_table(debug) {
+        const exprTable = [];
+
+        console.log("Begin parsing axioms from file ")
+        for(let i = 0; i < this.proofString.length; i++){
+            
+            var line = this.proofString[i]
+            if(line === ''){continue}
+            
+            //ignore \[ \]
+
+            line = line.replace('\\Rq','').replace('proof:','')
+            var PExps = line.split(',')
+            PExps[PExps.length - 1] = PExps[PExps.length - 1].replace('\r','')
+            //console.log(PExps)
+            for(let i = 0; i < PExps.length-1;i++) {
+                let expression = PExps[i]
+                
+                if(expression === '') continue
+
+                if(expression[0] === ' '){
+                    expression = expression.slice(1,expression.length)
+                }
+                if(expression[expression.length-1] === ' '){
+                    expression = expression.slice(0,expression.length-1)
+                }
+
+                if(expression.includes('\\eq') || expression.includes('\\Brs')){
+                    //remove } at the end
+                    expression = expression.slice(0,expression.length-1)
+                }
+
+                PExps[i] = expression
+            }
+            // console.log(PExps)
+            var exprs = this.parse_expressions(PExps, false)
+            //console.log(exprs)
+            exprTable.push(exprs)
+
+        }
+        // finished parsing
+        this.proofTable = exprTable;
+
+        if(debug) {
+            console.log(this.proofTable)
+        }
+    }   
+    
     parse_all_axiom_from_table(debug) {
 
         const axiomTable = [];
-
-        console.log("Begin parsing axioms from file: ")
+        console.log("Begin parsing axioms from file ")
         for(let i = 0; i < this.StringTable.length; i++){
             
             var line = this.StringTable[i]
@@ -198,162 +327,16 @@ export class UL_kernel {
             //remove meta character '\r'
             PrightExps[RightLast] = PrightExps[RightLast].replace('\r','')
             //remove whie space at ends and beginning
-            PleftExps[0] = PleftExps[Leftlast].replace(' ','')
+            PleftExps[0] = PleftExps[0].replace(' ','')
             PleftExps[Leftlast] = PleftExps[Leftlast].replace(' ','')
             PrightExps[0] = PrightExps[0].replace(' ','')
             PrightExps[RightLast] = PrightExps[RightLast].replace(' ','')
 
-            var leftExprs = true;
-
-            for(const ExprString of [PleftExps,PrightExps]){
-
-                var curExpr = new Expression();
-                var top = false
-                var bot = false
-                var mid = false
-                var add = true
-                var eqTable = [] // store all eq as return expression
-                for(let j = 0; j < ExprString.length; j ++) {
-                    if(eqTable.length === 0) {
-                        add = true;
-                    }
-                    const expr = ExprString[j];
-    
-                    var left = true;
-                    if(expr === '') {
-                        continue;
-                    }
-                    
-                    if(expr === '}{'){
-                        bot = true;
-                        continue;
-                    }
-
-                    if(expr === '}'){
-                        bot = false;
-                        curExpr = eqTable.pop();
-                        continue;
-                    }
-                    const newExpr = new Expression();
-                    
-                    let n = 0
-                    console.log(expr)
-                    while(n < expr.length) {
-                        var c = expr[n];
-
-                        if(c === ' '){
-                            n++
-                            continue;
-                        }
-
-                        //need to be able to prse variables with subscripts 
-                        //detect underscore ex : i_{20}
-                        if(isChar(c)) {
-                            var operand = "";
-                            while(c !== ' ' && c !== '}'  && c !== '{' && c !== '\\' && c !== undefined){
-                                console.log(c)
-                                operand += c
-                                c = expr[++n]
-                            }
-    
-                            if(left){
-                                newExpr.LeftOperand = operand;
-                                left = false;
-                            }
-                            else{
-                                newExpr.RightOperand = operand;
-                                left = true;
-                            }
-                            console.log(operand)
-                        }
-                        
-                        //detect operator
-                        if(c === '\\') {
-                            var op = ""
-                            while(c !== undefined && c !== ' ' && c !== '{'){
-                                op += c
-                                c = expr[++n]
-                            }
-                            if(op === "\\eq"){
-                                var left = true;
-                                
-                                while(c != '}'){
-                                    c = expr[++n]
-                                    if(isChar(c) && left){
-                                        newExpr.LeftOperand = c
-                                        left = false
-                                    }else if(isChar(c) && !left) {
-                                        newExpr.RightOperand = c
-                                    }
-                                    if(c === "\\"){
-                                        while(c !== undefined && c !== ' ' && c !== '}'){
-                                            op += c
-                                            c = expr[++n]
-                                        }
-                                        //console.log(op)
-                                        newExpr.Op = op;
-                                    }
-                                }
-
-                                //signal for next expression to be top
-                                eqTable.push(newExpr)
-                                mid = true;
-                                break;
-                            }
-                            newExpr.Op = op;
-                            left = false;
-                            
-                        }
-                        n++;
-                    }
-                    if(debug){
-                        console.log(newExpr)
-                    }
-                    
-                    if(leftExprs && !bot && !top && add ) {
-                        newAxiom.left.push(newExpr)
-                    }
-                    else if(!bot && !top && add){
-                        newAxiom.right.push(newExpr)
-                    }
-
-                    //head expression will point to first expression, head does not have prev, head.prev ===undefined
-                    //last expression.next === undefined
-                    
-                    newExpr.prev = curExpr
-                    if(!bot && !top){
-                        curExpr.next = newExpr
-                    }
-                    else if(top) {
-                        if(mid){
-                            eqTable[eqTable.length-2].top = newExpr
-
-                        }else {
-                            eqTable[eqTable.length-1].top = newExpr
-                        }
-                        top = false
-                    }
-                    else if(bot) {
-                        newExpr.prev = eqTable[eqTable.length-1]
-                        eqTable[eqTable.length-1].bot = newExpr
-                        bot = false
-                    }
-                    curExpr = newExpr;
-                    //console.log(eqTable);
-
-                    if(mid){
-                        add = false;
-                        top = true;
-                        mid = false;
-                    }
-                }
-                leftExprs = false;
-
-            }
+            newAxiom.right = this.parse_expressions(PrightExps, false)
+            newAxiom.left = this.parse_expressions(PleftExps, false)
             if(debug) {
                 console.log(newAxiom)
             }
-
             axiomTable.push(newAxiom)
         }
         //finished parsing
@@ -362,4 +345,254 @@ export class UL_kernel {
             console.log(this.axiomTable)
         }
     }   
+
+    parse_expressions(ExprString, debug) {
+
+        //make sure to include comma at beginning and end of expression !!!
+
+        //console.log(ExprString)
+        var exprs = []
+        var curExpr = new Expression();
+        var top = false
+        var bot = false
+        var mid = false
+        var add = true
+        var eqTable = [] // store all eq as return expression
+        console.log(ExprString)
+        for(let j = 0; j < ExprString.length; j ++) {
+            if(eqTable.length === 0) {
+                add = true;
+            }
+            const expr = ExprString[j];
+
+            var left = true;
+            if(expr === '') {
+                continue;
+            }
+            
+            if(expr === '}{'){
+                bot = true;
+                continue;
+            }
+
+            if(expr === '}'){
+                bot = false;
+                //console.log("reset")
+                curExpr = eqTable.pop();
+                continue;
+            }
+            const newExpr = new Expression();
+            
+            let n = 0
+            while(n < expr.length) {
+                var c = expr[n];
+                if(c === ' '){
+                    n++
+                    continue;
+                }
+                if(isChar(c)) {
+                    var operand = "";
+                    while(c !== ' ' && c !== '}'  && c !== '{' && c !== '\\' && c !== undefined){
+                        //console.log(c)
+                        operand += c
+                        c = expr[++n]
+                    }
+
+                    if(left){
+                        newExpr.LeftOperand = operand;
+                        left = false;
+                    }
+                    else{
+                        newExpr.RightOperand = operand;
+                        left = true;
+                    }
+                    //console.log(operand)
+                }
+                
+                //detect operator
+                if(c === '\\') {
+                    var op = ""
+                    while(c !== undefined && c !== ' ' && c !== '{'){
+                        op += c
+                        c = expr[++n]
+                    }
+
+                    //need to detect variations of \eq || op === "\\Blb" || op === "\\Bb" || op === "\\Bls"
+                    // \\Brs{}{}
+                    if(op === "\\eq" ){
+                        left = true;
+                        
+                        while(c != '}'){
+                            c = expr[n++]
+                            if(isChar(c) && left){
+                                newExpr.LeftOperand = c
+                                left = false
+                            }else if(isChar(c) && !left) {
+                                newExpr.RightOperand = c
+                            }
+                            if(c === "\\" || c === '}'){
+                                while(c !== undefined && c !== ' ' && c !== '}'){
+                                    op += c
+                                    c = expr[n++]
+                                }
+                                //console.log(op)
+                                newExpr.Op = op;
+                            }
+                        }
+                        //signal for next expression to be top
+                        eqTable.push(newExpr)
+                        mid = true;
+                        break;
+                    }else if(op === '\\Brs'){
+                        newExpr.Op = op;
+                        eqTable.push(newExpr)
+                        mid = true;
+                        break;
+                    }
+                    newExpr.Op = op;
+                    left = false;
+                    
+                }
+                n++;
+            }
+            
+            if(!bot && !top && add ) {
+                console.log("added")
+                exprs.push(newExpr)
+            }
+
+            //head expression will point to first expression, head does not have prev, head.prev ===undefined
+            //last expression.next === undefined
+            
+            newExpr.prev = curExpr
+            if(!bot && !top){
+                curExpr.next = newExpr
+            }
+            else if(top) {
+                if(mid){
+                    eqTable[eqTable.length-2].top = newExpr
+
+                }else {
+                    eqTable[eqTable.length-1].top = newExpr
+                }
+                top = false
+            }
+            else if(bot) {
+                newExpr.prev = eqTable[eqTable.length-1]
+                eqTable[eqTable.length-1].bot = newExpr
+                bot = false
+            }
+            curExpr = newExpr;
+
+            if(mid){
+                add = false;
+                top = true;
+                mid = false;
+            }
+        }
+        return exprs;
+    } 
+
+    Check_Brs(r1,r2){
+        for(let i = 0; i < r1.length - 1; i ++) {
+            //if Brs then find last eq and check prev from the last top and bot expression
+            let expr1 = r1[i]
+            if(expr1.Op === '\\Brs'){
+                for(let j = r2.length -1; j > 0; j--){
+                    let expr2 = r2[j]
+                    if(expr2.Op.includes('\\eq')){
+                        
+                        let BrTop = expr1.top
+                        while(BrTop.next !== undefined) BrTop = BrTop.next
+                        let BrBot = expr1.bot
+                        while(BrBot.next !== undefined) BrBot = BrBot.next
+
+                        let eqTop = expr2.top
+                        while(eqTop.next !== undefined) eqTop = eqTop.next
+                        let eqBot = expr2.bot
+                        while(eqBot.next !== undefined) eqBot = eqBot.next
+                        
+                        let BrExprsTop = []
+                        let eqExprsTop = []
+                        while(BrTop !== undefined && eqTop !== undefined){
+                            BrExprsTop.push(BrTop)
+                            eqExprsTop.push(eqTop)
+                            BrTop = BrTop.prev
+                            eqTop = eqTop.prev
+                            if(!this.Ruletext_equal(BrExprsTop,eqExprsTop)) {
+                                return false
+                            }
+                        }
+
+                        let BrExprsBot = []
+                        let eqExprsBot = []
+                        while(BrBot !== undefined && eqBot !== undefined){
+                            BrExprsBot.push(BrBot)
+                            eqExprsBot.push(eqBot)
+                            BrBot = BrBot.prev
+                            eqBot = eqBot.prev
+                            if(!this.Ruletext_equal(BrExprsBot,eqExprsBot)) {
+                                return false
+                            }
+                        }
+                        
+                    }
+
+                
+                }
+                //no eq
+                return false;
+            }
+
+        }
+        //finished checking all expr in r1
+        return true
+    }
+
+    rule_applicable(r1, r2){
+        //split between Brs and eq
+        if(!this.Check_Brs(r1,r2)) return false
+        else if(!this.Check_Brs(r2.r1)) return false
+        return true
+    }
+
+    add_check_code_var(table, c, exprs){
+        //exprs is array of array
+        //if code var not assigned, then true
+        if(table[c] === undefined){
+            table[c] = exprs
+            return table
+        }
+    }
+
+    check_code_vars(table, c, exprs){
+        //if c is not a code var, then false
+        if(c.Op !== '\\Tc') return false
+
+        //if exprs does not contain code variable and is expression
+        if(exprs.length > 1){
+            if(!this.Ruletext_equals(table[c], exprs) ){
+                return false
+            }else{
+                return true
+            }
+        }
+        else{
+            //if exprs is also code variable, make sure it can eventually return to c or undeined
+            let tempTable = {}
+            let temp = c
+            while(temp.Op === '\\Tc'){
+                if(tempTable[temp.right] || table[temp.right] === undefined){
+                    return true
+                }
+                tempTable[temp.right] = true
+                temp = table[temp.right]
+            }
+
+            if(temp !== c) { 
+                console.log("something weird happend")
+                return false
+            }
+        }
+    }
 }

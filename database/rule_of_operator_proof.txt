@@ -1,136 +1,67 @@
 
-proof:\\
-,i \Od m, j \Op, \\\\
-\Rq, j \On, j \Op,i \Od m, j \Op, \\\\
-\Rq, j \Op, j \On,i \Od m, j \Op, \\\\
-\Rq, j \Op,i \Od m, j \On, j \Op, \\\\
+proof:
+,i \Od m, j \Op, 
+\Rq, j \On, j \Op,i \Od m, j \Op, 
+\Rq, j \Op, j \On,i \Od m, j \Op, 
+\Rq, j \Op,i \Od m, j \On, j \Op, 
 \Rq, j \Op,i \Od m,
-\end{math}
 
-
-\[,i \Oc m, j \Op, \Rq , j \Op, i \Oc m,\]
-\[,i \Ob m, j \Op, \Rq , j \Op, i \Ob m,\]
-
-\[, \Og m, j \Op, \Rq , j \Op,  \Og m,\]
-\[, \Ot m, j \Op, \Rq , j \Op,  \Ot m,\]
-
-\[,i \On, j \Op, \Rq , j \Op, i \On,\]
-
-proof:\\
-\begin{math} 
-,i \On, j \Op, \\\\
-\Rq, j \On, j \Op, i \On, j \Op, \\\\
-\Rq, j \Op, j \On, i \On, j \Op, \\\\
-\Rq, j \Op, i \On, j \On, j \Op, \\\\
+proof:
+ 
+,i \On, j \Op, 
+\Rq, j \On, j \Op, i \On, j \Op, 
+\Rq, j \Op, j \On, i \On, j \Op, 
+\Rq, j \Op, i \On, j \On, j \Op, 
 \Rq, j \Op, i \On,
-\end{math}
 
-
-\[,i \Op, j \Op, \Rq , j \Op, i \Op,\]
-
-proof:\\
-\begin{math} 
-,i \Op, j \Op, \\\\
-\Rq, j \On, j \Op, i \Op, j \Op, \\\\
-\Rq, j \Op, j \On, i \Op, j \Op, \\\\
-\Rq, j \Op, i \Op, j \On, j \Op, \\\\
+proof:
+ 
+,i \Op, j \Op, 
+\Rq, j \On, j \Op, i \Op, j \Op, 
+\Rq, j \Op, j \On, i \Op, j \Op, 
+\Rq, j \Op, i \Op, j \On, j \Op, 
 \Rq, j \Op, i \Op,
-\end{math}
 
-
-
-
-
-\[,i \Op, j \Os, \Rq , j \Os,i \Op,\]
-
-proof:\\
-\begin{math} 
-,i \Op, j \Os, \\\\
-\Rq, i \Op, j \Os, i \On, i \Op, \\\\
-\Rq, i \Op, i \On, j \Os,   i \Op, \\\\
-\Rq, i \On, i \Op, j \Os,  i \Op, \\\\
+proof:
+ 
+,i \Op, j \Os, 
+\Rq, i \Op, j \Os, i \On, i \Op, 
+\Rq, i \Op, i \On, j \Os,   i \Op, 
+\Rq, i \On, i \Op, j \Os,  i \Op, 
 \Rq, j \Os, i \Op,
-\end{math}
 
+proof:
+ 
+,i \Op, \eq{j \Oe t}{,}{,} 
+\Rq,i \Op, \eq{j \Oe t}{,i \On, i \Op,}{,i \On, i \Op} 
+\Rq,i \Op,i \On, \eq{j \Oe t}{,i \Op,}{,i \Op,} 
+\Rq,i \On,i \Op, \eq{j \Oe t}{,i \Op,}{,i \Op,} 
+\Rq,  \eq{j \Oe t}{,i \Op,}{,i \Op,}
 
-
-\[,i \Op, \Blb{j \Oe t}{,}{,} \Rq , \Blb{j \Oe t}{,i \Op,}{,i \Op,}\]
-
-proof:\\
-\begin{math} 
-,i \Op, \Blb{j \Oe t}{,}{,} \\\\\\
-\Rq,i \Op, \Blb{j \Oe t}{,i \On, i \Op,}{,i \On, i \Op} \\\\\\
-\Rq,i \Op,i \On, \Blb{j \Oe t}{,i \Op,}{,i \Op,} \\\\\\
-\Rq,i \On,i \Op, \Blb{j \Oe t}{,i \Op,}{,i \Op,} \\\\\\
-\Rq,  \Blb{j \Oe t}{,i \Op,}{,i \Op,}
-\end{math}
-
-
-
-\[,i \Op, i \Os, \Rq , i \Os,\]
-
-proof:\\
-\begin{math} 
-,i \Op, i \Os, \\\\
-\Rq,i \Op, i \On,i \Os, \\\\
-\Rq,i \On, i \Op,i \Os, \\\\
+proof:
+ 
+,i \Op, i \Os, 
+\Rq,i \Op, i \On,i \Os, 
+\Rq,i \On, i \Op,i \Os, 
 \Rq, i \Os,
-\end{math}
 
-
-
-
-
-\[,i \Op, \Or, \Rq ,\Or,\]
-
-
-proof:\\
-\begin{math} 
-,i \Op, \Or, \\\\
-\Rq,i \Op, i \On, \Or, \\\\
-\Rq,i \On, i \Op, \Or, \\\\
+proof:
+ 
+,i \Op, \Or, 
+\Rq,i \Op, i \On, \Or, 
+\Rq,i \On, i \Op, \Or, 
 \Rq, \Or,
-\end{math}
 
 
-
-\subsection{theorems of logic error operator}
-
-\[, \Or, \Rq , \Or, \Or,\]
-
-
-\[\Brs{,\Tc c,}{,\Or,} , \Rq \Brs{,}{,\Or,},\Tc c,\]
-
-proof:\\
-\begin{math} 
- \Brs{,\Tc c,}{,\Or,} ,\\\\
-\Rq \Brs{,\Tc c,}{,\Or,\Tc c,} , \\\\
+proof:
+ 
+\Brs{,\Tc c,}{,\Or,} ,
+\Rq \Brs{,\Tc c,}{,\Or,\Tc c,} , 
 \Rq \Brs{,}{,\Or,} ,\Tc c,
-\end{math}
 
-
-
-
-\[\Brs{,\Or,} {,\Tc c,}, \Rq \Brs{,\Or,}{,},\Tc c,\]
-
-
-\[,i \Oc t, \Or, \Rq ,\Or,\]
-
-proof:\\
-\begin{math} 
-,i \Oc t, \Or,\\\\
-\Rq ,i \Oc t,  t \Os, \Or, \\\\
+proof:
+ 
+,i \Oc t, \Or,
+\Rq ,i \Oc t,  t \Os, \Or, 
 \Rq ,\Or,
-\end{math}
 
-
-
-\[,i \Od t, \Or, \Rq ,\Or,\]
-\[,i \Ob t, \Or, \Rq ,\Or,\]
-
-\[, \Og i, \Or, \Rq ,\Or,\]
-\[, \Ot i, \Or, \Rq ,\Or,\]
-
-
-
-\newpage

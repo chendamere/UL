@@ -1,1 +1,2 @@
-,i \Od m, i \Od n, \Rq ,i \Od n, i \Od m,
+proof:
+,i \Op, \eq{}{,i \On, i \Op,}{,i \On, i \Op,}, i \Op,
