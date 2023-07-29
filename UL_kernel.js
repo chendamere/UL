@@ -8,22 +8,27 @@ function isChar(str) {
 export class UL_kernel {
 
     constructor(){
-        this.StringTable=[];
+        this.title = ""
+        this.StringTable = [];
         this.proofString = [];
-        this.proofTable;
-        this.axiomTable;
+        this.proofTable = [];
+        this.axiomTable = [];
         this.functionTable;
         this.intermediate_theorems=[]
-        //this.init() 
+
     }
     init() {
         console.log("Universal Language ")
         //this.parse_all_axiom_from_table(false)
-        //console.log(this.proof)
-        //console.log(this.proofString)
-        this.parse_all_proof_from_table(false)
+
+        this.parse_all_axiom_from_table(false)
+        //console.log(this.axiomTable)
         // this.communtative_induction(this.axiomTable[this.axiomTable.length-1], false)
         // this.transitive_induction(this.axiomTable[this.axiomTable.length-1], this.axiomTable[this.axiomTable.length-2], false)
+        // console.log(this.Ruletext_equal(this.axiomTable[this.axiomTable.length-1], this.axiomTable[this.axiomTable.length-2]))
+        // console.log(this.axiomTable[0].left, this.axiomTable[0].right)
+        // console.log(this.rule_applicable(this.axiomTable[0].left, this.axiomTable[0].right))            
+
         // this.substitution_induction(this.axiomTable[this.axiomTable.length-2],this.axiomTable[this.axiomTable.length-1], 1, false)
     } 
 
@@ -251,6 +256,20 @@ export class UL_kernel {
         return true;
     }
 
+    include_left_split(expression){
+        if(expression.includes('\\eq') || expression.includes('\\Bls') || expression.includes('\\Blb') || expression.includes('\\Bb') || expression.includes('\\Bs')){
+            return true
+        }
+        else return false
+    }
+
+    include_right_split(expression){
+        if(expression.includes('\\Brs')){
+            return true
+        }
+        else return false
+    }
+
     parse_all_proof_from_table(debug) {
         const exprTable = [];
 
@@ -267,18 +286,17 @@ export class UL_kernel {
             PExps[PExps.length - 1] = PExps[PExps.length - 1].replace('\r','')
             //console.log(PExps)
             for(let i = 0; i < PExps.length-1;i++) {
-                let expression = PExps[i]
-                
+                let expression = PExps[i]                
                 if(expression === '') continue
 
                 if(expression[0] === ' '){
                     expression = expression.slice(1,expression.length)
                 }
-                if(expression[expression.length-1] === ' '){
-                    expression = expression.slice(0,expression.length-1)
+                if(expression[expression.length] === ' '){
+                    console.log(expression)
+                    expression = expression.slice(0,expression.length)
                 }
-
-                if(expression.includes('\\eq') || expression.includes('\\Brs')){
+                if(this.include_left_split(expression)|| this.include_right_split(expression)){
                     //remove } at the end
                     expression = expression.slice(0,expression.length-1)
                 }
@@ -304,8 +322,8 @@ export class UL_kernel {
         const axiomTable = [];
         console.log("Begin parsing axioms from file ")
         for(let i = 0; i < this.StringTable.length; i++){
-            
             var line = this.StringTable[i]
+            //console.log(line)
             if(line === ''){continue}
             
             //if line does not have contain \[\] skip it
@@ -313,6 +331,14 @@ export class UL_kernel {
                 continue
             }
             
+            //remove trailing white space
+            for(let i = 0; i < line.length -1; i ++) {
+                if( line[i] === ']') {
+                    line = line.slice(0, i+1)
+                    break
+                }
+            }
+
             //ignore \[ \]
             line = line.replace('\\[','').replace('\\]','')
 
@@ -321,19 +347,52 @@ export class UL_kernel {
             var PleftExps = leftExps.split(',')
             var PrightExps = rightExps.split(',')
 
-            let RightLast = PrightExps.length - 1
-            let Leftlast = PleftExps.length - 1
-
             //remove meta character '\r'
-            PrightExps[RightLast] = PrightExps[RightLast].replace('\r','')
+            PrightExps[PrightExps.length-1] = PrightExps[PrightExps.length-1].replace('\r','')
             //remove whie space at ends and beginning
-            PleftExps[0] = PleftExps[0].replace(' ','')
-            PleftExps[Leftlast] = PleftExps[Leftlast].replace(' ','')
-            PrightExps[0] = PrightExps[0].replace(' ','')
-            PrightExps[RightLast] = PrightExps[RightLast].replace(' ','')
+            // console.log(PleftExps,PrightExps)
+            for(let i = 0; i < PleftExps.length;i++) {
+                let expression = PleftExps[i]       
+                       
+                if(expression === '') continue
 
+                // console.log(expression,expression[expression.length-1])
+
+                if(expression[0] === ' '){
+                    expression = expression.slice(1,expression.length)
+                }
+                if(expression[expression.length-1] === ' '){
+                    // console.log("here")
+                    expression = expression.slice(0,expression.length-1)
+                }
+                if(this.include_left_split(expression)|| this.include_right_split(expression)){
+                    //remove } at the end
+                    expression = expression.slice(0,expression.length-1)
+                }
+
+                PleftExps[i] = expression
+            }
+            for(let i = 0; i < PrightExps.length;i++) {
+                let expression = PrightExps[i]                
+                if(expression === '') continue
+
+                if(expression[0] === ' '){
+                    expression = expression.slice(1,expression.length)
+                }
+                if(expression[expression.length] === ' '){
+                    //console.log(expression)
+                    expression = expression.slice(0,expression.length-1)
+                }
+                if(this.include_left_split(expression)|| this.include_right_split(expression)){
+                    //remove } at the end
+                    expression = expression.slice(0,expression.length-1)
+                }
+
+                PrightExps[i] = expression
+            }
+            // console.log(PrightExps)
+            newAxiom.left = this.parse_expressions(PleftExps, true)
             newAxiom.right = this.parse_expressions(PrightExps, false)
-            newAxiom.left = this.parse_expressions(PleftExps, false)
             if(debug) {
                 console.log(newAxiom)
             }
@@ -347,7 +406,7 @@ export class UL_kernel {
     }   
 
     parse_expressions(ExprString, debug) {
-
+        //console.log(ExprString)
         //make sure to include comma at beginning and end of expression !!!
 
         //console.log(ExprString)
@@ -358,12 +417,13 @@ export class UL_kernel {
         var mid = false
         var add = true
         var eqTable = [] // store all eq as return expression
-        console.log(ExprString)
+        //console.log(ExprString)
         for(let j = 0; j < ExprString.length; j ++) {
             if(eqTable.length === 0) {
                 add = true;
             }
             const expr = ExprString[j];
+            //console.log(expr,mid,top,bot,curExpr)
 
             var left = true;
             if(expr === '') {
@@ -371,11 +431,14 @@ export class UL_kernel {
             }
             
             if(expr === '}{'){
+                //console.log("top")
+                top = false;
                 bot = true;
                 continue;
             }
 
             if(expr === '}'){
+                top = false
                 bot = false;
                 //console.log("reset")
                 curExpr = eqTable.pop();
@@ -390,13 +453,17 @@ export class UL_kernel {
                     n++
                     continue;
                 }
+
+                //if first detected character is alphabet, then its operand
                 if(isChar(c)) {
                     var operand = "";
                     while(c !== ' ' && c !== '}'  && c !== '{' && c !== '\\' && c !== undefined){
                         //console.log(c)
                         operand += c
                         c = expr[++n]
+                        
                     }
+                    //console.log(operand)
 
                     if(left){
                         newExpr.LeftOperand = operand;
@@ -409,20 +476,25 @@ export class UL_kernel {
                     //console.log(operand)
                 }
                 
-                //detect operator
+                //if first detected character is \\ , then its operator
                 if(c === '\\') {
                     var op = ""
                     while(c !== undefined && c !== ' ' && c !== '{'){
                         op += c
                         c = expr[++n]
                     }
+                    //console.log(op)
+                    //console.log(op, this.include_left_split(op))
 
                     //need to detect variations of \eq || op === "\\Blb" || op === "\\Bb" || op === "\\Bls"
                     // \\Brs{}{}
-                    if(op === "\\eq" ){
+                    
+                    if(this.include_left_split(op)){
+                        //console.log(op)
                         left = true;
                         
-                        while(c != '}'){
+                        while(c !== '}'){
+                            //console.log(c, expr)
                             c = expr[n++]
                             if(isChar(c) && left){
                                 newExpr.LeftOperand = c
@@ -431,22 +503,27 @@ export class UL_kernel {
                                 newExpr.RightOperand = c
                             }
                             if(c === "\\" || c === '}'){
+                                //console.log(c, expr)
                                 while(c !== undefined && c !== ' ' && c !== '}'){
                                     op += c
                                     c = expr[n++]
                                 }
+                                
                                 //console.log(op)
                                 newExpr.Op = op;
                             }
                         }
                         //signal for next expression to be top
+                        //console.log(newExpr)
+
                         eqTable.push(newExpr)
                         mid = true;
                         break;
-                    }else if(op === '\\Brs'){
+                    }else if(this.include_right_split(op)){
                         newExpr.Op = op;
                         eqTable.push(newExpr)
                         mid = true;
+                        //console.log("break")
                         break;
                     }
                     newExpr.Op = op;
@@ -455,21 +532,24 @@ export class UL_kernel {
                 }
                 n++;
             }
+
+            //console.log(newExpr)
             
             if(!bot && !top && add ) {
-                console.log("added")
+                //console.log(newExpr)
                 exprs.push(newExpr)
             }
 
             //head expression will point to first expression, head does not have prev, head.prev ===undefined
             //last expression.next === undefined
-            
+            //console.log(newExpr)
             newExpr.prev = curExpr
             if(!bot && !top){
                 curExpr.next = newExpr
             }
             else if(top) {
                 if(mid){
+                    //console.log("here")
                     eqTable[eqTable.length-2].top = newExpr
 
                 }else {
@@ -483,24 +563,29 @@ export class UL_kernel {
                 bot = false
             }
             curExpr = newExpr;
+            //console.log(curExpr)
 
             if(mid){
+                //console.log("mid")
                 add = false;
                 top = true;
                 mid = false;
             }
         }
+        // console.log(exprs)
         return exprs;
     } 
 
     Check_Brs(r1,r2){
+        //console.log(r1, r2)
         for(let i = 0; i < r1.length - 1; i ++) {
             //if Brs then find last eq and check prev from the last top and bot expression
             let expr1 = r1[i]
-            if(expr1.Op === '\\Brs'){
+            if(this.include_right_split(expr1.Op)){
+                //find last eq or brs in r2
                 for(let j = r2.length -1; j > 0; j--){
                     let expr2 = r2[j]
-                    if(expr2.Op.includes('\\eq')){
+                    if(this.include_left_split(expr2.Op)|| this.include_right_split(expr2.Op)){
                         
                         let BrTop = expr1.top
                         while(BrTop.next !== undefined) BrTop = BrTop.next
@@ -535,28 +620,28 @@ export class UL_kernel {
                                 return false
                             }
                         }
-                        
+                        return true   
                     }
-
-                
                 }
                 //no eq
                 return false;
             }
 
         }
-        //finished checking all expr in r1
+        //no brs found
         return true
     }
 
     rule_applicable(r1, r2){
         //split between Brs and eq
+        //console.log(r1, r2)
+        
         if(!this.Check_Brs(r1,r2)) return false
-        else if(!this.Check_Brs(r2.r1)) return false
+        else if(!this.Check_Brs(r2,r1)) return false
         return true
     }
 
-    add_check_code_var(table, c, exprs){
+    add_code_var(table, c, exprs){
         //exprs is array of array
         //if code var not assigned, then true
         if(table[c] === undefined){
@@ -578,7 +663,7 @@ export class UL_kernel {
             }
         }
         else{
-            //if exprs is also code variable, make sure it can eventually return to c or undeined
+            //if exprs is also code variable, make sure it eventually return to c or undefined
             let tempTable = {}
             let temp = c
             while(temp.Op === '\\Tc'){

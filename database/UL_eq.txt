@@ -1,2 +1,0 @@
-proof:
-,i \Op, \eq{}{,i \On, i \Op,}{,i \On, i \Op,}, i \Op,

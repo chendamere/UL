@@ -14,6 +14,7 @@ function drawLine(ctx, begin, end, stroke = 'black', width = 1) {
     ctx.lineTo(...end);
     ctx.stroke();
 }
+
 export class Display {
 
     constructor(UL_kernel, canvas){
@@ -43,14 +44,13 @@ export class Display {
             ,"\\Tt"
         ]
 
-        this.canvas.width = 5120;
-        this.canvas.height = 5120;
-        this.canvas.style.width = "5120px";
-        this.canvas.style.height = "5120px";
+        this.canvas.width = 1500;
+        this.canvas.height = 5000;
+
         this.images = {}
         this.beginLine = true;
         this.context = this.canvas.getContext("2d");
-        this.height = 0;
+        this.height = 40;
         this.pos = 20;
         this.botSplit = true
         this.bracketSize = 1.0
@@ -71,15 +71,21 @@ export class Display {
         this.init();
     }
 
-    init() {
-        // if(this.axiomTable.length !== 0) {
-        //     this.display_from_table();
-        // }
+    
 
-        if(this.proof.length !== 0) {
-            console.log(this.proof)
-            this.display_from_proof()
+    init() {
+        if(this.axiomTable.length !== 0) {
+            this.display_from_table();
         }
+        //console.log(this.axiomTable)
+        
+
+        // if(this.proof.length !== 0)
+        // {
+        //     console.log(this.proof)
+        //     this.display_from_proof()
+        // }
+        
     }
 
     display_from_table(){
@@ -102,29 +108,32 @@ export class Display {
 
             //resset x pos every line
             this.pos = 20*this.textScale
-            
             for(const EXPS of [this.axiomTable[i].left, this.axiomTable[i].right]){
-                this.bracketSize = 1.0
                 for(const o of EXPS){
-                    if(String(o.Op).includes('\\eq') && eqSkipLine){
+                    if((this.include_left_split(o.Op) || this.include_right_split(o.Op) )&& eqSkipLine){
                         this.height += 50 * this.textScale
                         eqSkipLine = false
                         break
                     }
                 }
+            }
+            
+            for(const EXPS of [this.axiomTable[i].left, this.axiomTable[i].right]){
+                this.bracketSize = 1.0
                 if(this.beginLine){
                     context.fillText(String(i+1)+": ", this.pos, this.height + 50 * this.textScale);
                     this.pos += 60* this.textScale
                     context.fillText(",", this.pos, this.height + 50 * this.textScale);
                     this.beginLine = false
-                    this.pos += 20*this.textScale
+                    this.pos += 30*this.textScale
                 }
                 
                 for(const o of EXPS){
                     
                     //parse line if expression has \eq
                     if(o === undefined) continue;
-                    if(String(o.Op).includes('\\eq')){
+                    //console.log(o)
+                    if(this.include_right_split(o.Op)||this.include_left_split(o.Op)){
                         if(this.adjust) {
                             this.adjust = false
                             this.returnY = this.height;
@@ -138,6 +147,8 @@ export class Display {
                     //display REQ  
                     this.displayRQ(); 
                     leftExp = false
+                    this.pos += 10*this.textScale
+
                 }
             }
 
@@ -168,7 +179,7 @@ export class Display {
             for(const EXPS of [this.proof[i]]){
                 this.bracketSize = 1.0
                 for(const o of EXPS){
-                    if((String(o.Op).includes('\\eq')) || (String(o.Op).includes('\\Brs')) && eqSkipLine){
+                    if((this.include_right_split(o.Op)||this.include_left_split(o.Op)) && eqSkipLine){
                         this.height += 50 * this.textScale
                         eqSkipLine = false
                         break
@@ -184,14 +195,14 @@ export class Display {
                 for(const o of EXPS){
                     //parse line if expression has \eq
                     if(o === undefined) continue;
-                    if((String(o.Op).includes('\\eq')) || (String(o.Op).includes('\\Brs'))){
+                    if(this.include_right_split(o.Op)||this.include_left_split(o.Op)){
                         if(this.adjust) {
                             this.adjust = false
                             this.returnY = this.height;
                             this.numEq += 1;
                         }
                     }
-                    console.log(o)
+                    //console.log(o)
                     this.displayExpression(o)
                 }
             }
@@ -208,7 +219,7 @@ export class Display {
             this.height = this.returnY
         }
         this.context.drawImage(image, this.pos,  this.height + 15 * this.textScale,  this.textScale * 36,this.textScale * 36);
-        this.pos += 70 * this.textScale
+        this.pos += 60 * this.textScale
         this.context.fillText(",", this.pos, this.height + 50*this.textScale);
         this.pos += 20 * this.textScale
     }
@@ -220,7 +231,7 @@ export class Display {
         const tempX = this.pos
         const tempY = this.height
         var tempSize = this.bracketSize
-        this.maxXpos = this.pos;
+        this.maxXpos = this.pos + 20*this.textScale;
         
         //top expressions
         this.height -= 50 * this.bracketSize*this.textScale
@@ -279,49 +290,59 @@ export class Display {
         let rightOperand = o.RightOperand
         var message = ""
         var left = true;
-        let bracket = false       
-        console.log(o.Op)
+        let bracket = false   
+        let BackBracket = false    
+        //console.log(o.Op)
  
-        if(String(o.Op).includes('\\eq')){
+        if(this.include_left_split(o.Op)){
+            //console.log("here")
             if(o.Op.length ===3){
                 //just eq
-                console.log(o.Op)
+                //console.log(o.Op)
+            }
+            else if(o.Op.includes("\\Blb")){
+                OP = o.Op.slice(4)
+                //console.log(OP)
             }
             else{
+                //console.log(o.Op)
                 OP = o.Op.slice(3)
             }
             //sconsole.log(this.adjust)
             bracket = true
         }
 
-        if(String(o.Op).includes('\\Brs')){
+        if(this.include_right_split(o.Op)){
+            //console.log("yes")
             if(o.Op.length === 4){
-
+                console.log(o.Op)
             }
             else{
                 OP = o.Op.slice(4)
             }
             //sconsole.log(this.adjust)
-            bracket = true
+            BackBracket = true
         }
 
         //display left operand
         if(leftOperand !== undefined){
-            message = o.LeftOperand + " "
+            message = o.LeftOperand
             //console.log(message)
             
             context.fillText(message, this.pos, this.height + 50*this.textScale);
             //add extra padding if detect underscore
-            this.pos += (message.length-2)*10
+            this.pos += (message.length-1)*10
+            // console.log((message.length-1)*10)
             left = false;
+            this.pos += 30*this.textScale
         }
         //display operator
         for(const symbol of this.symbols){
-            if(OP === '\\eq' || OP === '\\Brs') break
+            if(this.include_right_split(OP)||this.include_left_split(OP)) break
             if(OP === symbol){
                 var image = this.images[OP]
-                this.pos += 15*this.textScale
                 context.drawImage(image, this.pos, this.height + 15 * this.textScale, 36 * this.textScale, 36 * this.textScale);
+                this.pos += 40*this.textScale
                 break;
             }
         }
@@ -329,31 +350,54 @@ export class Display {
         //display right operand
         if(rightOperand !== undefined){
             message = o.RightOperand
-            this.pos += 50*this.textScale
+            
             //console.log(message)
             context.fillText(message, this.pos, this.height + 50*this.textScale);
 
             //add extra padding if detect underscore
-            this.pos += (message.length)*10
+            this.pos += (message.length-1)*10
+            this.pos += 30*this.textScale
             
             left = true
         }
 
-        if(!left){
-            this.pos+=20*this.textScale
-        }
-        this.pos += 40*this.textScale
+        // if(!left){
+        //     this.pos+=10*this.textScale
+        // }
+        //for \Or
+        // if(left && rightOperand === undefined){
+        //     //console.log("yes")
+        //     this.pos+=10*this.textScale
+        // }
         if(bracket){
+            this.pos += 40*this.textScale
+
             this.drawBracket(this.pos, this.height + 45*this.textScale, this.bracketSize);
             //console.log(this.pos, this.height)
             //display top and bot expression
+            this.pos+=20*this.textScale
+
             this.displayTB(o);
-        }
-        else {
+            
             context.fillText(",", this.pos, this.height + 50*this.textScale);
             this.pos += 35*this.textScale
         }
-        this.pos += 20*this.textScale
+        else if(BackBracket){
+            this.displayTB(o)
+            this.pos+=20*this.textScale
+            this.drawBackBracket(this.pos, this.height + 45*this.textScale, this.bracketSize)
+            this.pos+=20*this.textScale
+
+            context.fillText(",", this.pos, this.height + 50*this.textScale);
+            this.pos += 35*this.textScale
+        }
+        else {
+            this.pos += 10*this.textScale
+
+            context.fillText(",", this.pos, this.height + 50*this.textScale);
+            this.pos += 20*this.textScale
+        }
+        //this.pos += 20*this.textScale
         if(this.pos > this.maxXpos){
             this.maxXpos = this.pos
         }
@@ -365,5 +409,30 @@ export class Display {
         drawLine(context, [x, y+ size*(-10+60)*this.textScale], [x,    y+size*(-10-60)*this.textScale], 'black', 2* this.textScale);
         drawLine(context, [x, y+ size*(-10-60)*this.textScale], [x+10, y+size*(-10-60)*this.textScale], 'black', 2* this.textScale);
         drawLine(context, [x, y+ size*(-10+60)*this.textScale], [x+10, y+size*(-10+60)*this.textScale], 'black', 2* this.textScale);
+    }
+
+    drawBackBracket(x, y, size) {
+        var context = this.canvas.getContext("2d");
+        drawLine(context, [x, y+ size*(-10)*this.textScale],    [x+10, y+size*(-10)*this.textScale], 'black', 2 * this.textScale);
+        drawLine(context, [x, y+ size*(-10+60)*this.textScale], [x,    y+size*(-10-60)*this.textScale], 'black', 2* this.textScale);
+        drawLine(context, [x, y+ size*(-10-60)*this.textScale], [x-10, y+size*(-10-60)*this.textScale], 'black', 2* this.textScale);
+        drawLine(context, [x, y+ size*(-10+60)*this.textScale], [x-10, y+size*(-10+60)*this.textScale], 'black', 2* this.textScale);
+        this.pos += 20*this.textScale
+    }
+
+    include_left_split(expression){
+        if(expression === undefined) return false
+        if(expression.includes('\\eq') || expression.includes('\\Bls') || expression.includes('\\Blb') || expression.includes('\\Bb') || expression.includes('\\Bs')){
+            return true
+        }
+        else return false
+    }
+
+    include_right_split(expression){
+        if(expression === undefined) return false
+        if(expression.includes('\\Brs')){
+            return true
+        }
+        else return false
     }
 }

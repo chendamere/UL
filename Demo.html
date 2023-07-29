@@ -6,156 +6,125 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Way Of Machine Thinking</title>
     <link rel="stylesheet" href="style.css">
-    
-    <!-- <script src="https://kit.fontawesome.com/ae4c4c26f7.js" crossorigin="anonymous"></script>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Kumbh+Sans:wght@400;700&display=swap" rel="stylesheet"> -->
-    <script type="module">
+    <script type="module" src ="load_subsection.js"></script>
 
-        import {UL_kernel} from "./UL_kernel.js";
-        import {Display} from "./Display.js"
-            
-        var UL;
-        var display;
-        var temp;
-        var symbol_width = 100, symbol_height = 100;
+    <title>demo</title>
 
-        //const parsedRules = await doGET("./database/UL_eq.txt").then(handleFileData)
-        //const rule_of_operator = await doGET("./database/rule_of_operator.txt").then(handleFileData)
-        //const rule_of_operator_proof = await doGET("./database/rule_of_operator_proof.txt").then(handleFileData)
-        const testing = await doGET("./database/UL_eq.txt").then(handleFileData)
-
-        function init() {
-            const canvas = document.getElementById('UL_kernel');
-            UL = new UL_kernel();
-            //UL.StringTable = rule_of_operator
-            UL.proofString = testing
-            UL.init()
-            display = new Display(UL, canvas)
-
-            setInterval(update, 0);
-        }
-
-        async function doGET(path) {
-            const promise = new Promise((resolve, reject) => {
-                var xhr = new XMLHttpRequest();
-                xhr.open("GET", path);
-
-                xhr.onreadystatechange = function() {
-                    if (xhr.readyState == 4) {
-                        // The request is done; did it work?
-                        if (xhr.status == 200) {
-                            // ***Yes, use `xhr.responseText` here***
-                            xhr.onload = () => {
-                                resolve(xhr.responseText)
-                            }
-                            //var a = callback(xhr.responseText);                        
-                        } else {
-                            // ***No, tell the callback the call failed***
-                            //callback(null);
-                        }
-                    }
-                };
-                
-                xhr.send();
-            })
-            return promise;
-        }
-
-        function handleFileData(fileData) {
-            console.log("handling data")
-            if (!fileData) {
-                // Show error
-                return;
-            }
-            const tempTable = []
-            const theorems = fileData.split('\n')
-            for(const line of theorems) {
-                // console.log(line.length)
-                if(line.length <= 1) {continue}
-                else{
-                    tempTable.push(line)
-                }
-            }
-            console.log("done")
-            return tempTable;
-        }
-        
-        function update() {
-            //const start = performance.now();
-            //UL.mainLoop();
-            //const elapsed = performance.now() - start;
-            //console.log("Draw() took " + elapsed + "ms");
-        }
-
-        window.onload = init;
-    </script>
 </head>
      
-    <body>
-        <nav class="navbar">
-            <div class="navbar__container">
-                <!-- <a href="/" id="navbar__logo"></i>UNIVERSAL LANGUAGE</a> -->
-                <div class="navbar__toggle" id="mobile-menu">
-                    <span class="bar"></span>
-                    <span class="bar"></span>
-                    <span class="bar"></span>
-                </div>
-                <ul class="navbar__menu">
-                    <li class="navbar__item">
-                        <a href="https://chendamere.github.io" class="navbar__links">About</a>
+<body>
+    <nav class="navbar">
+        <div class="navbar__container">
+            <!-- <a href="/" id="navbar__logo"></i>UNIVERSAL LANGUAGE</a> -->
+            <div class="navbar__toggle" id="mobile-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+            <ul class="navbar__menu">
+                <li class="navbar__item">
+                    <a href="https://chendamere.github.io" class="navbar__links">About</a>
+                </li>
+                <li class="navbar__item">
+                    <a href="/Demo.html" class="navbar__links">Demo</a>
+                </li>
+                <li class="navbar__item">
+                    <a href="./Toc.html" class="navbar__links">Table Of Content</a>
+                </li>
+                <li class="navbar__item">
+                    <a href="https://github.com/chendamere/chendamere.github.io" class="navbar__links">GitHub</a>
+                </li>
+
+            </ul>
+        </div>
+    </nav>
+
+    <div class="main">
+        <div class="main__demo">
+
+            <div class="toc">
+                <ul>
+                <!-- <li><a href="#">Home</a></li> -->
+                    <li>
+                        <a href="#">Chapters</a>
+                        <ul id="toc-ul">
+                                                        
+                        </ul>
                     </li>
-                    <li class="navbar__item">
-                        <a href="/Demo.html" class="navbar__links">Demo</a>
-                    </li>
-                    <li class="navbar__item">
-                        <a href="https://github.com/chendamere/chendamere.github.io" class="navbar__links">GitHub</a>
-                    </li>
-                    <!-- <li class="navbar__btn">
-                        <a href="/" class="button"></a>
-                    </li> -->
+                <!-- <li><a href="#">Contact</a></li> -->
                 </ul>
             </div>
-        </nav>
+            <!-- <div class="dropdown">
+                <button class="dropbtn">Chapters</button>
+                    <div class="dropdown-content">
+                            
+                            <button class = "center" >Addition</button>
+                            <button class = "center" >Axioms of Assign Operator</button>
 
-        <div class="main">
-            <div class="main__container">
-                <div class="main__content">
-                    <h1>Demo</h1>
-                    <!-- <img id='UL_Ps' alt="UL_Ps" src="./images/Op_svg/UL_Ps.svg" width="100" height="100" />
-                    <img id='UL_Pu' alt="UL_Pu" src="./images/Op_svg/UL_Pu.svg" width="100" height="100" />
-                    <img id='UL_Pne' alt="UL_Pne" src="./images/Op_svg/UL_Pne.svg" width="100" height="100" />
-                    <img id='UL_Pnl' alt="UL_Pnl" src="./images/Op_svg/UL_Pnl.svg" width="100" height="100" />
-                    <img id='UL_Tc' alt="UL_Tc" src="./images/Op_svg/UL_Tc.svg" width="100" height="100" />
-                    <img id='UL_Tt' alt="UL_Tt" src="./images/Op_svg/UL_Tt.svg" width="100" height="100" /> -->
-
-                    <div class="smaller_box">
-                        <canvas style="image-rendering:pixelated; border:1px solid black" id="UL_kernel"></canvas>
-                        <img id='UL_Oa' alt="UL_Oa" hidden="hidden" src="./images/Op_svg/UL_Oa.svg" width="100" height="100" />
-                        <img id='UL_Ob' alt="UL_Ob" hidden="hidden" src="./images/Op_svg/UL_Ob.svg" width="100" height="100" />
-                        <img id='UL_Oc' alt="UL_Oc" hidden="hidden" src="./images/Op_svg/UL_Oc.svg" width="100" height="100" />
-                        <img id='UL_Od' alt="UL_Od" hidden="hidden" src="./images/Op_svg/UL_Od.svg" width="100" height="100" />
-                        <img id='UL_Oe' alt="UL_Oe" hidden="hidden" src="./images/Op_svg/UL_Oe.svg" width="100" height="100" />
-                        <img id='UL_Og' alt="UL_Og" hidden="hidden" src="./images/Op_svg/UL_Og.svg" width="100" height="100" />
-                        <img id='UL_On' alt="UL_On" hidden="hidden" src="./images/Op_svg/UL_On.svg" width="100" height="100" />
-                        <img id='UL_Op' alt="UL_Op" hidden="hidden" src="./images/Op_svg/UL_Op.svg" width="100" height="100" />
-                        <img id='UL_Or' alt="UL_Or" hidden="hidden" src="./images/Op_svg/UL_Or.svg" width="100" height="100" />
-                        <img id='UL_Os' alt="UL_Os" hidden="hidden" src="./images/Op_svg/UL_Os.svg" width="100" height="100" />
-                        <img id='UL_Ot' alt="UL_Ot" hidden="hidden" src="./images/Op_svg/UL_Ot.svg" width="100" height="100" />
-                        <img id='UL_Tt' alt="UL_Tt" hidden="hidden" src="./images/Op_svg/UL_Tt.svg" width="100" height="100" />
-                        <img id='UL_Tc' alt="UL_Tc" hidden="hidden" src="./images/Op_svg/UL_Tc.svg" width="100" height="100" />
-                        <img id='UL_Pne' alt="UL_Pne" hidden="hidden" src="./images/Op_svg/UL_Pne.svg" width="100" height="100" />
-                        <img id='UL_Pnl' alt="UL_Pnl" hidden="hidden" src="./images/Op_svg/UL_Pnl.svg" width="100" height="100" />
-                        <img id='UL_Pu' alt="UL_Pu" hidden="hidden" src="./images/Op_svg/UL_Pu.svg" width="100" height="100" />
-                        <img id='UL_Ps' alt="UL_Ps" hidden="hidden" src="./images/Op_svg/UL_Ps.svg" width="100" height="100" />
-                        <img id='UL_Rq' alt="UL_Rq" hidden="hidden" src="./images/Op_svg/UL_Rq.svg" width="100" height="100" />
+                            <button class = "center" >Addition</button>
+                            <button class = "center" >Axioms of Assign Operator</button>
+                            <button class = "center" >Function Cpo(r)</button>
+                            <button class = "center" >Multiplication</button>
+                            <button class = "center" >Next Order Induction</button>
+                            <button class = "center" >paradox</button>
+                            <button class = "center" >Previous Order Induction</button>
+                            <button class = "center" >Recursive Function R_(i)</button>
+                            <button class = "center" >Recursive Function R(i)</button>
+                            <button class = "center" >Recursive Function Rc(i;j)</button>
+                            <button class = "center" >Recursive Function Rcpm(i;j;r)</button>
+                            <button class = "center" >Recursive Function Rcpo(i;r)</button>
+                            <button class = "center" >Rules of Assign Operator in emporary Space</button>
+                            <button class = "center" >Rules of Empty Branch Function</button>
+                            <button class = "center" >Rules of Node Ring</button>
+                            <button class = "center" >Rules of Number Equal Relationship</button>
+                            <button class = "center" >Rules of Number More Than and Less Than Relationship</button>
+                            <button class = "center" >Rules of Operators</button>
+                            <button class = "center" >Rules of Relationship of Node Connectivity</button>
+                            <button class = "center" >Rules of Continuity</button>
+                            <button class = "center" >Rules of Subnode</button>
+                            <button class = "center" >Rules of Three Fundamental Relationships</button>
+                            <button class = "center" >Swap Theorems of the Same Operand</button>
+                            <button class = "center" >Theorems of Assign Operator</button>
+                            <button class = "center" >Theorems of Insert Node Function Del(j)</button>
+                            <button class = "center" >Theorems of Insert Node Function Ins(t;j)</button>
+                            <button class = "center" >Theorems of Operators and Relationships</button>
+                            <button class = "center" >Theorems of Relationship of Identical Node Comparison</button>
+                            <button class = "center" >Theorems of Relationship of Node Null Comparison</button>
+                            <button class = "center" >Theorems of Relationship of Node Value Comparison</button>
+                            <button class = "center" >Tree Order Induction</button>
                     </div>
+            </div> -->
+            <div class="main__content">
+                
+                <div hidden="true" id="section-name">Axioms of Operators</div>
+                <h1 id="title">Loading...</h1>
 
+                <div class="smaller_box">
+                    <canvas style="image-rendering:pixelated" id="UL_kernel"></canvas>
                 </div>
+                
+                <img id='UL_Oa' alt="UL_Oa" hidden="hidden" src="./images/Op_svg/UL_Oa.svg" width="100" height="100" />
+                <img id='UL_Ob' alt="UL_Ob" hidden="hidden" src="./images/Op_svg/UL_Ob.svg" width="100" height="100" />
+                <img id='UL_Oc' alt="UL_Oc" hidden="hidden" src="./images/Op_svg/UL_Oc.svg" width="100" height="100" />
+                <img id='UL_Od' alt="UL_Od" hidden="hidden" src="./images/Op_svg/UL_Od.svg" width="100" height="100" />
+                <img id='UL_Oe' alt="UL_Oe" hidden="hidden" src="./images/Op_svg/UL_Oe.svg" width="100" height="100" />
+                <img id='UL_Og' alt="UL_Og" hidden="hidden" src="./images/Op_svg/UL_Og.svg" width="100" height="100" />
+                <img id='UL_On' alt="UL_On" hidden="hidden" src="./images/Op_svg/UL_On.svg" width="100" height="100" />
+                <img id='UL_Op' alt="UL_Op" hidden="hidden" src="./images/Op_svg/UL_Op.svg" width="100" height="100" />
+                <img id='UL_Or' alt="UL_Or" hidden="hidden" src="./images/Op_svg/UL_Or.svg" width="100" height="100" />
+                <img id='UL_Os' alt="UL_Os" hidden="hidden" src="./images/Op_svg/UL_Os.svg" width="100" height="100" />
+                <img id='UL_Ot' alt="UL_Ot" hidden="hidden" src="./images/Op_svg/UL_Ot.svg" width="100" height="100" />
+                <img id='UL_Tt' alt="UL_Tt" hidden="hidden" src="./images/Op_svg/UL_Tt.svg" width="100" height="100" />
+                <img id='UL_Tc' alt="UL_Tc" hidden="hidden" src="./images/Op_svg/UL_Tc.svg" width="100" height="100" />
+                <img id='UL_Pne' alt="UL_Pne" hidden="hidden" src="./images/Op_svg/UL_Pne.svg" width="100" height="100" />
+                <img id='UL_Pnl' alt="UL_Pnl" hidden="hidden" src="./images/Op_svg/UL_Pnl.svg" width="100" height="100" />
+                <img id='UL_Pu' alt="UL_Pu" hidden="hidden" src="./images/Op_svg/UL_Pu.svg" width="100" height="100" />
+                <img id='UL_Ps' alt="UL_Ps" hidden="hidden" src="./images/Op_svg/UL_Ps.svg" width="100" height="100" />
+                <img id='UL_Rq' alt="UL_Rq" hidden="hidden" src="./images/Op_svg/UL_Rq.svg" width="100" height="100" />
             </div>
         </div>
-    </body>
+    </div>
 </body>
+
 </html>
