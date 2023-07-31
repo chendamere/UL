@@ -9,12 +9,15 @@ export class UL_kernel {
 
     constructor(){
         this.title = ""
+        this.subsectionsIndex=[];
+        this.subsubsectionsIndex=[];
         this.StringTable = [];
         this.proofString = [];
         this.proofTable = [];
         this.axiomTable = [];
         this.functionTable;
         this.intermediate_theorems=[]
+        this.numberOfLines;
 
     }
     init() {

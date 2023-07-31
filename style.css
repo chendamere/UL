@@ -5,6 +5,12 @@
     font-family: 'Kumbh Sans', sans-serif;
 } 
 
+html, body {
+    width:  100%;
+    height: 100%;
+    margin: 0;
+  }
+
 .navbar {
     background: #585050;
     height: 80px;
@@ -212,34 +218,23 @@
     background-color: #ffffff;
     z-index: 1;
     width: 100%;
-    max-width: 1500px;
+    /* max-width: 1500px; */
     padding: 200px;
-}
-
-.main__toc{
-    grid-template-columns: 1fr 1fr;
-    margin: 0 auto;
-    height: 200vh;
-    background-color: #ffffff;
-    z-index: 1;
-    width: 100%;
-    max-width: 1500px;
-    padding: 300px;
 }
 
 .main__demo{
     grid-template-columns: 1fr 1fr;
     margin: 0 auto;
-    height: 400vh;
+    max-height: 400vh;
+    height: 100%;
     background-color: #ffffff;
     z-index: 1;
     width: 100%;
-    max-width: 1500px;
-    padding: 300px;
+    padding: 30px;
 }
 
 .main__content h1 {
-    font-size: 3rem;
+    font-size: 4rem;
     background-color: #000000;
     /* background-image: linear-gradient(to top, #ff0844 0%, #ffb199 100%); */
     background-size: 100%;
@@ -247,35 +242,7 @@
     -moz-background-clip: text;
     -webkit-text-fill-color: transparent;
     -moz-text-fill-color: transparent;
-}
-.toc-article h2{
-    font-size: 1rem;
-}
-
-.toc-article h3{
-    font-size: 1rem;
-    padding-left: 2rem;
-}
-
-article a:link {
-    color: green;
-    background-color: transparent;
-    text-decoration: none;
-  }
-  article a:visited {
-    color: rgb(70, 33, 64);
-    background-color: transparent;
-    text-decoration: none;
-  }
-  article a:hover {
-    color: rgb(96, 90, 197);
-    background-color: transparent;
-    text-decoration: underline;
-  }
-  article a:active {
-    color: yellow;
-    background-color: transparent;
-    text-decoration: underline;
+    padding-left: 5%;
 }
 
 /* .main__content h2 {
@@ -653,18 +620,19 @@ article a:link {
     }
 }
 
-.smaller_box{ overflow-y:auto; overflow-x:auto; width:900px; height:3000px; border:2px solid rgb(67, 67, 81); }
+.smaller_box{ overflow-y:auto; overflow-x:auto; border:10px ridge rgb(212, 212, 212); }
 
 .symbol_display{width: 100px; height: 100px;}
 
 .center {
     margin: auto;
-    width: 100%;    
+    width: 100%;
+    height: 100%;    
 }
 
   
 .toc {
-    background-color: #333;
+    background-color:  rgb(217, 217, 217);
     position: relative;
 }
 
@@ -676,50 +644,46 @@ article a:link {
 }
 
 .toc li {
-    display: inline-block;
+    display: block;
 }
 
-.toc li a {
-    color: white;
+.toc a {
+    color: rgb(209, 209, 209);
     display: block;
     padding: 10px 20px;
+    font-size: 4vh;
     text-decoration: none;
+    background-color: #585858;
+    text-align: center;
 }
 
 .toc li button {
     color: rgb(0, 0, 0);
-    background-color:  rgb(159, 150, 150);;
+    background-color:  rgb(207, 207, 207);;
     display: block;
     padding: 10px 20px;
     text-decoration: none;
+    border: #000000;
 }
 
 .toc li .dropdown {
     color: rgb(0, 0, 0);
-    background-color:  rgb(159, 150, 150);;
+    background-color:  rgb(217, 217, 217);
     display: block;
     padding: 10px 10px;
     text-decoration: none;
 }
 
 /* Style the dropdown menu */
-.toc ul ul {
-    position: absolute;
-    top: 100%;
-    display: none;
-}
 
-.toc ul ul li {
-    display: block;
-}
 
 .toc li:hover ul {
     display: block;
 }
 
 /* Change the background color of dropdown links on hover */
-.toc ul ul li button:hover {
-    background-color: #555;
+.toc ul li button:hover {
+    background-color:  rgb(214, 214, 214);
 }   
   
 .dropdown-content {
@@ -746,4 +710,25 @@ article a:link {
     display: block;
     align-items: center;
     text-align: center;
+}
+
+.container {
+	display: flex;
+	justify-content: center;
+}
+
+.flex-row {
+    display: flex;
+    justify-content: center;
+}
+
+.div7 {
+    justify-self: start;
+    height:100%;
+}
+
+.div8 {
+    justify-self: end;
+    margin: 2vh;
+
 }

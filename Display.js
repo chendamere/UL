@@ -44,13 +44,17 @@ export class Display {
             ,"\\Tt"
         ]
 
-        this.canvas.width = 1500;
-        this.canvas.height = 5000;
+        //this.canvas.width = 1500;
+        // this.canvas.height = 5000;
 
         this.images = {}
         this.beginLine = true;
         this.context = this.canvas.getContext("2d");
-        this.height = 40;
+        this.context.canvas.width  = window.innerWidth/1.5;
+        window.innerHeight = this.axiomTable.length*100
+        this.context.canvas.height = window.innerHeight;
+        // console.log(this.context.canvas.height)
+        this.heightOffset = 40;
         this.pos = 20;
         this.botSplit = true
         this.bracketSize = 1.0
@@ -67,8 +71,6 @@ export class Display {
             var image = document.getElementById(id);
             this.images[symbol] = image
         }
-        
-        this.init();
     }
 
     
@@ -77,7 +79,7 @@ export class Display {
         if(this.axiomTable.length !== 0) {
             this.display_from_table();
         }
-        //console.log(this.axiomTable)
+        console.log(this.axiomTable)
         
 
         // if(this.proof.length !== 0)
@@ -96,6 +98,12 @@ export class Display {
         context.textAlign = "start";
         context.textBaseline = "bottom";
         context.fillStyle = "#000000"; //color
+        var InSubSubSection = false;
+        var InSubsection = false;
+
+        // console.log(this.kernel.subsectionsIndex)
+        // console.log(this.kernel.subsubsectionsIndex)
+
 
         for(let i = 0; i < this.axiomTable.length; i++) {
 
@@ -108,10 +116,52 @@ export class Display {
 
             //resset x pos every line
             this.pos = 20*this.textScale
+            for(const subsec of this.kernel.subsectionsIndex){
+                //display subsection
+                if(i === subsec[1]){
+                    // console.log(i,subsec)
+                    context.font = size*2 + "px Helvetica, sans-serif ";
+                    this.pos = 120*this.textScale
+                    context.fillText(subsec[0], this.pos, this.heightOffset + 50 * this.textScale);
+                    context.font = size + "px Helvetica, sans-serif ";
+                    this.heightOffset += 50 * this.textScale*2
+                    this.pos = 20*this.textScale
+                    InSubsection = true
+                }
+
+                if(i === subsec[2]){
+                    this.heightOffset += 50 * this.textScale*2
+                }
+            }
+
+            for(const subsubsec of this.kernel.subsubsectionsIndex){
+                //display subsection
+                if(i === subsubsec[1]){
+                    //console.log(i,subsubsec)
+                    context.font = size*1.5 + "px Helvetica, sans-serif ";
+                    this.pos = 220*this.textScale
+                    context.fillText(subsubsec[0], this.pos, this.heightOffset + 50 * this.textScale);
+                    context.font = size + "px Helvetica, sans-serif ";
+                    this.heightOffset += 50 * this.textScale*1.5
+                    this.pos = 20*this.textScale
+                    InSubSubSection = true
+                }
+                if(i === subsubsec[2]){
+                    this.heightOffset += 50 * this.textScale*2
+                }
+            }
+
+            if(InSubsection){
+                this.pos += 150*this.textScale
+            }
+            if(InSubSubSection){
+                this.pos += 150*this.textScale
+            }
+
             for(const EXPS of [this.axiomTable[i].left, this.axiomTable[i].right]){
                 for(const o of EXPS){
                     if((this.include_left_split(o.Op) || this.include_right_split(o.Op) )&& eqSkipLine){
-                        this.height += 50 * this.textScale
+                        this.heightOffset += 50 * this.textScale
                         eqSkipLine = false
                         break
                     }
@@ -121,9 +171,9 @@ export class Display {
             for(const EXPS of [this.axiomTable[i].left, this.axiomTable[i].right]){
                 this.bracketSize = 1.0
                 if(this.beginLine){
-                    context.fillText(String(i+1)+": ", this.pos, this.height + 50 * this.textScale);
+                    context.fillText(String(i+1)+": ", this.pos, this.heightOffset + 50 * this.textScale);
                     this.pos += 60* this.textScale
-                    context.fillText(",", this.pos, this.height + 50 * this.textScale);
+                    context.fillText(",", this.pos, this.heightOffset + 50 * this.textScale);
                     this.beginLine = false
                     this.pos += 30*this.textScale
                 }
@@ -136,7 +186,7 @@ export class Display {
                     if(this.include_right_split(o.Op)||this.include_left_split(o.Op)){
                         if(this.adjust) {
                             this.adjust = false
-                            this.returnY = this.height;
+                            this.returnY = this.heightOffset;
                             this.numEq += 1;
                         }
                     }
@@ -153,7 +203,7 @@ export class Display {
             }
 
             this.beginLine = true;
-            this.height += 50*this.textScale+this.numEq*30
+            this.heightOffset += 50*this.textScale+this.numEq*30
         }
     }
 
@@ -180,15 +230,15 @@ export class Display {
                 this.bracketSize = 1.0
                 for(const o of EXPS){
                     if((this.include_right_split(o.Op)||this.include_left_split(o.Op)) && eqSkipLine){
-                        this.height += 50 * this.textScale
+                        this.heightOffset += 50 * this.textScale
                         eqSkipLine = false
                         break
                     }
                 }
                 if(this.beginLine){
-                    context.fillText(String(i+1)+": ", this.pos, this.height + 50 * this.textScale);
+                    context.fillText(String(i+1)+": ", this.pos, this.heightOffset + 50 * this.textScale);
                     this.pos += 60* this.textScale
-                    context.fillText(",", this.pos, this.height + 50 * this.textScale);
+                    context.fillText(",", this.pos, this.heightOffset + 50 * this.textScale);
                     this.beginLine = false
                     this.pos += 20*this.textScale
                 }    
@@ -198,7 +248,7 @@ export class Display {
                     if(this.include_right_split(o.Op)||this.include_left_split(o.Op)){
                         if(this.adjust) {
                             this.adjust = false
-                            this.returnY = this.height;
+                            this.returnY = this.heightOffset;
                             this.numEq += 1;
                         }
                     }
@@ -208,7 +258,7 @@ export class Display {
             }
 
             this.beginLine = true;
-            this.height += 50*this.textScale+this.numEq*30
+            this.heightOffset += 50*this.textScale+this.numEq*30
         }
     }
 
@@ -216,11 +266,11 @@ export class Display {
         const id = "UL_Rq"
         const image = document.getElementById(id);
         if(this.returnY !== undefined){
-            this.height = this.returnY
+            this.heightOffset = this.returnY
         }
-        this.context.drawImage(image, this.pos,  this.height + 15 * this.textScale,  this.textScale * 36,this.textScale * 36);
+        this.context.drawImage(image, this.pos,  this.heightOffset + 15 * this.textScale,  this.textScale * 36,this.textScale * 36);
         this.pos += 60 * this.textScale
-        this.context.fillText(",", this.pos, this.height + 50*this.textScale);
+        this.context.fillText(",", this.pos, this.heightOffset + 50*this.textScale);
         this.pos += 20 * this.textScale
     }
 
@@ -229,13 +279,13 @@ export class Display {
         var context = this.canvas.getContext("2d");
 
         const tempX = this.pos
-        const tempY = this.height
+        const tempY = this.heightOffset
         var tempSize = this.bracketSize
         this.maxXpos = this.pos + 20*this.textScale;
         
         //top expressions
-        this.height -= 50 * this.bracketSize*this.textScale
-        context.fillText(",", this.pos, this.height + 50*this.textScale);
+        this.heightOffset -= 50 * this.bracketSize*this.textScale
+        context.fillText(",", this.pos, this.heightOffset + 50*this.textScale);
         this.pos += 20*this.textScale
 
         this.bracketSize *= 0.5
@@ -257,11 +307,11 @@ export class Display {
 
         expression = o.bot
         this.pos = tempX
-        this.height =tempY
+        this.heightOffset =tempY
         this.bracketSize = tempSize 
 
-        this.height += 50 * this.bracketSize*this.textScale
-        context.fillText(",", this.pos, this.height + 50*this.textScale);
+        this.heightOffset += 50 * this.bracketSize*this.textScale
+        context.fillText(",", this.pos, this.heightOffset + 50*this.textScale);
         this.pos += 20*this.textScale
         if(expression !== undefined){
             this.bracketSize *= 0.5
@@ -276,14 +326,14 @@ export class Display {
         }
         this.pos = this.maxXpos
         this.bracketSize = tempSize 
-        this.height =tempY
+        this.heightOffset =tempY
 
     }
 
     displayExpression(o){
 
         if(o === undefined) return;
-        //console.log(this.pos, this.height)
+        //console.log(this.pos, this.heightOffset)
         var context = this.context
         let OP = o.Op;
         let leftOperand = o.LeftOperand 
@@ -315,7 +365,7 @@ export class Display {
         if(this.include_right_split(o.Op)){
             //console.log("yes")
             if(o.Op.length === 4){
-                console.log(o.Op)
+                // console.log(o.Op)
             }
             else{
                 OP = o.Op.slice(4)
@@ -329,7 +379,7 @@ export class Display {
             message = o.LeftOperand
             //console.log(message)
             
-            context.fillText(message, this.pos, this.height + 50*this.textScale);
+            context.fillText(message, this.pos, this.heightOffset + 50*this.textScale);
             //add extra padding if detect underscore
             this.pos += (message.length-1)*10
             // console.log((message.length-1)*10)
@@ -341,7 +391,7 @@ export class Display {
             if(this.include_right_split(OP)||this.include_left_split(OP)) break
             if(OP === symbol){
                 var image = this.images[OP]
-                context.drawImage(image, this.pos, this.height + 15 * this.textScale, 36 * this.textScale, 36 * this.textScale);
+                context.drawImage(image, this.pos, this.heightOffset + 15 * this.textScale, 36 * this.textScale, 36 * this.textScale);
                 this.pos += 40*this.textScale
                 break;
             }
@@ -352,7 +402,7 @@ export class Display {
             message = o.RightOperand
             
             //console.log(message)
-            context.fillText(message, this.pos, this.height + 50*this.textScale);
+            context.fillText(message, this.pos, this.heightOffset + 50*this.textScale);
 
             //add extra padding if detect underscore
             this.pos += (message.length-1)*10
@@ -372,29 +422,24 @@ export class Display {
         if(bracket){
             this.pos += 40*this.textScale
 
-            this.drawBracket(this.pos, this.height + 45*this.textScale, this.bracketSize);
-            //console.log(this.pos, this.height)
+            this.drawBracket(this.pos, this.heightOffset + 45*this.textScale, this.bracketSize);
+            //console.log(this.pos, this.heightOffset)
             //display top and bot expression
             this.pos+=20*this.textScale
 
             this.displayTB(o);
-            
-            context.fillText(",", this.pos, this.height + 50*this.textScale);
-            this.pos += 35*this.textScale
         }
         else if(BackBracket){
             this.displayTB(o)
             this.pos+=20*this.textScale
-            this.drawBackBracket(this.pos, this.height + 45*this.textScale, this.bracketSize)
+            this.drawBackBracket(this.pos, this.heightOffset + 45*this.textScale, this.bracketSize)
             this.pos+=20*this.textScale
 
-            context.fillText(",", this.pos, this.height + 50*this.textScale);
-            this.pos += 35*this.textScale
         }
         else {
             this.pos += 10*this.textScale
 
-            context.fillText(",", this.pos, this.height + 50*this.textScale);
+            context.fillText(",", this.pos, this.heightOffset + 50*this.textScale);
             this.pos += 20*this.textScale
         }
         //this.pos += 20*this.textScale

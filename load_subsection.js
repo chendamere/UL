@@ -5,60 +5,49 @@ var UL = new UL_kernel();
 var display;
 const canvas = document.getElementById('UL_kernel');
 
-
-// const subsection = document.getElementById("subsection-name")
+window.onload = init
 
 const asyn_subsection = async (path) => {
     return new Promise((resolve) => {
         setTimeout(() => {
-            console.log(path)
+            //console.log(path)
             var ret = doGET(path).then(handleFileData)
             resolve(ret)
         });
     });
 };
 
-
-// const subsectionName = subsection.innerHTML
-// console.log(subsectionName)
-// var path = "./database/txt/" + subsectionName + ".txt"
-
-// const rule_of_operator = await doGET(path).then(handleFileData)
-
-// "Rules_of_Relationship_of_Node_Connectivity",
-// "Rules_of_Continuity",
-// "Rules_of_Subnode",
-// "Rules_of_Three_Fundamental_Relationships",
-// "Swap_Theorems_of_the_Same_Operand",
-// "Theorems_of_Assign_Operator",
-// "Theorems_of_Insert_Node_Function_Del(j)",
-// "Theorems_of_Insert_Node_Function_Ins(t;j)",
-// "Theorems_of_Operators and Relationships",
-// "Theorems_of_Relationship_of_Identical_Node_Comparison",
-// "Theorems_of_Relationship_of_Node_Null_Comparison",
-// "Theorems_of_Relationship_of_Node_Value_Comparison",
-// "Tree_Order_Induction"
-// "Axioms_of_Assign_Operator",
-// "Function_Cpo(r)",
-// "Multiplication",
-// "Next_Order_Induction",
-// "paradox",
-// "Previous_Order_Induction",
-// "Recursive_Function_R_(i)",
-// "Recursive_Function_R(i)",
-// "Recursive_Function_Rc(i;j)",
-// "Recursive_Function_Rcpm(i;j;r)",
-// "Recursive_Function_Rcpo(i;r)",
-// "Rules_of_Assign_Operator_in_emporary_Space",
-// "Rules_of_Empty_Branch_Function",
-// "Rules_of_Node_Ring",
-// "Rules_of_Number_Equal_Relationship",
-// "Rules_of_Number_More_Than_and_Less_Than_Relationship",
-
 var chapterNames = [
     "Rules of Operators",
-    "Addition",
-    "Next Order Induction",
+    "Rules of Three Fundamental Relationships",
+
+    // "Addition",
+    // "Next Order Induction",
+    // "Rules of Relationship of Node Connectivity",
+    // "Swap Theorems of the Same Operand",
+    // "Theorems of Assign Operator",
+    // "Theorems of Delete Node Function Del(j)",
+    // "Theorems of Insert Node Function Ins(t;j)",
+    // "Theorems of Operators and Relationships",
+    // "Theorems of Relationship of Node Null Comparison",
+    // "Theorems of Relationship of Node Value Comparison",
+    // "Tree Order Induction",
+    // "Axioms of Assign Operator",
+    // "Function Cpo(r)",
+    // "Multiplication",
+    // "Next Order Induction",
+    // "paradox",
+    // "Previous Order Induction",
+    // "Recursive Function R_(i)",
+    // "Recursive Function R(i)",
+    // "Recursive Function Rc(i;j)",
+    // "Recursive Function Rcpm(i;j;r)",
+    // "Recursive Function Rcpo(i;r)",
+    // "Rules of Assign Operator in Temporary Space",
+    // "Rules of Empty Branch Function",
+    // "Rules of Node Ring",
+    // "Rules of Number Equal Relationship",
+    // "Rules of Number More Than and Less Than Relationship",
 ]
 
 const parsedChapters = []
@@ -67,11 +56,11 @@ var sub_section_index = {}
 for(let i = 0; i <= chapterNames.length-1; i++){
     parsedChapters.push(await asyn_subsection("./database/latex/" +chapterNames[i]+".tex"))
 }
-console.log(parsedChapters)
+// console.log(parsedChapters)
 create_sections(parsedChapters)
 
 let btns = document.getElementsByTagName("button")
-    console.log(btns)
+    //console.log(btns)
     for (var i = 0; i < btns.length; i++)
     {
         btns[i].onclick = function()
@@ -80,7 +69,7 @@ let btns = document.getElementsByTagName("button")
             console.log(this.innerHTML)
             console.log(document.getElementById("section-name").innerHTML)
 
-            init()            
+            init()         
         };
 }
 
@@ -97,20 +86,37 @@ function init() {
     //extract subsection to parsed_strTable
     let add = false
 
+    //reset stringtable
     UL.StringTable = []
+    UL.subsectionsIndex = []
+    UL.subsubsectionsIndex = []
+    let numSubSec = 0
+    let numSubSubSec = 0
+    //console.log(parsedChapters)
     for(let i = 0; i < parsedChapters.length; i++){
 
         let chapter = parsedChapters[i]
-        for(let j = 0; j < chapter.length; j ++) {
+        console.log(chapter.length)
+        let subsection = [];
+        let subsubsection = [];
+        let offset;
+        let sectionFound= false;
+        let index = 0;
+        let j = 0;
+        
+        for(; j < chapter.length; j ++,index ++) {
             let line = chapter[j]
-            // console.log(line)
+            console.log(line)
+            offset = numSubSubSec+numSubSec+2
             if(line[0] === "#"){
-                //console.log(line,btnTitle)
+                console.log(line)
                 if(line.includes(btnTitle)){
                     UL.title = line.slice(1,line.length)
-                    //console.log(UL.title)
+                    console.log(UL.title)
                     //detect section title
                     add = !add
+                    sectionFound = true;
+                    index = 1
                     continue
                 }
                 if(add){
@@ -119,50 +125,84 @@ function init() {
                     break;
                 }
             }
-            if(add) {
-                //console.log("here")
-                UL.StringTable.push(line)
+            else if(sectionFound){
+                if(line[0] === "%"){
+                    // console.log(line,subsubsection)
+                    numSubSubSec += 1
+                    if(subsubsection.length===0){
+                        subsubsection.push(line.slice(1,line.length))
+                        subsubsection.push(index-(offset))    
+                    }
+                    else if(subsubsection.length===2){
+                        subsubsection.push(index-(offset))
+                        UL.subsubsectionsIndex.push(subsubsection)
+                        subsubsection = []
+                        subsubsection.push(line.slice(1,line.length))
+                        subsubsection.push(index-(offset))
+                    }
+                    else{
+                        console.log("parsing subsubsection error")
+                    }
+                }
+                else if(line[0] === "$"){
+                    // console.log(numSubSubSec,numSubSec)
+                    console.log(line, subsection)
+                    numSubSec += 1
+                    if(subsection.length===0){
+                        //should -2 because chapter name and section name
+                        subsection.push(line.slice(1,line.length))
+                        subsection.push(index-(offset))
+                    }
+                    else if(subsection.length===2){
+                        subsection.push(index-(offset))
+                        UL.subsectionsIndex.push(subsection)
+                        subsection = []
+                        subsection.push(line.slice(1,line.length))
+                        subsection.push(index-(offset))
+                        // console.log(line, subsection)
+
+                    }
+                    
+                    else{
+                        console.log("parsing subsection error")
+                    }
+                }
+                else if(add) {
+                    //console.log("here")
+                    // console.log(line)
+                    UL.StringTable.push(line)
+                }
             }
-            // console.log(ChapterTitle,btnTitle)
-            // if(line.includes(btnTitle)){
-            //     //console.log(Chapter)
-            //     parsed_strTable = get_title(chapter)
-            // }
+            else{
+                console.log("not found")
+            }
+        }
+        if(j === chapter.length && sectionFound){
+            // console.log("here", UL.subsectionsIndex, j)
+            //console.log("here",j,chapter.length)
+            //edge cases
+            if(subsection.length === 2) {
+                subsection.push(index-(offset))
+                UL.subsectionsIndex.push(subsection)
+                subsection = []
+            }
+            if(subsubsection.length === 2) {
+                subsubsection.push(index-(offset))
+                UL.subsubsectionsIndex.push(subsubsection)
+                subsubsection = []
+            }   
+            break;
         }
     }
-    //console.log(UL.StringTable)
 
-    // if(parsed_strTable === undefined) {
-    //     return
-    // }    
-    // UL.title = parsed_strTable[0]
-    // UL.StringTable = parsed_strTable[1]
-
-    // console.log(UL.title, UL.StringTable)
-
-
+    console.log(UL.subsectionsIndex,UL.subsubsectionsIndex)
     //display title
     document.title = UL.title
     document.getElementById('title').innerHTML = UL.title
 
     UL.init()
     display = new Display(UL, canvas)
-
-    
-}
-
-function get_title(stringTable){
-    for(let i = 0; i <= stringTable.length - 1; i++){
-        if(String(stringTable[i]).includes("@")){
-            // console.log(stringTable[i].slice(1, stringTable[i].length))
-            let retTitle = stringTable[i].slice(1, stringTable[i].length)
-            retTitle = retTitle.replaceAll("_"," ")
-            console.log(retTitle)
-            //first is title second is sliced stringtable
-            return [retTitle, stringTable.slice(i+1,stringTable.length)]
-        }
-    }
-    return stringTable
+    display.init()    
 }
 
 async function doGET(path) {
@@ -193,7 +233,7 @@ async function doGET(path) {
 
 
 function handleFileData(fileData) {
-    console.log("handling data")
+    //console.log("handling data")
 
     let beginMath = false
     
@@ -216,9 +256,7 @@ function handleFileData(fileData) {
             beginMath = false
             continue
         }
-        //parsed_line = line.replaceAll("\\","")
 
-        //console.log(parsed_line.toLowerCase())
         parsed_line = line
         let i = parsed_line.length-1
         let j = 0
@@ -240,14 +278,14 @@ function handleFileData(fileData) {
             tempTable.push(parsed_line)
             //console.log(parsed_line)
         }
-        // else if(parsed_line.toLowerCase().includes("subsubsection")){
-        //     parsed_line = parsed_line.replace("\\subsubsection","%").replace("{","").replace("}","")
-        //     tempTable.push(parsed_line)
-        // }
-        // else if(parsed_line.toLowerCase().includes("subsection")){
-        //     parsed_line = parsed_line.replace("\\subsection","$").replace("{","").replace("}","")
-        //     tempTable.push(parsed_line)
-        // }
+        else if(parsed_line.toLowerCase().includes("subsubsection")){
+            parsed_line = parsed_line.replace("\\subsubsection","%").replace("{","").replace("}","")
+            tempTable.push(parsed_line)
+        }
+        else if(parsed_line.toLowerCase().includes("subsection")){
+            parsed_line = parsed_line.replace("\\subsection","$").replace("{","").replace("}","")
+            tempTable.push(parsed_line)
+        }
         else if(parsed_line.toLowerCase().includes("section")){
             parsed_line = parsed_line.replace("\\section","#").replace("{","").replace("}","")
             tempTable.push(parsed_line)
@@ -260,7 +298,7 @@ function handleFileData(fileData) {
         else {continue}
 
     }
-    console.log("done")
+    //console.log("done")
     // for(const o of theorems) {
     //     console.log(o, o.length)
     // }
@@ -334,9 +372,8 @@ function create_sections(parsed_chapters){
             console.log("no chapter!")
         }
         var li = document.createElement("li")
+        li.classList.add("align-left")
         li.appendChild(drop_down)
         toc_ul.appendChild(li)
     }
 }
-
-window.onload = init
