@@ -8,6 +8,7 @@ export class Expression{
         this.bot;
         this.prev;
         this.next;
+        this.hasIf = false;
     }
 };
 

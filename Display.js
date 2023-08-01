@@ -15,6 +15,9 @@ function drawLine(ctx, begin, end, stroke = 'black', width = 1) {
     ctx.stroke();
 }
 
+function hasNumber(myString) {
+    return /\d/.test(myString);
+}
 export class Display {
 
     constructor(UL_kernel, canvas){
@@ -42,6 +45,7 @@ export class Display {
             ,"\\Ps"
             ,"\\Tc"
             ,"\\Tt"
+            ,"\\Pe"
         ]
 
         //this.canvas.width = 1500;
@@ -51,8 +55,7 @@ export class Display {
         this.beginLine = true;
         this.context = this.canvas.getContext("2d");
         this.context.canvas.width  = window.innerWidth/1.5;
-        window.innerHeight = this.axiomTable.length*100
-        this.context.canvas.height = window.innerHeight;
+
         // console.log(this.context.canvas.height)
         this.heightOffset = 40;
         this.pos = 20;
@@ -76,6 +79,14 @@ export class Display {
     
 
     init() {
+
+        var numSplit = this.count_splits_in_table()
+
+        var height = (this.kernel.subsectionsIndex.length*150) +(this.kernel.subsubsectionsIndex.length*100) + (this.axiomTable.length - numSplit)*20 + (numSplit * 80)
+        console.log(numSplit)
+        window.innerHeight = height
+        this.context.canvas.height = window.innerHeight;
+
         if(this.axiomTable.length !== 0) {
             this.display_from_table();
         }
@@ -88,6 +99,26 @@ export class Display {
         //     this.display_from_proof()
         // }
         
+    }
+
+    count_splits_in_table(){
+        var count = 0
+        for(let i = 0; i < this.axiomTable.length; i++) {
+            var found = false
+            for(const EXPS of [this.axiomTable[i].left, this.axiomTable[i].right]){
+                // console.log(EXPS)
+                // if(found) continue
+                for(const o of EXPS){
+                    if((this.include_left_split(o.Op) || this.include_right_split(o.Op)) && !found){
+                        // console.log(o.Op)
+                        count += 1
+                        found = true
+                        break
+                    }
+                }
+            }
+        }
+        return count
     }
 
     display_from_table(){
@@ -103,6 +134,8 @@ export class Display {
 
         // console.log(this.kernel.subsectionsIndex)
         // console.log(this.kernel.subsubsectionsIndex)
+        console.log(this.kernel.subsectionsIndex)
+
 
 
         for(let i = 0; i < this.axiomTable.length; i++) {
@@ -116,8 +149,9 @@ export class Display {
 
             //resset x pos every line
             this.pos = 20*this.textScale
+
             for(const subsec of this.kernel.subsectionsIndex){
-                //display subsection
+                //display subsection title
                 if(i === subsec[1]){
                     // console.log(i,subsec)
                     context.font = size*2 + "px Helvetica, sans-serif ";
@@ -127,27 +161,35 @@ export class Display {
                     this.heightOffset += 50 * this.textScale*2
                     this.pos = 20*this.textScale
                     InSubsection = true
+                    break
                 }
 
                 if(i === subsec[2]){
+                    // console.log(subsec)
                     this.heightOffset += 50 * this.textScale*2
+                    
                 }
             }
+            
 
             for(const subsubsec of this.kernel.subsubsectionsIndex){
-                //display subsection
+                //display subsubsection title
                 if(i === subsubsec[1]){
                     //console.log(i,subsubsec)
                     context.font = size*1.5 + "px Helvetica, sans-serif ";
                     this.pos = 220*this.textScale
                     context.fillText(subsubsec[0], this.pos, this.heightOffset + 50 * this.textScale);
                     context.font = size + "px Helvetica, sans-serif ";
-                    this.heightOffset += 50 * this.textScale*1.5
+                    this.heightOffset += 70 * this.textScale*1.5
                     this.pos = 20*this.textScale
                     InSubSubSection = true
+                    break
                 }
                 if(i === subsubsec[2]){
+                    // console.log(subsubsec)
+
                     this.heightOffset += 50 * this.textScale*2
+                    
                 }
             }
 
@@ -330,6 +372,76 @@ export class Display {
 
     }
 
+    padding(message){
+        var extraScaling = 0.7
+        var multiple = false
+        for(const Char of message) {
+            //console.log(Char)
+            if(Char === 'm' || Char ==='w' || Char === 'M' || Char ==='W' || Char === '_'){
+                if(multiple){
+                    this.pos += 30*this.textScale*extraScaling
+                }else{
+                    this.pos += 30*this.textScale
+
+                }
+            }
+            else if(Char === 'i' || Char === 'l' || Char === 'j' || Char === 'I' || Char === 'J' || Char ==="1"){
+                if(multiple){
+                    this.pos += 10*this.textScale*extraScaling
+                }else{
+                this.pos += 10*this.textScale
+                }
+            }
+            else{
+                //console.log(Char)
+                if(multiple){
+                    this.pos += 20*this.textScale*extraScaling
+                }else{
+                    this.pos += 20*this.textScale
+                }
+            }
+            multiple = true
+        }
+    }
+
+    displaySubscriptMessage(message,curMessage){
+        var context = this.context
+        context.fillText(message, this.pos, this.heightOffset + 50*this.textScale);
+        this.pos += 10 * this.textScale
+        let size = String(this.textScale * 30)
+        context.font = size/2 + "px Helvetica, sans-serif ";
+        context.fillText(curMessage, this.pos, this.heightOffset + 55*this.textScale);
+        this.pos += 15   * this.textScale
+
+        context.font = size + "px Helvetica, sans-serif ";
+    }
+    subscript(message){
+        var curMessage = message;
+        for(let i = 0; i<message.length; i++){
+            if(message[i] === '_'){
+                if(message[i+1] !== undefined)
+                {
+                    if(Number.isInteger(parseInt(message[i+1]))){
+                        curMessage = message.slice(i+1)
+                        message = message.slice(0,i)
+                        // console.log(curMessage)
+                        this.displaySubscriptMessage(message,curMessage)
+                    }
+                    else if(message[i+1] === '{'){
+                        let j = i+1 
+                        while(j !== '}'){
+                            curMessage += message[j++]
+                        }
+                        message = message.slice(0,i)
+                        this.displaySubscriptMessage(message,curMessage)
+                    }
+                    else{break}
+                }
+                else{break}
+            }
+        }
+    }
+
     displayExpression(o){
 
         if(o === undefined) return;
@@ -374,21 +486,33 @@ export class Display {
             BackBracket = true
         }
 
+        if(o.hasIf) {
+            let message = "if("
+            context.fillText(message, this.pos, this.heightOffset + 50*this.textScale);
+            // this.pos += (message.length-1)*10
+            this.pos += 30*this.textScale
+        }
+
         //display left operand
         if(leftOperand !== undefined){
-            message = o.LeftOperand
+            message = leftOperand
             //console.log(message)
-            
-            context.fillText(message, this.pos, this.heightOffset + 50*this.textScale);
-            //add extra padding if detect underscore
-            this.pos += (message.length-1)*10
+
+            if(message.includes('_')){
+                this.subscript(message)
+            }
+            else{
+                context.fillText(message, this.pos, this.heightOffset + 50*this.textScale);
+                this.padding(message)
+
+            }            
+            //add extra padding 
+            // this.pos += (message.length-1)*10
             // console.log((message.length-1)*10)
             left = false;
-            this.pos += 30*this.textScale
         }
         //display operator
         for(const symbol of this.symbols){
-            if(this.include_right_split(OP)||this.include_left_split(OP)) break
             if(OP === symbol){
                 var image = this.images[OP]
                 context.drawImage(image, this.pos, this.heightOffset + 15 * this.textScale, 36 * this.textScale, 36 * this.textScale);
@@ -399,16 +523,20 @@ export class Display {
 
         //display right operand
         if(rightOperand !== undefined){
-            message = o.RightOperand
+            message = rightOperand
             
-            //console.log(message)
-            context.fillText(message, this.pos, this.heightOffset + 50*this.textScale);
-
-            //add extra padding if detect underscore
-            this.pos += (message.length-1)*10
-            this.pos += 30*this.textScale
-            
+            if(message.includes('_')){
+                this.subscript(message)
+            }
+            else{
+                context.fillText(message, this.pos, this.heightOffset + 50*this.textScale);
+                this.padding(message)
+            }         
             left = true
+        }
+        if(o.hasIf) {
+            context.fillText(")", this.pos, this.heightOffset + 50*this.textScale);
+            this.pos += 10*this.textScale
         }
 
         // if(!left){
@@ -421,7 +549,6 @@ export class Display {
         // }
         if(bracket){
             this.pos += 40*this.textScale
-
             this.drawBracket(this.pos, this.heightOffset + 45*this.textScale, this.bracketSize);
             //console.log(this.pos, this.heightOffset)
             //display top and bot expression

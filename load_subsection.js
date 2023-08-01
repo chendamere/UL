@@ -17,6 +17,25 @@ const asyn_subsection = async (path) => {
     });
 };
 
+const test_asyn_subsection = async (path) => {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            //console.log(path)
+            var ret = doGET(path).then(test_parsing)
+            resolve(ret)
+        });
+    });
+};
+
+function test_parsing(fileData){
+    
+    if(!fileData){
+        return;
+    }
+    return fileData
+}
+
+
 var chapterNames = [
     "Rules of Operators",
     "Rules of Three Fundamental Relationships",
@@ -56,6 +75,12 @@ var sub_section_index = {}
 for(let i = 0; i <= chapterNames.length-1; i++){
     parsedChapters.push(await asyn_subsection("./database/latex/" +chapterNames[i]+".tex"))
 }
+
+var testText = await test_asyn_subsection("./test.txt")
+var latexText = await test_asyn_subsection("./latex.tex")
+
+console.log(testText)
+console.log(latexText)
 // console.log(parsedChapters)
 create_sections(parsedChapters)
 
@@ -66,8 +91,8 @@ let btns = document.getElementsByTagName("button")
         btns[i].onclick = function()
         {
             document.getElementById("section-name").innerHTML = this.innerHTML
-            console.log(this.innerHTML)
-            console.log(document.getElementById("section-name").innerHTML)
+            //console.log(this.innerHTML)
+            //console.log(document.getElementById("section-name").innerHTML)
 
             init()         
         };
@@ -77,6 +102,7 @@ let btns = document.getElementsByTagName("button")
 function init() {
 
     console.log("window loaded")
+
     
     //UL.StringTable = rule_of_operator
     //let parsed_strTable
@@ -96,7 +122,7 @@ function init() {
     for(let i = 0; i < parsedChapters.length; i++){
 
         let chapter = parsedChapters[i]
-        console.log(chapter.length)
+        //console.log(chapter)
         let subsection = [];
         let subsubsection = [];
         let offset;
@@ -106,21 +132,22 @@ function init() {
         
         for(; j < chapter.length; j ++,index ++) {
             let line = chapter[j]
-            console.log(line)
-            offset = numSubSubSec+numSubSec+2
+            // console.log(line)
+            offset = numSubSubSec+numSubSec+1
             if(line[0] === "#"){
-                console.log(line)
+                // console.log(line)
                 if(line.includes(btnTitle)){
+                    // console.log(line)
                     UL.title = line.slice(1,line.length)
-                    console.log(UL.title)
+                    //console.log(UL.title)
                     //detect section title
-                    add = !add
+                    add = true
                     sectionFound = true;
-                    index = 1
+                    index = 0
                     continue
                 }
                 if(add){
-                    console.log("break")
+                    // console.log("break")
                     //if already adding, then finished parsing section
                     break;
                 }
@@ -146,12 +173,13 @@ function init() {
                 }
                 else if(line[0] === "$"){
                     // console.log(numSubSubSec,numSubSec)
-                    console.log(line, subsection)
                     numSubSec += 1
                     if(subsection.length===0){
                         //should -2 because chapter name and section name
                         subsection.push(line.slice(1,line.length))
                         subsection.push(index-(offset))
+                        console.log(line, subsection)
+
                     }
                     else if(subsection.length===2){
                         subsection.push(index-(offset))
@@ -159,10 +187,9 @@ function init() {
                         subsection = []
                         subsection.push(line.slice(1,line.length))
                         subsection.push(index-(offset))
-                        // console.log(line, subsection)
+                        // console.log(line, subsection, index, offset)
 
                     }
-                    
                     else{
                         console.log("parsing subsection error")
                     }
@@ -174,14 +201,13 @@ function init() {
                 }
             }
             else{
-                console.log("not found")
+                //console.log("not found")
             }
         }
-        if(j === chapter.length && sectionFound){
-            // console.log("here", UL.subsectionsIndex, j)
-            //console.log("here",j,chapter.length)
+        if(sectionFound){
             //edge cases
             if(subsection.length === 2) {
+                // console.log(subsection)
                 subsection.push(index-(offset))
                 UL.subsectionsIndex.push(subsection)
                 subsection = []
@@ -195,7 +221,7 @@ function init() {
         }
     }
 
-    console.log(UL.subsectionsIndex,UL.subsubsectionsIndex)
+    //console.log(UL.subsectionsIndex,UL.subsubsectionsIndex)
     //display title
     document.title = UL.title
     document.getElementById('title').innerHTML = UL.title

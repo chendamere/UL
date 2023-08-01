@@ -420,6 +420,7 @@ export class UL_kernel {
         var mid = false
         var add = true
         var eqTable = [] // store all eq as return expression
+        // console.log(ExprString)
         //console.log(ExprString)
         for(let j = 0; j < ExprString.length; j ++) {
             if(eqTable.length === 0) {
@@ -458,6 +459,7 @@ export class UL_kernel {
                 }
 
                 //if first detected character is alphabet, then its operand
+                //unless they end up being special functions like if or Rcpo
                 if(isChar(c)) {
                     var operand = "";
                     while(c !== ' ' && c !== '}'  && c !== '{' && c !== '\\' && c !== undefined){
@@ -500,14 +502,29 @@ export class UL_kernel {
                             //console.log(c, expr)
                             c = expr[n++]
                             if(isChar(c) && left){
-                                newExpr.LeftOperand = c
+                                let operand = "";
+                                while(c !== ' ' && c !== '}'  && c !== '{' && c !== '\\' && c !== undefined){
+                                    if(operand === 'if('){
+                                        operand = ""
+                                        newExpr.hasIf = true
+                                        //console.log("here")
+                                    }
+                                    operand += c
+                                    c = expr[n++]
+                                }
+                                newExpr.LeftOperand = operand
                                 left = false
                             }else if(isChar(c) && !left) {
-                                newExpr.RightOperand = c
+                                let operand = "";
+                                while(c !== ' ' && c !== '}'  && c !== '{' && c !== '\\' && c!==')' && c !== undefined){
+                                    operand += c
+                                    c = expr[n++]
+                                }
+                                newExpr.RightOperand = operand
                             }
                             if(c === "\\" || c === '}'){
                                 //console.log(c, expr)
-                                while(c !== undefined && c !== ' ' && c !== '}'){
+                                while(c !== undefined && c !== ' ' && c !== '}' && c !==')'){
                                     op += c
                                     c = expr[n++]
                                 }
