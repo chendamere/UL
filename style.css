@@ -634,6 +634,7 @@ html, body {
 .toc {
     background-color:  rgb(217, 217, 217);
     position: relative;
+    min-width: 60vh;
 }
 
 .toc ul {

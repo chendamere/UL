@@ -5,7 +5,14 @@ var UL = new UL_kernel();
 var display;
 const canvas = document.getElementById('UL_kernel');
 
-window.onload = init
+window.onload = function(){
+    init()
+}
+
+window.addEventListener('load', function () {
+    // init()
+
+})
 
 const asyn_subsection = async (path) => {
     return new Promise((resolve) => {
@@ -39,6 +46,9 @@ function test_parsing(fileData){
 var chapterNames = [
     "Rules of Operators",
     "Rules of Three Fundamental Relationships",
+    "Theorems of Relationship of Node Null Comparison",
+    "Theorems of Relationship of Node Value Comparison",
+    "Theorems of Relationship of Identical Node Comparison",
 
     // "Addition",
     // "Next Order Induction",
@@ -48,8 +58,6 @@ var chapterNames = [
     // "Theorems of Delete Node Function Del(j)",
     // "Theorems of Insert Node Function Ins(t;j)",
     // "Theorems of Operators and Relationships",
-    // "Theorems of Relationship of Node Null Comparison",
-    // "Theorems of Relationship of Node Value Comparison",
     // "Tree Order Induction",
     // "Axioms of Assign Operator",
     // "Function Cpo(r)",
@@ -76,24 +84,20 @@ for(let i = 0; i <= chapterNames.length-1; i++){
     parsedChapters.push(await asyn_subsection("./database/latex/" +chapterNames[i]+".tex"))
 }
 
-var testText = await test_asyn_subsection("./test.txt")
-var latexText = await test_asyn_subsection("./latex.tex")
+// var testText = await test_asyn_subsection("./test.txt")
+// var latexText = await test_asyn_subsection("./latex.tex")
 
-console.log(testText)
-console.log(latexText)
-// console.log(parsedChapters)
 create_sections(parsedChapters)
 
+// let htmlChapterNames;
+
 let btns = document.getElementsByTagName("button")
-    //console.log(btns)
-    for (var i = 0; i < btns.length; i++)
-    {
+for (var i = 0; i < btns.length; i++)
+{
         btns[i].onclick = function()
         {
             document.getElementById("section-name").innerHTML = this.innerHTML
-            //console.log(this.innerHTML)
-            //console.log(document.getElementById("section-name").innerHTML)
-
+            
             init()         
         };
 }
@@ -102,11 +106,11 @@ let btns = document.getElementsByTagName("button")
 function init() {
 
     console.log("window loaded")
-
     
     //UL.StringTable = rule_of_operator
     //let parsed_strTable
-
+    let htmlChapterName = document.getElementById("chapterName").firstChild.data
+    // console.log(htmlChapterNames)
     let btnTitle = document.getElementById("section-name").innerHTML
 
     //extract subsection to parsed_strTable
@@ -118,7 +122,14 @@ function init() {
     UL.subsubsectionsIndex = []
     let numSubSec = 0
     let numSubSubSec = 0
-    //console.log(parsedChapters)
+
+    //let a = document.getElementsByClassName("dropdown")
+    // console.log(a.length)
+    // console.log(btnTitle)
+    // console.log(htmlChapterNames)
+    // console.log(a)
+
+    // console.log(parsedChapters)
     for(let i = 0; i < parsedChapters.length; i++){
 
         let chapter = parsedChapters[i]
@@ -126,23 +137,31 @@ function init() {
         let subsection = [];
         let subsubsection = [];
         let offset;
-        let sectionFound= false;
+        let chapterFound = false;
+        let subSectionFound= false;
         let index = 0;
         let j = 0;
-        
         for(; j < chapter.length; j ++,index ++) {
             let line = chapter[j]
             // console.log(line)
+
+            //first detect chapter name
+
+            if(line[0] === "@"){
+                if(line.includes(htmlChapterName)){
+                    
+                    chapterFound = true;
+                }
+            }
             offset = numSubSubSec+numSubSec+1
-            if(line[0] === "#"){
+            if(line[0] === "#" && chapterFound){
                 // console.log(line)
                 if(line.includes(btnTitle)){
                     // console.log(line)
                     UL.title = line.slice(1,line.length)
-                    //console.log(UL.title)
                     //detect section title
                     add = true
-                    sectionFound = true;
+                    subSectionFound = true;
                     index = 0
                     continue
                 }
@@ -152,7 +171,7 @@ function init() {
                     break;
                 }
             }
-            else if(sectionFound){
+            else if(subSectionFound){
                 if(line[0] === "%"){
                     // console.log(line,subsubsection)
                     numSubSubSec += 1
@@ -204,7 +223,7 @@ function init() {
                 //console.log("not found")
             }
         }
-        if(sectionFound){
+        if(subSectionFound){
             //edge cases
             if(subsection.length === 2) {
                 // console.log(subsection)
@@ -336,13 +355,9 @@ function create_sections(parsed_chapters){
     //section is list of section name 
     // get toc_ul
     var toc_ul = document.getElementById("toc-ul");
-    //console.log(toc_ul)
 
     for(let i = 0; i < parsed_chapters.length;i++) {
         let chapter = parsed_chapters[i]
-        //console.log(chapter)
-        var chapterName = ""
-
         var drop_down;
         //look for chapter name if not found return error
         for(let j = 0 ; j < chapter.length; j++ ) {
@@ -351,6 +366,8 @@ function create_sections(parsed_chapters){
             //console.log(name)
             var span;
             var span2;
+
+            let chapterName = ""
 
             //dectect chapter name
             if(name[0] === "@"){
@@ -363,7 +380,7 @@ function create_sections(parsed_chapters){
             
                 span = document.createElement("span")
                 span2 = document.createElement("span")
-                span2.innerHTML = chapterName                
+                span2.innerText = chapterName                
             }
 
             //detect section name
@@ -379,7 +396,7 @@ function create_sections(parsed_chapters){
                 section.classList.add("dropdown-content")
             
                 var button = document.createElement("button");
-                button.innerHTML = sectionName;
+                button.innerText = sectionName;
                 button.classList.add("center")
 
                 section.appendChild(button)

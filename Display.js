@@ -28,7 +28,8 @@ export class Display {
         this.axiomTable = this.kernel.axiomTable;
         this.proof = this.kernel.proofTable
 
-        this.symbols = ["\\Oa"
+        this.symbols = [
+            "\\Oa"
             ,"\\Ob"
             ,"\\Oc"
             ,"\\Od"
@@ -39,17 +40,19 @@ export class Display {
             ,"\\Or"
             ,"\\Os"
             ,"\\Ot"
-            ,"\\Pne"
             ,"\\Pnl"
             ,"\\Pu"
             ,"\\Ps"
             ,"\\Tc"
             ,"\\Tt"
             ,"\\Pe"
+            ,"\\nPe"
+            ,"\\nPne"
+            ,"\\nPnl"
+            ,"\\nPu"
+            ,"\\nPs"
+            ,"\\nPe"
         ]
-
-        //this.canvas.width = 1500;
-        // this.canvas.height = 5000;
 
         this.images = {}
         this.beginLine = true;
@@ -69,21 +72,19 @@ export class Display {
 
         //handling image src
         for(const symbol of this.symbols){
-            const id = "UL_" + String(symbol).slice(-2)
-            //console.log(id)
+            const id = "UL_" + String(symbol).slice(1, this.symbols.length)
+            // console.log(id)
             var image = document.getElementById(id);
             this.images[symbol] = image
         }
     }
 
-    
-
     init() {
 
         var numSplit = this.count_splits_in_table()
 
-        var height = (this.kernel.subsectionsIndex.length*150) +(this.kernel.subsubsectionsIndex.length*100) + (this.axiomTable.length - numSplit)*20 + (numSplit * 80)
-        console.log(numSplit)
+        var height = (40 + this.kernel.subsectionsIndex.length*100) + (this.kernel.subsubsectionsIndex.length*100) + (this.axiomTable.length - numSplit)*25 + (numSplit * 80) 
+        // height *= this.textScale
         window.innerHeight = height
         this.context.canvas.height = window.innerHeight;
 
@@ -92,13 +93,6 @@ export class Display {
         }
         console.log(this.axiomTable)
         
-
-        // if(this.proof.length !== 0)
-        // {
-        //     console.log(this.proof)
-        //     this.display_from_proof()
-        // }
-        
     }
 
     count_splits_in_table(){
@@ -106,11 +100,9 @@ export class Display {
         for(let i = 0; i < this.axiomTable.length; i++) {
             var found = false
             for(const EXPS of [this.axiomTable[i].left, this.axiomTable[i].right]){
-                // console.log(EXPS)
                 // if(found) continue
                 for(const o of EXPS){
                     if((this.include_left_split(o.Op) || this.include_right_split(o.Op)) && !found){
-                        // console.log(o.Op)
                         count += 1
                         found = true
                         break
@@ -136,8 +128,6 @@ export class Display {
         // console.log(this.kernel.subsubsectionsIndex)
         console.log(this.kernel.subsectionsIndex)
 
-
-
         for(let i = 0; i < this.axiomTable.length; i++) {
 
             this.returnY = undefined
@@ -158,7 +148,7 @@ export class Display {
                     this.pos = 120*this.textScale
                     context.fillText(subsec[0], this.pos, this.heightOffset + 50 * this.textScale);
                     context.font = size + "px Helvetica, sans-serif ";
-                    this.heightOffset += 50 * this.textScale*2
+                    this.heightOffset += 50 
                     this.pos = 20*this.textScale
                     InSubsection = true
                     break
@@ -166,21 +156,20 @@ export class Display {
 
                 if(i === subsec[2]){
                     // console.log(subsec)
-                    this.heightOffset += 50 * this.textScale*2
+                    this.heightOffset += 50 
                     
                 }
             }
-            
 
             for(const subsubsec of this.kernel.subsubsectionsIndex){
-                //display subsubsection title
+                //display subsubsection title 
                 if(i === subsubsec[1]){
                     //console.log(i,subsubsec)
                     context.font = size*1.5 + "px Helvetica, sans-serif ";
                     this.pos = 220*this.textScale
                     context.fillText(subsubsec[0], this.pos, this.heightOffset + 50 * this.textScale);
                     context.font = size + "px Helvetica, sans-serif ";
-                    this.heightOffset += 70 * this.textScale*1.5
+                    this.heightOffset += 50
                     this.pos = 20*this.textScale
                     InSubSubSection = true
                     break
@@ -188,7 +177,7 @@ export class Display {
                 if(i === subsubsec[2]){
                     // console.log(subsubsec)
 
-                    this.heightOffset += 50 * this.textScale*2
+                    this.heightOffset += 50 
                     
                 }
             }
@@ -208,6 +197,7 @@ export class Display {
                         break
                     }
                 }
+                if(!eqSkipLine)break
             }
             
             for(const EXPS of [this.axiomTable[i].left, this.axiomTable[i].right]){
@@ -246,7 +236,12 @@ export class Display {
 
             this.beginLine = true;
             this.heightOffset += 50*this.textScale+this.numEq*30
+            // console.log(this.heightOffset)
         }
+
+        console.log(this.context.canvas.height, this.heightOffset)
+
+
     }
 
     display_from_proof(){
@@ -407,11 +402,11 @@ export class Display {
     displaySubscriptMessage(message,curMessage){
         var context = this.context
         context.fillText(message, this.pos, this.heightOffset + 50*this.textScale);
-        this.pos += 10 * this.textScale
+        this.pos += 15 * this.textScale
         let size = String(this.textScale * 30)
         context.font = size/2 + "px Helvetica, sans-serif ";
         context.fillText(curMessage, this.pos, this.heightOffset + 55*this.textScale);
-        this.pos += 15   * this.textScale
+        this.pos += 15 * this.textScale
 
         context.font = size + "px Helvetica, sans-serif ";
     }
@@ -455,14 +450,15 @@ export class Display {
         let bracket = false   
         let BackBracket = false    
         //console.log(o.Op)
- 
+        // console.log(o)
+
         if(this.include_left_split(o.Op)){
             //console.log("here")
             if(o.Op.length ===3){
                 //just eq
                 //console.log(o.Op)
             }
-            else if(o.Op.includes("\\Blb")){
+            else if(o.Op.includes("\\Blb") || o.Op.includes("\\Bls")){
                 OP = o.Op.slice(4)
                 //console.log(OP)
             }
@@ -470,7 +466,7 @@ export class Display {
                 //console.log(o.Op)
                 OP = o.Op.slice(3)
             }
-            //sconsole.log(this.adjust)
+            //console.log(this.adjust)
             bracket = true
         }
 
@@ -515,8 +511,17 @@ export class Display {
         for(const symbol of this.symbols){
             if(OP === symbol){
                 var image = this.images[OP]
-                context.drawImage(image, this.pos, this.heightOffset + 15 * this.textScale, 36 * this.textScale, 36 * this.textScale);
-                this.pos += 40*this.textScale
+                //if Pu or nPu then its a 3 height 5 width
+                if(OP ==="\\Pu" || OP ==="\\nPu"){
+                    context.drawImage(image, this.pos, this.heightOffset + 15 * this.textScale, 60 * this.textScale, 36 * this.textScale);
+                    this.pos += 52*this.textScale
+                }
+                else{
+                    // console.log(image)
+                    context.drawImage(image, this.pos, this.heightOffset + 15 * this.textScale, 36 * this.textScale, 36 * this.textScale);
+                    this.pos += 40*this.textScale
+
+                }
                 break;
             }
         }
@@ -538,19 +543,9 @@ export class Display {
             context.fillText(")", this.pos, this.heightOffset + 50*this.textScale);
             this.pos += 10*this.textScale
         }
-
-        // if(!left){
-        //     this.pos+=10*this.textScale
-        // }
-        //for \Or
-        // if(left && rightOperand === undefined){
-        //     //console.log("yes")
-        //     this.pos+=10*this.textScale
-        // }
         if(bracket){
             this.pos += 40*this.textScale
             this.drawBracket(this.pos, this.heightOffset + 45*this.textScale, this.bracketSize);
-            //console.log(this.pos, this.heightOffset)
             //display top and bot expression
             this.pos+=20*this.textScale
 
@@ -565,7 +560,6 @@ export class Display {
         }
         else {
             this.pos += 10*this.textScale
-
             context.fillText(",", this.pos, this.heightOffset + 50*this.textScale);
             this.pos += 20*this.textScale
         }
