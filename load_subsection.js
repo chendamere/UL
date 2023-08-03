@@ -97,6 +97,12 @@ for (var i = 0; i < btns.length; i++)
         btns[i].onclick = function()
         {
             document.getElementById("section-name").innerHTML = this.innerHTML
+            let parent = (this.parentElement.parentElement.parentElement)
+            // console.log(parent.firstChild.data)
+            document.getElementById("chapterName").innerText = parent.firstChild.data
+            // console.log(Cname)
+            // Cname = Cname.slice(1,Cname.length-1)
+            // console.log(Cname)
             
             init()         
         };
@@ -107,10 +113,9 @@ function init() {
 
     console.log("window loaded")
     
-    //UL.StringTable = rule_of_operator
     //let parsed_strTable
     let htmlChapterName = document.getElementById("chapterName").firstChild.data
-    // console.log(htmlChapterNames)
+    // console.log(htmlChapterName)
     let btnTitle = document.getElementById("section-name").innerHTML
 
     //extract subsection to parsed_strTable
@@ -123,17 +128,10 @@ function init() {
     let numSubSec = 0
     let numSubSubSec = 0
 
-    //let a = document.getElementsByClassName("dropdown")
-    // console.log(a.length)
-    // console.log(btnTitle)
-    // console.log(htmlChapterNames)
-    // console.log(a)
-
     // console.log(parsedChapters)
     for(let i = 0; i < parsedChapters.length; i++){
 
         let chapter = parsedChapters[i]
-        //console.log(chapter)
         let subsection = [];
         let subsubsection = [];
         let offset;
@@ -143,7 +141,6 @@ function init() {
         let j = 0;
         for(; j < chapter.length; j ++,index ++) {
             let line = chapter[j]
-            // console.log(line)
 
             //first detect chapter name
 
