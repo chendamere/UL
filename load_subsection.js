@@ -44,36 +44,40 @@ function test_parsing(fileData){
 
 
 var chapterNames = [
-    "Rules of Operators",
-    "Rules of Three Fundamental Relationships",
-    "Theorems of Relationship of Node Null Comparison",
-    "Theorems of Relationship of Node Value Comparison",
-    "Theorems of Relationship of Identical Node Comparison",
+    "Testing",
+    // "Rules of Operators",
+    // "Rules of Three Fundamental Relationships",
+    // "Theorems of Relationship of Node Null Comparison",
+    // "Theorems of Relationship of Node Value Comparison",
+    // "Theorems of Relationship of Identical Node Comparison",
+    // "Rules of Empty Branch Function",
+    // "Swap Theorems of the Same Operand",
+    // "Theorems of Operators and Relationships",
+    // "Next Order Induction",
+    // "Recursive Function R(i)",
+    // "Previous Order Induction",
+    // "Recursive Function R_(i)",
+    // "Rules of Node Ring",
+    // "Rules of Relationship of Node Connectivity",
+    // "Rules of Relationship of Node Continuity",
+    // "Rules of Relationship of Subnode",
+    // "Tree Order Induction",
+    // "Recursive Function Rc(i;j)",
+    // "Rules of Number Equal Relationship",
+
 
     // "Addition",
     // "Next Order Induction",
-    // "Rules of Relationship of Node Connectivity",
-    // "Swap Theorems of the Same Operand",
     // "Theorems of Assign Operator",
     // "Theorems of Delete Node Function Del(j)",
     // "Theorems of Insert Node Function Ins(t;j)",
-    // "Theorems of Operators and Relationships",
-    // "Tree Order Induction",
     // "Axioms of Assign Operator",
     // "Function Cpo(r)",
     // "Multiplication",
-    // "Next Order Induction",
     // "paradox",
-    // "Previous Order Induction",
-    // "Recursive Function R_(i)",
-    // "Recursive Function R(i)",
-    // "Recursive Function Rc(i;j)",
     // "Recursive Function Rcpm(i;j;r)",
     // "Recursive Function Rcpo(i;r)",
     // "Rules of Assign Operator in Temporary Space",
-    // "Rules of Empty Branch Function",
-    // "Rules of Node Ring",
-    // "Rules of Number Equal Relationship",
     // "Rules of Number More Than and Less Than Relationship",
 ]
 
@@ -83,6 +87,7 @@ var sub_section_index = {}
 for(let i = 0; i <= chapterNames.length-1; i++){
     parsedChapters.push(await asyn_subsection("./database/latex/" +chapterNames[i]+".tex"))
 }
+// console.log(parsedChapters)
 
 // var testText = await test_asyn_subsection("./test.txt")
 // var latexText = await test_asyn_subsection("./latex.tex")
@@ -98,11 +103,8 @@ for (var i = 0; i < btns.length; i++)
         {
             document.getElementById("section-name").innerHTML = this.innerHTML
             let parent = (this.parentElement.parentElement.parentElement)
-            // console.log(parent.firstChild.data)
             document.getElementById("chapterName").innerText = parent.firstChild.data
-            // console.log(Cname)
-            // Cname = Cname.slice(1,Cname.length-1)
-            // console.log(Cname)
+
             
             init()         
         };
@@ -237,7 +239,8 @@ function init() {
         }
     }
 
-    //console.log(UL.subsectionsIndex,UL.subsubsectionsIndex)
+    // console.log(UL.subsectionsIndex,UL.subsubsectionsIndex)
+    // console.log(parsedChapters)
     //display title
     document.title = UL.title
     document.getElementById('title').innerHTML = UL.title
@@ -285,9 +288,9 @@ function handleFileData(fileData) {
     }
     const tempTable = []
     const theorems = fileData.split('\n')
-    //console.log(theorems)
+    // console.log(theorems)
     for(const line of theorems) {
-        // console.log(line.length)
+        // console.log(line)
         var parsed_line = ""
 
         if(line.includes("\\begin{math}")){
@@ -299,7 +302,7 @@ function handleFileData(fileData) {
             continue
         }
 
-        parsed_line = line
+        parsed_line = line.replaceAll("\r","")
         let i = parsed_line.length-1
         let j = 0
         while(i > 0 && (parsed_line[i] === "\\" || parsed_line[i] === " ")){
@@ -309,7 +312,7 @@ function handleFileData(fileData) {
             j++
         }
         parsed_line = parsed_line.slice(j,i+1)
-        // console.log(parsed_line)
+        //console.log(parsed_line)
 
         if(parsed_line.length <= 1) {continue}
         else if((parsed_line.includes("\\[") && parsed_line.includes("\\]"))){
@@ -382,8 +385,10 @@ function create_sections(parsed_chapters){
 
             //detect section name
             if(name[0] === "#"){
+
+                //somehow section name cannot include &
                 var sectionName = name.slice(1,name.length)
-                //console.log(sectionName)
+                // console.log(sectionName)
 
                 if(span === undefined || span2 === undefined || drop_down ===undefined) {
                     console.log("chapter name not found!")

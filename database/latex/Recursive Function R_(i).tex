@@ -1,26 +1,26 @@
 
-\chapter{Recursive Function R\_(i)}
-\section{Definition of R\_(i)}
-\[,R\_(i), \Rq ,\Bb{if(i \Pu)}{,}{, i \Op, R\_(i),},\]
+\chapter{Recursive Function R_(i)}
+\section{Definition of R_(i)}
+\[,R_(i), \Rq ,\Bb{if(i \Pu)}{,}{, i \Op, R_(i),},\]
 \bigskip
 \bigskip
-\section{Theorems of R\_(i)}
+\section{Theorems of R_(i)}
 \subsection{Transformation:}
-\[, i \Pu, R\_(i), \Rq ,  i \Pu,\]
+\[, i \Pu, R_(i), \Rq ,  i \Pu,\]
 
-\[, i \nPu, R\_(i), \Rq , i \nPu, i \Op, R\_(i),\]
+\[, i \nPu, R_(i), \Rq , i \nPu, i \Op, R_(i),\]
 
-\[, R\_(i), \Rq , \Bb{if( i \Pu)}{,}{, i \Op,}, R\_(i),\]
+\[, R_(i), \Rq , \Bb{if( i \Pu)}{,}{, i \Op,}, R_(i),\]
 \bigskip
 \bigskip
 proof:\\
 \begin{math} 
-, R\_(i),\\\\
-\Rq,\Bb{if(i \Pu)}{,}{, i \Op, R\_(i),},\\\\\\
-\Rq,\Bb{if(i \Pu)}{,i \Pu,}{, i \Op, R\_(i),},\\\\\\
-\Rq,\Bb{if(i \Pu)}{,i \Pu, R\_(i),}{, i \Op, R\_(i),},\\\\\\
-\Rq,\Bb{if(i \Pu)}{, R\_(i),}{, i \Op, R\_(i),},\\\\\\
-\Rq,\Bb{if(i \Pu)}{,}{, i \Op,}, R\_(i),
+, R_(i),\\\\
+\Rq,\Bb{if(i \Pu)}{,}{, i \Op, R_(i),},\\\\\\
+\Rq,\Bb{if(i \Pu)}{,i \Pu,}{, i \Op, R_(i),},\\\\\\
+\Rq,\Bb{if(i \Pu)}{,i \Pu, R_(i),}{, i \Op, R_(i),},\\\\\\
+\Rq,\Bb{if(i \Pu)}{, R_(i),}{, i \Op, R_(i),},\\\\\\
+\Rq,\Bb{if(i \Pu)}{,}{, i \Op,}, R_(i),
 \end{math}
 \bigskip
 \bigskip
@@ -29,28 +29,28 @@ proof:\\
 \bigskip
 \bigskip
 \subsection{Result:}
-\[, R\_(i), \Rq , R\_(i), i \Pu,\]
+\[, R_(i), \Rq , R_(i), i \Pu,\]
 induction \; proof:\\
 \begin{math} 
 premise \; 1:\\
-, i \Pu, R\_(i),\\
+, i \Pu, R_(i),\\
 \Rq, i \Pu,\\
 \Rq, i \Pu, i \Pu,\\
-\Rq, i \Pu, R\_(i), i \Pu,\\\\\\
+\Rq, i \Pu, R_(i), i \Pu,\\\\\\
 premise \; 2:\\
-,\Ip \Pp i, R\_(i), \Rq ,\Ip \Pp i, R\_(i), i \Pu,\Ri \\\\
-,i \nPu, \Ip \Ps i, R\_(i), \\\\
-\Rq,\Ip \Ps i, i \nPu, R\_(i), \\\\
-\Rq,\Ip \Ps i, i \nPu, i \Op, R\_(i), \\\\
-\Rq, i \nPu,\Ip \Ps i, i \Op, R\_(i), \\\\
-\Rq, i \nPu,  i \Op, \Ip \Pp i, R\_(i), \\\\
-\Rq, i \nPu,  i \Op, \Ip \Pp i, R\_(i), i \Pu, \\\\
-\Rq, i \nPu,\Ip \Ps i,  i \Op, R\_(i), i \Pu, \\\\
-\Rq,\Ip \Ps i, i \nPu,  i \Op, R\_(i), i \Pu, \\\\
-\Rq,\Ip \Ps i, i \nPu, R\_(i), i \Pu, \\\\
-\Rq, i \nPu,\Ip \Ps i, R\_(i), i \Pu, \\\\\\
+,\Ip \Pp i, R_(i), \Rq ,\Ip \Pp i, R_(i), i \Pu,\Ri \\\\
+,i \nPu, \Ip \Ps i, R_(i), \\\\
+\Rq,\Ip \Ps i, i \nPu, R_(i), \\\\
+\Rq,\Ip \Ps i, i \nPu, i \Op, R_(i), \\\\
+\Rq, i \nPu,\Ip \Ps i, i \Op, R_(i), \\\\
+\Rq, i \nPu,  i \Op, \Ip \Pp i, R_(i), \\\\
+\Rq, i \nPu,  i \Op, \Ip \Pp i, R_(i), i \Pu, \\\\
+\Rq, i \nPu,\Ip \Ps i,  i \Op, R_(i), i \Pu, \\\\
+\Rq,\Ip \Ps i, i \nPu,  i \Op, R_(i), i \Pu, \\\\
+\Rq,\Ip \Ps i, i \nPu, R_(i), i \Pu, \\\\
+\Rq, i \nPu,\Ip \Ps i, R_(i), i \Pu, \\\\\\
 conclusion:\\
-,R\_(i), \Rq , R\_(i), i \Pu,
+,R_(i), \Rq , R_(i), i \Pu,
 \end{math}
 \bigskip
 \bigskip  
@@ -59,46 +59,46 @@ conclusion:\\
 \bigskip
 \bigskip
 \subsection{Operator:}
-\[, R\_(i), i \Os, \Rq , i \Os,\]
+\[, R_(i), i \Os, \Rq , i \Os,\]
 induction \;  proof:\\
 \begin{math} 
 premise \; 1:\\
-, i \Pu, R\_(i),i \Os,\\
+, i \Pu, R_(i),i \Os,\\
 \Rq, i \Pu,i \Os,\\\\\\
 premise \; 2:\\
-,\Ip \Pp i, R\_(i), i \Os, \Rq ,\Ip \Pp i,  i \Os, \Ri \\\\
-,i \nPu, \Ip \Ps i, R\_(i),  i \Os,\\\\
-\Rq,\Ip \Ps i, i \nPu, R\_(i),  i \Os,\\\\
-\Rq,\Ip \Ps i, i \nPu, i \Op, R\_(i),  i \Os,\\\\
-\Rq, i \nPu,\Ip \Ps i, i \Op, R\_(i),  i \Os,\\\\
-\Rq, i \nPu,  i \Op, \Ip \Pp i, R\_(i),  i \Os,\\\\
+,\Ip \Pp i, R_(i), i \Os, \Rq ,\Ip \Pp i,  i \Os, \Ri \\\\
+,i \nPu, \Ip \Ps i, R_(i),  i \Os,\\\\
+\Rq,\Ip \Ps i, i \nPu, R_(i),  i \Os,\\\\
+\Rq,\Ip \Ps i, i \nPu, i \Op, R_(i),  i \Os,\\\\
+\Rq, i \nPu,\Ip \Ps i, i \Op, R_(i),  i \Os,\\\\
+\Rq, i \nPu,  i \Op, \Ip \Pp i, R_(i),  i \Os,\\\\
 \Rq, i \nPu,  i \Op, \Ip \Pp i, i \Os,\\\\
 \Rq, i \nPu,\Ip \Ps i,  i \Op,  i \Os,\\\\
 \Rq, i \nPu,\Ip \Ps i,  i \Os,\\\\\\
 conclusion:\\
-, R\_(i), i \Os, \Rq , i \Os,
+, R_(i), i \Os, \Rq , i \Os,
 \end{math}
 \bigskip
 \bigskip  
 
-\[, R\_(i), \Or, \Rq , \Or,\]
+\[, R_(i), \Or, \Rq , \Or,\]
 induction \;  proof:\\
 \begin{math} 
 premise \; 1:\\
-, i \Pu, R\_(i),\Or,\\
+, i \Pu, R_(i),\Or,\\
 \Rq, i \Pu,\Or,\\\\\\
 premise \; 2:\\
-,\Ip \Pp i, R\_(i), \Or, \Rq ,\Ip \Pp i,  \Or, \Ri \\\\
-,i \nPu, \Ip \Ps i, R\_(i),  \Or,\\\\
-\Rq,\Ip \Ps i, i \nPu, R\_(i),  \Or,\\\\
-\Rq,\Ip \Ps i, i \nPu, i \Op, R\_(i),  \Or,\\\\
-\Rq, i \nPu,\Ip \Ps i, i \Op, R\_(i),  \Or,\\\\
-\Rq, i \nPu,  i \Op, \Ip \Pp i, R\_(i),  \Or,\\\\
+,\Ip \Pp i, R_(i), \Or, \Rq ,\Ip \Pp i,  \Or, \Ri \\\\
+,i \nPu, \Ip \Ps i, R_(i),  \Or,\\\\
+\Rq,\Ip \Ps i, i \nPu, R_(i),  \Or,\\\\
+\Rq,\Ip \Ps i, i \nPu, i \Op, R_(i),  \Or,\\\\
+\Rq, i \nPu,\Ip \Ps i, i \Op, R_(i),  \Or,\\\\
+\Rq, i \nPu,  i \Op, \Ip \Pp i, R_(i),  \Or,\\\\
 \Rq, i \nPu,  i \Op, \Ip \Pp i, \Or,\\\\
 \Rq, i \nPu,\Ip \Ps i,  i \Op,  \Or,\\\\
 \Rq, i \nPu,\Ip \Ps i,  \Or,\\\\\\
 conclusion:\\
-, R\_(i), \Or, \Rq , \Or,
+, R_(i), \Or, \Rq , \Or,
 \end{math}
 \bigskip
 \bigskip  
@@ -106,135 +106,135 @@ conclusion:\\
 \bigskip
 \bigskip
 \subsection{Swap with operator:}
-\[, R\_(i), \Ot j, \Rq , \Ot j, R\_(i),\]
-\[, R\_(i), \Og j, \Rq , \Og j, R\_(i),\]
+\[, R_(i), \Ot j, \Rq , \Ot j, R_(i),\]
+\[, R_(i), \Og j, \Rq , \Og j, R_(i),\]
 
-\[, R\_(i), j \Od n, \Rq , j \Od n, R\_(i),\]
-\[, R\_(i), j \Oc n, \Rq , j \Oc n, R\_(i),\]
-\[, R\_(i), j \Ob n, \Rq , j \Ob n, R\_(i),\]
+\[, R_(i), j \Od n, \Rq , j \Od n, R_(i),\]
+\[, R_(i), j \Oc n, \Rq , j \Oc n, R_(i),\]
+\[, R_(i), j \Ob n, \Rq , j \Ob n, R_(i),\]
 
-\[, R\_(i), j \On, \Rq , j \On, R\_(i),\]
+\[, R_(i), j \On, \Rq , j \On, R_(i),\]
 induction \;  proof:\\
 \begin{math} 
 premise \; 1:\\
-, i \Pu, R\_(i), j \On,\\
+, i \Pu, R_(i), j \On,\\
 \Rq, i \Pu, j \On,\\
 \Rq, j \On, i \Pu,\\
-\Rq, j \On, i \Pu, R\_(i),\\
-\Rq, i \Pu, j \On, R\_(i),\\\\\\
+\Rq, j \On, i \Pu, R_(i),\\
+\Rq, i \Pu, j \On, R_(i),\\\\\\
 premise \; 2:\\
-,\Ip \Pp i, R\_(i), j \On, \Rq ,\Ip \Pp i, j \On, R\_(i), \Ri \\\\
-,i \nPu, \Ip \Ps i, R\_(i), j \On,\\\\
-\Rq, \Ip \Ps i,i \nPu, R\_(i), j \On,\\\\
-\Rq, \Ip \Ps i,i \nPu, i \Op, R\_(i), j \On,\\\\
-\Rq,i \nPu, \Ip \Ps i, i \Op, R\_(i), j \On,\\\\
-\Rq,i \nPu, i \Op, \Ip \Pp i, R\_(i), j \On,\\\\
-\Rq,i \nPu, i \Op, \Ip \Pp i, j \On, R\_(i),\\\\
-\Rq,i \nPu, \Ip \Ps i, i \Op, j \On, R\_(i),\\\\
-\Rq,i \nPu, \Ip \Ps i, j \On, i \Op, R\_(i),\\\\
-\Rq, \Ip \Ps i, j \On,i \nPu, i \Op, R\_(i),\\\\
-\Rq, \Ip \Ps i, j \On,i \nPu, R\_(i),\\\\
-\Rq,i \nPu, \Ip \Ps i, j \On, R\_(i),\\\\\\
+,\Ip \Pp i, R_(i), j \On, \Rq ,\Ip \Pp i, j \On, R_(i), \Ri \\\\
+,i \nPu, \Ip \Ps i, R_(i), j \On,\\\\
+\Rq, \Ip \Ps i,i \nPu, R_(i), j \On,\\\\
+\Rq, \Ip \Ps i,i \nPu, i \Op, R_(i), j \On,\\\\
+\Rq,i \nPu, \Ip \Ps i, i \Op, R_(i), j \On,\\\\
+\Rq,i \nPu, i \Op, \Ip \Pp i, R_(i), j \On,\\\\
+\Rq,i \nPu, i \Op, \Ip \Pp i, j \On, R_(i),\\\\
+\Rq,i \nPu, \Ip \Ps i, i \Op, j \On, R_(i),\\\\
+\Rq,i \nPu, \Ip \Ps i, j \On, i \Op, R_(i),\\\\
+\Rq, \Ip \Ps i, j \On,i \nPu, i \Op, R_(i),\\\\
+\Rq, \Ip \Ps i, j \On,i \nPu, R_(i),\\\\
+\Rq,i \nPu, \Ip \Ps i, j \On, R_(i),\\\\\\
 conclusion:\\
-, R\_(i), j \On, \Rq , j \On, R\_(i),
+, R_(i), j \On, \Rq , j \On, R_(i),
 \end{math}
 \bigskip
 \bigskip  
 
-\[, R\_(i), j \Op, \Rq , j \Op, R\_(i),\]
-\[, R\_(i), j \Os, \Rq , j \Os, R\_(i),\]
+\[, R_(i), j \Op, \Rq , j \Op, R_(i),\]
+\[, R_(i), j \Os, \Rq , j \Os, R_(i),\]
 
 \bigskip
 \bigskip
 \subsection{Swap with branch function:}
-\[, R\_(i), \Bb{if(m \Pe n)}{,\Tc c_1,}{,\Tc c_2,}, \Rq , \Bb{if(m \Pe n)}{, R\_(i), \Tc c_1,}{, R\_(i), \Tc c_2,},\]
+\[, R_(i), \Bb{if(m \Pe n)}{,\Tc c_1,}{,\Tc c_2,}, \Rq , \Bb{if(m \Pe n)}{, R_(i), \Tc c_1,}{, R_(i), \Tc c_2,},\]
 induction \;  proof:\\
 \begin{math} 
 premise \; 1:\\
-, i \Pu, R\_(i), \Bb{if(m \Pe n)}{,\Tc c_1,}{,\Tc c_2,},\\\\
+, i \Pu, R_(i), \Bb{if(m \Pe n)}{,\Tc c_1,}{,\Tc c_2,},\\\\
 \Rq, i \Pu, \Bb{if(m \Pe n)}{,\Tc c_1,}{,\Tc c_2,},\\\\
 \Rq, \Bb{if(m \Pe n)}{, i \Pu, \Tc c_1,}{, i \Pu, \Tc c_2,},\\\\
-\Rq, \Bb{if(m \Pe n)}{, i \Pu, R\_(i), \Tc c_1,}{, i \Pu, R\_(i), \Tc c_2,},\\\\
-\Rq, i \Pu, \Bb{if(m \Pe n)}{, R\_(i), \Tc c_1,}{, R\_(i), \Tc c_2,},\\\\\\
+\Rq, \Bb{if(m \Pe n)}{, i \Pu, R_(i), \Tc c_1,}{, i \Pu, R_(i), \Tc c_2,},\\\\
+\Rq, i \Pu, \Bb{if(m \Pe n)}{, R_(i), \Tc c_1,}{, R_(i), \Tc c_2,},\\\\\\
 premise \; 2:\\
-,\Ip \Pp i, R\_(i), \Bb{if(m \Pe n)}{,\Tc c_1,}{,\Tc c_2,},  \Rq ,\Ip \Pp i, \Bb{if(m \Pe n)}{, R\_(i), \Tc c_1,}{, R\_(i), \Tc c_2,}, \Ri \\\\\\
-,i \nPu, \Ip \Ps i, R\_(i), \Bb{if(m \Pe n)}{,\Tc c_1,}{,\Tc c_2,},\\\\\\
-\Rq, \Ip \Ps i,i \nPu, R\_(i), \Bb{if(m \Pe n)}{,\Tc c_1,}{,\Tc c_2,},\\\\\\
-\Rq, \Ip \Ps i,i \nPu,  i \Op, R\_(i), \Bb{if(m \Pe n)}{,\Tc c_1,}{,\Tc c_2,},\\\\\\
-\Rq,i \nPu, \Ip \Ps i,  i \Op, R\_(i), \Bb{if(m \Pe n)}{,\Tc c_1,}{,\Tc c_2,},\\\\\\
-\Rq,i \nPu,  i \Op, \Ip \Pp i, R\_(i), \Bb{if(m \Pe n)}{,\Tc c_1,}{,\Tc c_2,},\\\\\\
-\Rq,i \nPu,  i \Op, \Ip \Pp i, \Bb{if(m \Pe n)}{, R\_(i), \Tc c_1,}{, R\_(i), \Tc c_2,},\\\\\\
-\Rq,i \nPu, \Ip \Ps i,  i \Op, \Bb{if(m \Pe n)}{, R\_(i), \Tc c_1,}{, R\_(i), \Tc c_2,},\\\\\\
-\Rq, \Ip \Ps i, i \nPu,  i \Op, \Bb{if(m \Pe n)}{, R\_(i), \Tc c_1,}{, R\_(i), \Tc c_2,},\\\\\\
-\Rq, \Ip \Ps i, i \nPu, \Bb{if(m \Pe n)}{,  i \Op, R\_(i), \Tc c_1,}{,  i \Op, R\_(i), \Tc c_2,},\\\\\\
-\Rq, \Ip \Ps i, \Bb{if(m \Pe n)}{, i \nPu,  i \Op, R\_(i), \Tc c_1,}{, i \nPu,  i \Op, R\_(i), \Tc c_2,},\\\\\\
-\Rq, \Ip \Ps i, \Bb{if(m \Pe n)}{, i \nPu, R\_(i), \Tc c_1,}{, i \nPu, R\_(i), \Tc c_2,},\\\\\\
-\Rq, \Ip \Ps i, i \nPu, \Bb{if(m \Pe n)}{, R\_(i), \Tc c_1,}{, R\_(i), \Tc c_2,},\\\\\\
-\Rq, i \nPu, \Ip \Ps i, \Bb{if(m \Pe n)}{, R\_(i), \Tc c_1,}{, R\_(i), \Tc c_2,},\\\\\\
+,\Ip \Pp i, R_(i), \Bb{if(m \Pe n)}{,\Tc c_1,}{,\Tc c_2,},  \Rq ,\Ip \Pp i, \Bb{if(m \Pe n)}{, R_(i), \Tc c_1,}{, R_(i), \Tc c_2,}, \Ri \\\\\\
+,i \nPu, \Ip \Ps i, R_(i), \Bb{if(m \Pe n)}{,\Tc c_1,}{,\Tc c_2,},\\\\\\
+\Rq, \Ip \Ps i,i \nPu, R_(i), \Bb{if(m \Pe n)}{,\Tc c_1,}{,\Tc c_2,},\\\\\\
+\Rq, \Ip \Ps i,i \nPu,  i \Op, R_(i), \Bb{if(m \Pe n)}{,\Tc c_1,}{,\Tc c_2,},\\\\\\
+\Rq,i \nPu, \Ip \Ps i,  i \Op, R_(i), \Bb{if(m \Pe n)}{,\Tc c_1,}{,\Tc c_2,},\\\\\\
+\Rq,i \nPu,  i \Op, \Ip \Pp i, R_(i), \Bb{if(m \Pe n)}{,\Tc c_1,}{,\Tc c_2,},\\\\\\
+\Rq,i \nPu,  i \Op, \Ip \Pp i, \Bb{if(m \Pe n)}{, R_(i), \Tc c_1,}{, R_(i), \Tc c_2,},\\\\\\
+\Rq,i \nPu, \Ip \Ps i,  i \Op, \Bb{if(m \Pe n)}{, R_(i), \Tc c_1,}{, R_(i), \Tc c_2,},\\\\\\
+\Rq, \Ip \Ps i, i \nPu,  i \Op, \Bb{if(m \Pe n)}{, R_(i), \Tc c_1,}{, R_(i), \Tc c_2,},\\\\\\
+\Rq, \Ip \Ps i, i \nPu, \Bb{if(m \Pe n)}{,  i \Op, R_(i), \Tc c_1,}{,  i \Op, R_(i), \Tc c_2,},\\\\\\
+\Rq, \Ip \Ps i, \Bb{if(m \Pe n)}{, i \nPu,  i \Op, R_(i), \Tc c_1,}{, i \nPu,  i \Op, R_(i), \Tc c_2,},\\\\\\
+\Rq, \Ip \Ps i, \Bb{if(m \Pe n)}{, i \nPu, R_(i), \Tc c_1,}{, i \nPu, R_(i), \Tc c_2,},\\\\\\
+\Rq, \Ip \Ps i, i \nPu, \Bb{if(m \Pe n)}{, R_(i), \Tc c_1,}{, R_(i), \Tc c_2,},\\\\\\
+\Rq, i \nPu, \Ip \Ps i, \Bb{if(m \Pe n)}{, R_(i), \Tc c_1,}{, R_(i), \Tc c_2,},\\\\\\
 conclusion:\\
-, R\_(i), \Bb{if(m \Pe n)}{,\Tc c_1,}{,\Tc c_2,}, \Rq , \Bb{if(m \Pe n)}{, R\_(i), \Tc c_1,}{, R\_(i), \Tc c_2,},
+, R_(i), \Bb{if(m \Pe n)}{,\Tc c_1,}{,\Tc c_2,}, \Rq , \Bb{if(m \Pe n)}{, R_(i), \Tc c_1,}{, R_(i), \Tc c_2,},
 \end{math}
 \bigskip
 \bigskip
 
-\[, R\_(i), \Bb{if(m \Pu)}{,\Tc c_1,}{,\Tc c_2,}, \Rq , \Bb{if(m \Pu)}{, R\_(i), \Tc c_1,}{, R\_(i), \Tc c_2,},\]
+\[, R_(i), \Bb{if(m \Pu)}{,\Tc c_1,}{,\Tc c_2,}, \Rq , \Bb{if(m \Pu)}{, R_(i), \Tc c_1,}{, R_(i), \Tc c_2,},\]
 
-\[, R\_(i), \Bb{if(m \Ps n)}{,\Tc c_1,}{,\Tc c_2,}, \Rq , \Bb{if(m \Ps n)}{, R\_(i), \Tc c_1,}{, R\_(i), \Tc c_2,},\]
+\[, R_(i), \Bb{if(m \Ps n)}{,\Tc c_1,}{,\Tc c_2,}, \Rq , \Bb{if(m \Ps n)}{, R_(i), \Tc c_1,}{, R_(i), \Tc c_2,},\]
 
 
 \bigskip
 \bigskip
 \subsection{Swap with propositions:}
-\[, m \Pe n, R\_(i), \Rq , R\_(i), m \Pe n,\]
+\[, m \Pe n, R_(i), \Rq , R_(i), m \Pe n,\]
 \bigskip
 \bigskip
 proof:\\
 \begin{math} 
-, m \Pe n, R\_(i),\\\\
-\Rq,\Bb{if(m \Pe n)}{,}{, \Or,}, R\_(i),\\\\\\
-\Rq,\Bb{if(m \Pe n)}{, R\_(i),}{, \Or,},\\\\\\
-\Rq,\Bb{if(m \Pe n)}{, R\_(i),}{, R\_(i), \Or,},\\\\\\
-\Rq, R\_(i),\Bb{if(m \Pe n)}{,}{, \Or,},\\\\\\
-\Rq, R\_(i), m \Pe n,
+, m \Pe n, R_(i),\\\\
+\Rq,\Bb{if(m \Pe n)}{,}{, \Or,}, R_(i),\\\\\\
+\Rq,\Bb{if(m \Pe n)}{, R_(i),}{, \Or,},\\\\\\
+\Rq,\Bb{if(m \Pe n)}{, R_(i),}{, R_(i), \Or,},\\\\\\
+\Rq, R_(i),\Bb{if(m \Pe n)}{,}{, \Or,},\\\\\\
+\Rq, R_(i), m \Pe n,
 \end{math}
 \bigskip
 \bigskip
 
-\[, m \nPe n, R\_(i), \Rq , R\_(i), m \nPe n,\]
+\[, m \nPe n, R_(i), \Rq , R_(i), m \nPe n,\]
 
-\[, m \Pu, R\_(i), \Rq , R\_(i), m \Pu,\]
-\[, m \nPu, R\_(i), \Rq , R\_(i), m \nPu,\]
+\[, m \Pu, R_(i), \Rq , R_(i), m \Pu,\]
+\[, m \nPu, R_(i), \Rq , R_(i), m \nPu,\]
 
-\[, m \Ps n, R\_(i), \Rq , R\_(i), m \Ps n,\]
-\[, m \nPs n, R\_(i), \Rq , R\_(i), m \nPs n,\]
+\[, m \Ps n, R_(i), \Rq , R_(i), m \Ps n,\]
+\[, m \nPs n, R_(i), \Rq , R_(i), m \nPs n,\]
 
 \bigskip
 \bigskip
 \subsection{Swap with self:}
-\[, R\_(i), R\_(j), \Rq , R\_(j), R\_(i),\]
+\[, R_(i), R_(j), \Rq , R_(j), R_(i),\]
 induction \; proof:\\
 \begin{math} 
 premise \; 1:\\
-, i \Pu, R\_(i), R\_(j),\\
-\Rq, i \Pu, R\_(j),\\
-\Rq, R\_(j), i \Pu,\\
-\Rq, R\_(j), i \Pu, R\_(i),\\
-\Rq, i \Pu, R\_(j), R\_(i),\\\\\\
+, i \Pu, R_(i), R_(j),\\
+\Rq, i \Pu, R_(j),\\
+\Rq, R_(j), i \Pu,\\
+\Rq, R_(j), i \Pu, R_(i),\\
+\Rq, i \Pu, R_(j), R_(i),\\\\\\
 premise \; 2:\\
-,\Ip \Pp i, R\_(i), R\_(j), \Rq ,\Ip \Pp i, R\_(j), R\_(i), \Ri \\\\
-,i \nPu, \Ip \Ps i, R\_(i), R\_(j),\\\\
-\Rq, \Ip \Ps i,i \nPu, R\_(i), R\_(j),\\\\
-\Rq, \Ip \Ps i,i \nPu, i \Op, R\_(i), R\_(j),\\\\
-\Rq,i \nPu, \Ip \Ps i, i \Op, R\_(i), R\_(j),\\\\
-\Rq,i \nPu, i \Op, \Ip \Pp i, R\_(i), R\_(j),\\\\
-\Rq,i \nPu, i \Op, \Ip \Pp i, R\_(j), R\_(i),\\\\
-\Rq,i \nPu, \Ip \Ps i, i \Op, R\_(j), R\_(i),\\\\
-\Rq,i \nPu, \Ip \Ps i, R\_(j), i \Op, R\_(i),\\\\
-\Rq, \Ip \Ps i, R\_(j),i \nPu, i \Op, R\_(i),\\\\
-\Rq, \Ip \Ps i, R\_(j),i \nPu, R\_(i),\\\\
-\Rq,i \nPu, \Ip \Ps i, R\_(j), R\_(i),\\\\\\
+,\Ip \Pp i, R_(i), R_(j), \Rq ,\Ip \Pp i, R_(j), R_(i), \Ri \\\\
+,i \nPu, \Ip \Ps i, R_(i), R_(j),\\\\
+\Rq, \Ip \Ps i,i \nPu, R_(i), R_(j),\\\\
+\Rq, \Ip \Ps i,i \nPu, i \Op, R_(i), R_(j),\\\\
+\Rq,i \nPu, \Ip \Ps i, i \Op, R_(i), R_(j),\\\\
+\Rq,i \nPu, i \Op, \Ip \Pp i, R_(i), R_(j),\\\\
+\Rq,i \nPu, i \Op, \Ip \Pp i, R_(j), R_(i),\\\\
+\Rq,i \nPu, \Ip \Ps i, i \Op, R_(j), R_(i),\\\\
+\Rq,i \nPu, \Ip \Ps i, R_(j), i \Op, R_(i),\\\\
+\Rq, \Ip \Ps i, R_(j),i \nPu, i \Op, R_(i),\\\\
+\Rq, \Ip \Ps i, R_(j),i \nPu, R_(i),\\\\
+\Rq,i \nPu, \Ip \Ps i, R_(j), R_(i),\\\\\\
 conclusion:\\
-, R\_(i), R\_(j), \Rq , R\_(j), R\_(i),
+, R_(i), R_(j), \Rq , R_(j), R_(i),
 \end{math}
 \bigskip
 \bigskip  
@@ -242,44 +242,44 @@ conclusion:\\
 \bigskip
 \bigskip
 \subsection{Swap with R(j):}
-\[, R\_(i), R(j), \Rq , R(j), R\_(i),\]
+\[, R_(i), R(j), \Rq , R(j), R_(i),\]
 
 \bigskip
 \bigskip
 \subsection{Swap with flag object :}
-\[, R\_(i), \Ip \Ps j, \Rq , \Ip \Ps j, R\_(i),\]
+\[, R_(i), \Ip \Ps j, \Rq , \Ip \Ps j, R_(i),\]
 induction \; proof:\\
 \begin{math} 
 premise \; 1:\\
-, i \Pu, R\_(i), \Ip \Ps j,\\
+, i \Pu, R_(i), \Ip \Ps j,\\
 \Rq, i \Pu, \Ip \Ps j,\\
 \Rq, \Ip \Ps j, i \Pu,\\
-\Rq, \Ip \Ps j, i \Pu, R\_(i),\\
-\Rq, i \Pu, \Ip \Ps j, R\_(i),\\\\\\
+\Rq, \Ip \Ps j, i \Pu, R_(i),\\
+\Rq, i \Pu, \Ip \Ps j, R_(i),\\\\\\
 premise \; 2:\\
-,\Ip \Pp i, R\_(i), \Ip \Ps j, \Rq ,\Ip \Pp i, \Ip \Ps j, R\_(i), \Ri \\\\
-,i \nPu, \Ip \Ps i, R\_(i), \Ip \Ps j,\\\\
-\Rq, \Ip \Ps i,i \nPu, R\_(i), \Ip \Ps j,\\\\
-\Rq, \Ip \Ps i,i \nPu, i \Op, R\_(i), \Ip \Ps j,\\\\
-\Rq,i \nPu, \Ip \Ps i, i \Op, R\_(i), \Ip \Ps j,\\\\
-\Rq,i \nPu, i \Op, \Ip \Pp i, R\_(i), \Ip \Ps j,\\\\
-\Rq,i \nPu, i \Op, \Ip \Pp i, \Ip \Ps j, R\_(i),\\\\
-\Rq,i \nPu, \Ip \Ps i, i \Op, \Ip \Ps j, R\_(i),\\\\
-\Rq,i \nPu, \Ip \Ps i, \Ip \Ps j, i \Op, R\_(i),\\\\
-\Rq, \Ip \Ps i, \Ip \Ps j,i \nPu, i \Op, R\_(i),\\\\
-\Rq, \Ip \Ps i, \Ip \Ps j,i \nPu, R\_(i),\\\\
-\Rq,i \nPu, \Ip \Ps i, \Ip \Ps j, R\_(i),\\\\\\
+,\Ip \Pp i, R_(i), \Ip \Ps j, \Rq ,\Ip \Pp i, \Ip \Ps j, R_(i), \Ri \\\\
+,i \nPu, \Ip \Ps i, R_(i), \Ip \Ps j,\\\\
+\Rq, \Ip \Ps i,i \nPu, R_(i), \Ip \Ps j,\\\\
+\Rq, \Ip \Ps i,i \nPu, i \Op, R_(i), \Ip \Ps j,\\\\
+\Rq,i \nPu, \Ip \Ps i, i \Op, R_(i), \Ip \Ps j,\\\\
+\Rq,i \nPu, i \Op, \Ip \Pp i, R_(i), \Ip \Ps j,\\\\
+\Rq,i \nPu, i \Op, \Ip \Pp i, \Ip \Ps j, R_(i),\\\\
+\Rq,i \nPu, \Ip \Ps i, i \Op, \Ip \Ps j, R_(i),\\\\
+\Rq,i \nPu, \Ip \Ps i, \Ip \Ps j, i \Op, R_(i),\\\\
+\Rq, \Ip \Ps i, \Ip \Ps j,i \nPu, i \Op, R_(i),\\\\
+\Rq, \Ip \Ps i, \Ip \Ps j,i \nPu, R_(i),\\\\
+\Rq,i \nPu, \Ip \Ps i, \Ip \Ps j, R_(i),\\\\\\
 conclusion:\\
-, R\_(i), \Ip \Ps j, \Rq , \Ip \Ps j, R\_(i),
+, R_(i), \Ip \Ps j, \Rq , \Ip \Ps j, R_(i),
 \end{math}
 \bigskip
 \bigskip
 
-\[, R\_(i), \In \Ps j, \Rq , \In \Ps j, R\_(i),\]
+\[, R_(i), \In \Ps j, \Rq , \In \Ps j, R_(i),\]
 
-\[, R\_(i), \Ip \Pp j, \Rq , \Ip \Pp j, R\_(i),\]
+\[, R_(i), \Ip \Pp j, \Rq , \Ip \Pp j, R_(i),\]
 
-\[, R\_(i), \In \Pn j, \Rq , \In \Pn j, R\_(i),\]
+\[, R_(i), \In \Pn j, \Rq , \In \Pn j, R_(i),\]
 
 \[, R(i), \Ip \Ps j, \Rq , \Ip \Ps j, R(i),\]
 
@@ -288,48 +288,48 @@ conclusion:\\
 \bigskip
 \bigskip
 \subsection{Identical node:}
-\[,i \Ps j, R\_(i), R\_(j), \Rq ,i \Ps j, R\_(i), R\_(j), i \Ps j,\]
+\[,i \Ps j, R_(i), R_(j), \Rq ,i \Ps j, R_(i), R_(j), i \Ps j,\]
 induction \; proof:\\
 \begin{math} 
 premise \; 1:\\
-, i \Pu, i \Ps j, R\_(i), R\_(j),\\\\
-\Rq, i \Ps j, i \Pu, R\_(i), R\_(j),\\\\
-\Rq, i \Ps j, i \Pu, R\_(j),\\\\
-\Rq, i \Ps j, j \Pu, R\_(j),\\\\
+, i \Pu, i \Ps j, R_(i), R_(j),\\\\
+\Rq, i \Ps j, i \Pu, R_(i), R_(j),\\\\
+\Rq, i \Ps j, i \Pu, R_(j),\\\\
+\Rq, i \Ps j, j \Pu, R_(j),\\\\
 \Rq, i \Ps j, j \Pu,\\\\
 \Rq, i \Ps j, i \Ps j, j \Pu,\\\\
 \Rq, i \Ps j, j \Pu, i \Ps j,\\\\
-\Rq, i \Ps j, j \Pu, R\_(j), i \Ps j,\\\\
-\Rq, i \Ps j, i \Pu, R\_(j), i \Ps j,\\\\
-\Rq, i \Ps j, i \Pu, R\_(i), R\_(j), i \Ps j,\\\\
-\Rq, i \Pu, i \Ps j, R\_(i), R\_(j), i \Ps j,\\\\\\
+\Rq, i \Ps j, j \Pu, R_(j), i \Ps j,\\\\
+\Rq, i \Ps j, i \Pu, R_(j), i \Ps j,\\\\
+\Rq, i \Ps j, i \Pu, R_(i), R_(j), i \Ps j,\\\\
+\Rq, i \Pu, i \Ps j, R_(i), R_(j), i \Ps j,\\\\\\
 premise \; 2:\\
-,\Ip \Pp i, i \Ps j, R\_(i), R\_(j), \Rq ,\Ip \Pp i, i \Ps j, R\_(i), R\_(j), i \Ps j, \Ri \\\\
-,i \nPu, \Ip \Ps i, i \Ps j, R\_(i), R\_(j),\\\\
-\Rq, \Ip \Ps i,i \nPu, i \Ps j, R\_(i), R\_(j),\\\\
-\Rq, \Ip \Ps i, i \Ps j,i \nPu, R\_(i), R\_(j),\\\\
-\Rq, \Ip \Ps i, i \Ps j,i \nPu, i \Op, R\_(i), R\_(j),\\\\
-\Rq, \Ip \Ps i, i \Ps j,j \nPu, i \Op, R\_(i), R\_(j),\\\\
-\Rq, \Ip \Ps i, i \Ps j, i \Op, j \nPu, R\_(i), R\_(j),\\\\
-\Rq, \Ip \Ps i, i \Ps j, i \Op,  R\_(i), j \nPu, R\_(j),\\\\
-\Rq, \Ip \Ps i, i \Ps j, i \Op,  R\_(i), j \nPu, j \Op, R\_(j),\\\\
-\Rq, j \nPu, \Ip \Ps i, i \Ps j, i \Op,  R\_(i), j \Op, R\_(j),\\\\
-\Rq, j \nPu, \Ip \Ps i, i \Ps j, i \Op, j \Op,  R\_(i), R\_(j),\\\\
-\Rq, j \nPu, \Ip \Ps i, i \Op, j \Op, i \Ps j,  R\_(i), R\_(j),\\\\
-\Rq, j \nPu, i \Op, \Ip \Pp i, j \Op, i \Ps j,  R\_(i), R\_(j),\\\\
-\Rq, j \nPu, i \Op, j \Op, \Ip \Pp i, i \Ps j,  R\_(i), R\_(j),\\\\
-\Rq, j \nPu, i \Op, j \Op, \Ip \Pp i, i \Ps j, R\_(i),  R\_(j), i \Ps j,\\\\
-\Rq, \Ip \Ps i, j \nPu, i \Op, j \Op, i \Ps j, R\_(i),  R\_(j), i \Ps j,\\\\
-\Rq, \Ip \Ps i, i \Ps j, j \nPu, i \Op, j \Op, R\_(i),  R\_(j), i \Ps j,\\\\
-\Rq, \Ip \Ps i, i \Ps j, j \nPu, i \Op, R\_(i), j \Op,  R\_(j), i \Ps j,\\\\
-\Rq, \Ip \Ps i, i \Ps j, i \Op, R\_(i), j \nPu, j \Op,  R\_(j), i \Ps j,\\\\
-\Rq, \Ip \Ps i, i \Ps j, i \Op, R\_(i), j \nPu,  R\_(j), i \Ps j,\\\\
-\Rq, \Ip \Ps i, i \Ps j, j \nPu, i \Op, R\_(i),  R\_(j), i \Ps j,\\\\
-\Rq, \Ip \Ps i, i \Ps j, i \nPu, i \Op, R\_(i),  R\_(j), i \Ps j,\\\\
-\Rq, \Ip \Ps i, i \Ps j, i \nPu, R\_(i),  R\_(j), i \Ps j,\\\\
-\Rq, i \nPu, \Ip \Ps i, i \Ps j, R\_(i),  R\_(j), i \Ps j,\\\\
+,\Ip \Pp i, i \Ps j, R_(i), R_(j), \Rq ,\Ip \Pp i, i \Ps j, R_(i), R_(j), i \Ps j, \Ri \\\\
+,i \nPu, \Ip \Ps i, i \Ps j, R_(i), R_(j),\\\\
+\Rq, \Ip \Ps i,i \nPu, i \Ps j, R_(i), R_(j),\\\\
+\Rq, \Ip \Ps i, i \Ps j,i \nPu, R_(i), R_(j),\\\\
+\Rq, \Ip \Ps i, i \Ps j,i \nPu, i \Op, R_(i), R_(j),\\\\
+\Rq, \Ip \Ps i, i \Ps j,j \nPu, i \Op, R_(i), R_(j),\\\\
+\Rq, \Ip \Ps i, i \Ps j, i \Op, j \nPu, R_(i), R_(j),\\\\
+\Rq, \Ip \Ps i, i \Ps j, i \Op,  R_(i), j \nPu, R_(j),\\\\
+\Rq, \Ip \Ps i, i \Ps j, i \Op,  R_(i), j \nPu, j \Op, R_(j),\\\\
+\Rq, j \nPu, \Ip \Ps i, i \Ps j, i \Op,  R_(i), j \Op, R_(j),\\\\
+\Rq, j \nPu, \Ip \Ps i, i \Ps j, i \Op, j \Op,  R_(i), R_(j),\\\\
+\Rq, j \nPu, \Ip \Ps i, i \Op, j \Op, i \Ps j,  R_(i), R_(j),\\\\
+\Rq, j \nPu, i \Op, \Ip \Pp i, j \Op, i \Ps j,  R_(i), R_(j),\\\\
+\Rq, j \nPu, i \Op, j \Op, \Ip \Pp i, i \Ps j,  R_(i), R_(j),\\\\
+\Rq, j \nPu, i \Op, j \Op, \Ip \Pp i, i \Ps j, R_(i),  R_(j), i \Ps j,\\\\
+\Rq, \Ip \Ps i, j \nPu, i \Op, j \Op, i \Ps j, R_(i),  R_(j), i \Ps j,\\\\
+\Rq, \Ip \Ps i, i \Ps j, j \nPu, i \Op, j \Op, R_(i),  R_(j), i \Ps j,\\\\
+\Rq, \Ip \Ps i, i \Ps j, j \nPu, i \Op, R_(i), j \Op,  R_(j), i \Ps j,\\\\
+\Rq, \Ip \Ps i, i \Ps j, i \Op, R_(i), j \nPu, j \Op,  R_(j), i \Ps j,\\\\
+\Rq, \Ip \Ps i, i \Ps j, i \Op, R_(i), j \nPu,  R_(j), i \Ps j,\\\\
+\Rq, \Ip \Ps i, i \Ps j, j \nPu, i \Op, R_(i),  R_(j), i \Ps j,\\\\
+\Rq, \Ip \Ps i, i \Ps j, i \nPu, i \Op, R_(i),  R_(j), i \Ps j,\\\\
+\Rq, \Ip \Ps i, i \Ps j, i \nPu, R_(i),  R_(j), i \Ps j,\\\\
+\Rq, i \nPu, \Ip \Ps i, i \Ps j, R_(i),  R_(j), i \Ps j,\\\\
 conclusion:\\
-,i \Ps j, R\_(i), R\_(j), \Rq ,i \Ps j, R\_(i), R\_(j), i \Ps j,
+,i \Ps j, R_(i), R_(j), \Rq ,i \Ps j, R_(i), R_(j), i \Ps j,
 \end{math}
 
 \newpage

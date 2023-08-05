@@ -2,8 +2,10 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="300" height="300" viewBox="0 0 300 300" xml:space="preserve">
 
-<g transform="scale(8) translate(10,8)">
-<path d="M21.883 12l-7.527 6.235.644.765 9-7.521-9-7.479-.645.764 7.529 6.236h-21.884v1h21.883z"/>
+<g transform="translate(45,10)">
+<g transform="scale(0.9)">
+<path d="M24.24878,150C24.24878,79.46997,80.54952,22.29409,150,22.29409s125.75122,57.17588,125.75122,127.70591-56.30074,127.70591-125.75122,127.70591-125.75122-57.17588-125.75122-127.70591Z" opacity="0.96" fill="rgba(255,255,255,0)" stroke="#000" stroke-width="10"/><line x1="0" y1="-73.852955" x2="0" y2="73.852955" transform="matrix(0 1-.95383 0 150 213.797063)" stroke="#020202" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><line x1="0" y1="-63.852955" x2="0" y2="63.852955" transform="matrix(1 0 0 1.418299 150 115.856672)" stroke="#020202" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><ellipse rx="30.808191" ry="30.808191" transform="translate(210.904886 207.797071)" fill="rgba(210,219,237,0)" stroke-width="0"/>
+</g>
 </g>
 <g transform="translate(-40)">
 <g transform="matrix(1.39 0 0 1.57 150 150)" style="" id="88116627-9f1b-45a2-aacb-e02c37e63ab9"  >

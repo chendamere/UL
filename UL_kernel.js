@@ -1,6 +1,18 @@
 
 import {Axiom, Expression} from "./UL_dataType.js"
 
+
+//NOTES for parsing from latex file:
+// in the title: no need of \ for : _
+// also the subsection titles will not parse for &
+// need to parse for proof format and \begin{math}
+// also fix R(i), R(j) so R() should be function and the operand is in between ()
+// and Rd():r
+// and Rc(i;j)
+// also comments that starts with % needs to be parsed
+// comma incorrectly displayed w ith there are more than 2 braches
+// display ~ (\sim)
+
 function isChar(str) {
     return str.length === 1 && str.match(/[a-z]/i);
 }
@@ -267,7 +279,7 @@ export class UL_kernel {
     }
 
     include_right_split(expression){
-        if(expression.includes('\\Brs')){
+        if(expression.includes('\\Brs') || expression.includes('\\Brb') || expression.includes('\\Bb') || expression.includes('\\Bs')){
             return true
         }
         else return false
@@ -352,68 +364,43 @@ export class UL_kernel {
 
             //remove meta character '\r'
             PrightExps[PrightExps.length-1] = PrightExps[PrightExps.length-1].replace('\r','')
+            PleftExps[PleftExps.length-1] = PleftExps[PleftExps.length-1].replace('\r','')
+
             //remove whie space at ends and beginning
-            for(let i = 0; i < PleftExps.length;i++) {
-                let expression = PleftExps[i]       
-                       
-                if(expression === '') continue
-
-                
-                let j = 0; 
-                while(j<expression.length){
-                    if(expression[0] === ' '){
-                        expression = expression.slice(1,expression.length)
-                        // console.log(expression)
-                        j++
-                    }      
-                    else break              
-                }
-         
-                j = expression.length
-                while(j > 0){
-                    if(expression[expression.length-1] === ' '){
-                        expression = expression.slice(0,expression.length-1)
-                        j--
-                    }
-                    else break
-                }
-               
-                if(this.include_left_split(expression)|| this.include_right_split(expression)){
-                    //remove } at the end
-                    expression = expression.slice(0,expression.length-1)
-                }
-                PleftExps[i] = expression
-            }
-            for(let i = 0; i < PrightExps.length;i++) {
-                let expression = PrightExps[i]                
-                if(expression === '') continue
-
-                let j = 0; 
-                while(j<expression.length){
-                    if(expression[0] === ' '){
-                        expression = expression.slice(1,expression.length)
-                        j++
-                    }      
-                    else break
+            for(const exps of [PleftExps,PrightExps]){
+                for(let i = 0; i < exps.length;i++) {
+                    let expression = exps[i]       
                            
-                }
-                j = expression.length
-
-                while(j > 0){
-                    if(expression[expression.length-1] === ' '){
-                        expression = expression.slice(0,expression.length-1)
-                        j--
+                    if(expression === '') continue
+    
+                    
+                    let j = 0; 
+                    while(j<expression.length){
+                        if(expression[0] === ' '){
+                            expression = expression.slice(1,expression.length)
+                            // console.log(expression)
+                            j++
+                        }      
+                        else break              
                     }
-                    else break
+             
+                    j = expression.length
+                    while(j > 0){
+                        if(expression[expression.length-1] === ' '){
+                            expression = expression.slice(0,expression.length-1)
+                            j--
+                        }
+                        else break
+                    }
+                   
+                    if(this.include_left_split(expression)|| this.include_right_split(expression)){
+                        //remove } at the end
+                        expression = expression.slice(0,expression.length-1)
+                    }
+                    exps[i] = expression
                 }
-                if(this.include_left_split(expression)|| this.include_right_split(expression)){
-                    //remove } at the end
-                    expression = expression.slice(0,expression.length-1)
-                }
-
-                PrightExps[i] = expression
             }
-          
+           
             newAxiom.left = this.parse_expressions(PleftExps, true)
             newAxiom.right = this.parse_expressions(PrightExps, false)
             if(debug) {
@@ -429,32 +416,32 @@ export class UL_kernel {
     }   
 
     parse_expressions(ExprString, debug) {
-        //console.log(ExprString)
+        // console.log(ExprString)
+        console.log(ExprString)
         //make sure to include comma at beginning and end of expression !!!
 
-        // console.log(ExprString)
         var exprs = []
         var curExpr = new Expression();
         var top = false
         var bot = false
-        var mid = false
+        var newBranch = false
         var add = true
         var eqTable = [] // store all eq as return expression
         // console.log(ExprString)
-        //console.log(ExprString)
         for(let j = 0; j < ExprString.length; j ++) {
             if(eqTable.length === 0) {
                 add = true;
             }
             const expr = ExprString[j];
-            //console.log(expr,mid,top,bot,curExpr)
+            // console.log(expr)
+            //console.log(expr,newBranch,top,bot,curExpr)
 
             var left = true;
             if(expr === '') {
                 continue;
             }
             
-            if(expr === '}{'){
+            if(expr.includes('}{')){
                 //console.log("top")
                 top = false;
                 bot = true;
@@ -464,29 +451,86 @@ export class UL_kernel {
             if(expr === '}'){
                 top = false
                 bot = false;
-                //console.log("reset")
+                newBranch = false;
+                let temp = curExpr
+                // console.log(temp)
+                // console.log("reset",curExpr)
                 curExpr = eqTable.pop();
+                let ret = curExpr;
+
+                // console.log(curExpr)
+                // console.log(curExpr, eqTable)
+                if(curExpr !== temp && (this.include_left_split(temp.Op) || this.include_right_split(temp.Op))){
+                    console.log("here", curExpr, temp)
+
+                    if(curExpr.bot === undefined){
+                        curExpr.bot = temp
+                    }
+                    else{
+                        let botExp = curExpr.bot;
+                        while(botExp.next !== undefined){
+                            botExp = botExp.next
+                        }
+                        botExp = temp
+                    }
+                    console.log(curExpr)
+                    
+                    // if(curExpr.bot === undefined){
+                        
+                    // }
+                    // curExpr = curExpr.bot;
+                    // while(last.next){
+                    //     last = last.next
+                    // }
+                    // botExp.next = temp
+
+                    // console.log(last)
+                    // returnBranch = false
+                }
                 continue;
             }
             const newExpr = new Expression();
             
+            //R
+
             let n = 0
+            var c = expr[n];
+            if(expr.includes("R(") || expr.includes("Rd(") || expr.includes("R_(") || expr.includes("Rc(")){
+                var temp = c
+                while(c !== "("){
+                    c = expr[++n]
+                    temp += c
+                }
+                newExpr.Op = temp + ")"
+            }
+            // console.log(expr)
             while(n < expr.length) {
-                var c = expr[n];
+
+                c = expr[n];
                 if(c === ' '){
                     n++
                     continue;
                 }
 
                 //if first detected character is alphabet, then its operand
-                //unless they end up being special functions like if or Rcpo
-                if(isChar(c)) {
+                //unless they are special functions like R Rcpo
+                if(isChar(c) || c === '\\'){
+
                     var operand = "";
-                    while(c !== ' ' && c !== '}'  && c !== '{' && c !== '\\' && c !== undefined){
-                        //console.log(c)
-                        operand += c
-                        c = expr[++n]
-                        
+                    operand = expr[n] + expr[n+1] + expr[n+2]
+
+                    if(operand === '\\In' || operand === "\\Ip" || operand === "\\It"){
+                        // console.log(operand)
+                    }else{
+                        operand = ""
+
+                        if(isChar(c)) {
+                            while(c !== ' ' && c !== '}' && c !== '{' && c !== undefined && c !== '\\' && c !== ";" && c !== ")"){
+                                //console.log(c)
+                                operand += c
+                                c = expr[++n]
+                            }
+                        }                        
                     }
 
                     if(left){
@@ -506,7 +550,6 @@ export class UL_kernel {
                         op += c
                         c = expr[++n]
                     }
-
                     
                     //see function to see what is going on
                     if(this.include_left_split(op)){
@@ -514,22 +557,27 @@ export class UL_kernel {
                         
                         while(c !== '}'){
                             c = expr[n++]
+
+                            //parsing operand and operator in the branch function
                             if(isChar(c) && left){
                                 let operand = "";
-                                while(c !== ' ' && c !== '}'  && c !== '{' && c !== '\\' && c !== undefined){
+                                while(c !== '}'  && c !== '{' && c !== '\\' && c !== undefined){
                                     if(operand === 'if('){
                                         operand = ""
                                         newExpr.hasIf = true
                                     }
-                                    operand += c
+                                    // console.log(operand)
+                                    if(c!== " ") operand += c
+
                                     c = expr[n++]
                                 }
+                                // console.log(operand)
                                 newExpr.LeftOperand = operand
                                 left = false
                             }else if(isChar(c) && !left) {
                                 let operand = "";
-                                while(c !== ' ' && c !== '}'  && c !== '{' && c !== '\\' && c!==')' && c !== undefined){
-                                    operand += c
+                                while(c !== '}'  && c !== '{' && c !== '\\' && c!==')' && c !== undefined){
+                                    if(c!== " ") operand += c
                                     c = expr[n++]
                                 }
                                 newExpr.RightOperand = operand
@@ -547,12 +595,12 @@ export class UL_kernel {
                         //signal for next expression to be top
 
                         eqTable.push(newExpr)
-                        mid = true;
+                        newBranch = true;
                         break;
                     }else if(this.include_right_split(op)){
                         newExpr.Op = op;
                         eqTable.push(newExpr)
-                        mid = true;
+                        newBranch = true;
                         break;
                     }
                     newExpr.Op = op;
@@ -561,11 +609,13 @@ export class UL_kernel {
                 }
                 n++;
             }
-
-           
+            // console.log(newExpr)
+            // console.log(curExpr,newExpr, bot,top,add)
+            // console.log(newExpr,bot,top,add, eqTable[0],eqTable[1])
 
             if(!bot && !top && add ) {
                 exprs.push(newExpr)
+                // console.log(newExpr)
             }
 
             //head expression will point to first expression, head does not have prev, head.prev ===undefined
@@ -575,8 +625,9 @@ export class UL_kernel {
                 curExpr.next = newExpr
             }
             else if(top) {
-                if(mid){
-                    //console.log("here")
+                if(newBranch){
+                    // console.log("here",newExpr, ExprString[j])
+                    //if its a newly added branch exp
                     eqTable[eqTable.length-2].top = newExpr
 
                 }else {
@@ -590,6 +641,7 @@ export class UL_kernel {
 
                 }
                 else{
+                    // console.log(newExpr)
                     newExpr.prev = eqTable[eqTable.length-1]
                     eqTable[eqTable.length-1].bot = newExpr
                 }
@@ -597,12 +649,13 @@ export class UL_kernel {
             }
             curExpr = newExpr;
 
-            if(mid){
+            if(newBranch){
                 add = false;
                 top = true;
-                mid = false;
+                newBranch = false;
             }
         }
+        
         return exprs;
     } 
 

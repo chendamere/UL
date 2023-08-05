@@ -41,11 +41,20 @@ export class Display {
             ,"\\Os"
             ,"\\Ot"
             ,"\\Pnl"
+            ,"\\Pne"
             ,"\\Pu"
             ,"\\Ps"
             ,"\\Tc"
             ,"\\Tt"
             ,"\\Pe"
+            ,"\\Pp"
+            ,"\\Pn"
+            ,"\\Pc"
+            ,"\\Pb"
+            ,"\\nPb"
+            ,"\\nPp"
+            ,"\\nPn"
+            ,"\\nPc"
             ,"\\nPe"
             ,"\\nPne"
             ,"\\nPnl"
@@ -69,6 +78,7 @@ export class Display {
         this.numEq = 0;
         this.maxXpos = 0;
         this.adjust = true;
+        this.beginExprs = true;
 
         //handling image src
         for(const symbol of this.symbols){
@@ -83,7 +93,7 @@ export class Display {
 
         var numSplit = this.count_splits_in_table()
 
-        var height = (40 + this.kernel.subsectionsIndex.length*100) + (this.kernel.subsubsectionsIndex.length*100) + (this.axiomTable.length - numSplit)*25 + (numSplit * 80) 
+        var height = (50 + this.kernel.subsectionsIndex.length*100) + (this.kernel.subsubsectionsIndex.length*100) + (this.axiomTable.length - numSplit)*25 + (numSplit * 100) 
         // height *= this.textScale
         window.innerHeight = height
         this.context.canvas.height = window.innerHeight;
@@ -125,8 +135,6 @@ export class Display {
         var InSubsection = false;
 
         // console.log(this.kernel.subsectionsIndex)
-        // console.log(this.kernel.subsubsectionsIndex)
-        console.log(this.kernel.subsectionsIndex)
 
         for(let i = 0; i < this.axiomTable.length; i++) {
 
@@ -201,13 +209,19 @@ export class Display {
             }
             
             for(const EXPS of [this.axiomTable[i].left, this.axiomTable[i].right]){
+                // console.log(EXPS)
+
                 this.bracketSize = 1.0
                 if(this.beginLine){
                     context.fillText(String(i+1)+": ", this.pos, this.heightOffset + 50 * this.textScale);
                     this.pos += 60* this.textScale
-                    context.fillText(",", this.pos, this.heightOffset + 50 * this.textScale);
                     this.beginLine = false
-                    this.pos += 30*this.textScale
+                    this.beginExprs = true
+
+                }
+                if(EXPS.length === 0){
+                    context.fillText(",", this.pos, this.heightOffset + 50*this.textScale);
+                    this.pos += 20*this.textScale
                 }
                 
                 for(const o of EXPS){
@@ -227,19 +241,21 @@ export class Display {
 
                 if(leftExp){
                     //display REQ  
+                    this.pos += 20*this.textScale
                     this.displayRQ(); 
                     leftExp = false
+                    this.beginExprs = true
                     this.pos += 10*this.textScale
 
                 }
             }
 
             this.beginLine = true;
-            this.heightOffset += 50*this.textScale+this.numEq*30
+            this.heightOffset += 50*this.textScale+this.numEq*50
             // console.log(this.heightOffset)
         }
 
-        console.log(this.context.canvas.height, this.heightOffset)
+        // console.log(this.context.canvas.height, this.heightOffset)
 
 
     }
@@ -307,8 +323,8 @@ export class Display {
         }
         this.context.drawImage(image, this.pos,  this.heightOffset + 15 * this.textScale,  this.textScale * 36,this.textScale * 36);
         this.pos += 60 * this.textScale
-        this.context.fillText(",", this.pos, this.heightOffset + 50*this.textScale);
-        this.pos += 20 * this.textScale
+        // this.context.fillText(",", this.pos, this.heightOffset + 50*this.textScale);
+        // this.pos += 20 * this.textScale
     }
 
     displayTB(o) {
@@ -372,7 +388,7 @@ export class Display {
         var multiple = false
         for(const Char of message) {
             //console.log(Char)
-            if(Char === 'm' || Char ==='w' || Char === 'M' || Char ==='W' || Char === '_'){
+            if(Char === 'm' || Char ==='w' || Char === 'M' || Char ==='W' || Char === '_' || Char ==="&"){
                 if(multiple){
                     this.pos += 30*this.textScale*extraScaling
                 }else{
@@ -437,6 +453,10 @@ export class Display {
         }
     }
 
+    isRfn(op){
+        return op === "R()" || op ==="R_()" || op === "Rd()" || op === "Rc()"
+    }
+
     displayExpression(o){
 
         if(o === undefined) return;
@@ -451,6 +471,15 @@ export class Display {
         let BackBracket = false    
         //console.log(o.Op)
         // console.log(o)
+
+        if(this.beginExprs){
+            this.beginExprs = false
+            if(this.include_left_split(o.Op) || !this.include_right_split(o.Op)){
+                context.fillText(",", this.pos, this.heightOffset + 50*this.textScale);
+                this.pos += 20 * this.textScale
+            }
+        }
+
 
         if(this.include_left_split(o.Op)){
             //console.log("here")
@@ -472,14 +501,25 @@ export class Display {
 
         if(this.include_right_split(o.Op)){
             //console.log("yes")
-            if(o.Op.length === 4){
+            if(o.Op.length === 4 || o.Op.length === 3){
                 // console.log(o.Op)
             }
-            else{
+            else if(o.Op.includes("\\Blb") || o.Op.includes("\\Bls")){
                 OP = o.Op.slice(4)
+                //console.log(OP)
+            }
+            else if(o.Op.includes("\\Bb") || o.Op.includes("\\Bs")){
+                OP = o.Op.slice(3)
+                //console.log(OP)
             }
             //sconsole.log(this.adjust)
             BackBracket = true
+        }
+
+        if(this.isRfn(o.Op)){
+            message = o.Op.slice(0, message.length-1)
+            context.fillText(message, this.pos, this.heightOffset + 50*this.textScale);
+            this.padding(message)
         }
 
         if(o.hasIf) {
@@ -491,8 +531,20 @@ export class Display {
 
         //display left operand
         if(leftOperand !== undefined){
-            message = leftOperand
-            //console.log(message)
+
+            //display flag object 
+            if(leftOperand === "\\In"){
+                message = "&Shi"
+            }
+            else if(leftOperand === "\\Ip"){
+                message = "&Shj"
+            }
+            else if(leftOperand === "\\It"){
+                message = "&SVi"
+            }
+            else{
+                message = leftOperand
+            }
 
             if(message.includes('_')){
                 this.subscript(message)
@@ -500,11 +552,8 @@ export class Display {
             else{
                 context.fillText(message, this.pos, this.heightOffset + 50*this.textScale);
                 this.padding(message)
-
-            }            
-            //add extra padding 
-            // this.pos += (message.length-1)*10
-            // console.log((message.length-1)*10)
+            }
+            
             left = false;
         }
         //display operator
@@ -518,16 +567,28 @@ export class Display {
                 }
                 else{
                     // console.log(image)
+                    
                     context.drawImage(image, this.pos, this.heightOffset + 15 * this.textScale, 36 * this.textScale, 36 * this.textScale);
                     this.pos += 40*this.textScale
 
                 }
                 break;
             }
+            else if(OP ==="\\sim"){
+                // console.log("~")
+                context.fillText('~', this.pos, this.heightOffset + 50*this.textScale);
+                this.pos += 30*this.textScale
+                break
+            }
         }
 
         //display right operand
         if(rightOperand !== undefined){
+            if(this.isRfn(o.Op)){
+                context.fillText(";", this.pos, this.heightOffset + 50*this.textScale);
+                this.pos += 10*this.textScale
+            }
+
             message = rightOperand
             
             if(message.includes('_')){
@@ -536,10 +597,12 @@ export class Display {
             else{
                 context.fillText(message, this.pos, this.heightOffset + 50*this.textScale);
                 this.padding(message)
-            }         
+            }
+            
             left = true
         }
-        if(o.hasIf) {
+
+        if(o.hasIf || this.isRfn(o.Op)) {
             context.fillText(")", this.pos, this.heightOffset + 50*this.textScale);
             this.pos += 10*this.textScale
         }
@@ -548,8 +611,13 @@ export class Display {
             this.drawBracket(this.pos, this.heightOffset + 45*this.textScale, this.bracketSize);
             //display top and bot expression
             this.pos+=20*this.textScale
-
             this.displayTB(o);
+            this.pos+=20*this.textScale
+
+            if(BackBracket){
+                this.drawBackBracket(this.pos, this.heightOffset + 45*this.textScale, this.bracketSize)
+                // this.pos+=20*this.textScale
+            }
         }
         else if(BackBracket){
             this.displayTB(o)
@@ -583,7 +651,10 @@ export class Display {
         drawLine(context, [x, y+ size*(-10+60)*this.textScale], [x,    y+size*(-10-60)*this.textScale], 'black', 2* this.textScale);
         drawLine(context, [x, y+ size*(-10-60)*this.textScale], [x-10, y+size*(-10-60)*this.textScale], 'black', 2* this.textScale);
         drawLine(context, [x, y+ size*(-10+60)*this.textScale], [x-10, y+size*(-10+60)*this.textScale], 'black', 2* this.textScale);
+        this.pos += 20 * this.textScale
+        this.context.fillText(",", this.pos, this.heightOffset + 50*this.textScale);
         this.pos += 20*this.textScale
+        
     }
 
     include_left_split(expression){
@@ -596,7 +667,7 @@ export class Display {
 
     include_right_split(expression){
         if(expression === undefined) return false
-        if(expression.includes('\\Brs')){
+        if(expression.includes('\\Brs') || expression.includes('\\Bb') || expression.includes('\\Bs')){
             return true
         }
         else return false
