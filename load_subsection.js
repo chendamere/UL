@@ -5,12 +5,12 @@ var UL = new UL_kernel();
 var display;
 const canvas = document.getElementById('UL_kernel');
 
-window.onload = function(){
-    init()
-}
+// window.onload = function(){
+//     // init()
+// }
 
 window.addEventListener('load', function () {
-    // init()
+    init()
 
 })
 
@@ -113,7 +113,7 @@ for (var i = 0; i < btns.length; i++)
 function init() {
 
     console.log("window loaded")
-    console.log(testText)
+    // console.log(testText)
     
     //let parsed_strTable
     let htmlChapterName = document.getElementById("chapterName").firstChild.data
