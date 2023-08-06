@@ -87,7 +87,7 @@ for(let i = 0; i <= chapterNames.length-1; i++){
 }
 // console.log(parsedChapters)
 
-var testText = await test_asyn_subsection("./test.txt")
+// var testText = await test_asyn_subsection("./test.txt")
 // var latexText = await test_asyn_subsection("./latex.tex")
 
 create_sections(parsedChapters)
