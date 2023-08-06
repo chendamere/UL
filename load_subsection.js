@@ -45,40 +45,39 @@ function test_parsing(fileData){
 
 var chapterNames = [
     "Testing",
-    // "Rules of Operators",
-    // "Rules of Three Fundamental Relationships",
-    // "Theorems of Relationship of Node Null Comparison",
-    // "Theorems of Relationship of Node Value Comparison",
-    // "Theorems of Relationship of Identical Node Comparison",
-    // "Rules of Empty Branch Function",
-    // "Swap Theorems of the Same Operand",
-    // "Theorems of Operators and Relationships",
-    // "Next Order Induction",
-    // "Recursive Function R(i)",
-    // "Previous Order Induction",
-    // "Recursive Function R_(i)",
-    // "Rules of Node Ring",
-    // "Rules of Relationship of Node Connectivity",
-    // "Rules of Relationship of Node Continuity",
-    // "Rules of Relationship of Subnode",
-    // "Tree Order Induction",
-    // "Recursive Function Rc(i;j)",
-    // "Rules of Number Equal Relationship",
+    "Rules of Operators",
+    "Rules of Three Fundamental Relationships",
+    "Theorems of Relationship of Node Null Comparison",
+    "Theorems of Relationship of Node Value Comparison",
+    "Theorems of Relationship of Identical Node Comparison",
+    "Rules of Empty Branch Function",
+    "Swap Theorems of the Same Operand",
+    "Theorems of Operators and Relationships",
+    "Next Order Induction",
+    "Recursive Function R(i)",
+    "Previous Order Induction",
+    "Recursive Function R_(i)",
+    "Rules of Node Ring",
+    "Rules of Relationship of Node Connectivity",
+    "Rules of Relationship of Node Continuity",
+    "Rules of Relationship of Subnode",
+    "Tree Order Induction",
+    "Recursive Function Rc(i;j)",
+    "Rules of Number Equal Relationship",
+    "Rules of Number More Than and Less Than Relationship",
+    "Rules of Assign Operator in Temporary Space",
+    "Axioms of Assign Operator",
+    "Theorems of Insert Node Function Ins(t;j)",
+    "Theorems of Delete Node Function Del(j)",
+    "Theorems of Assign Operator",
+    "Function Cpo(r)",
+    "Recursive Function Rcpo(i;r)",
+    "Addition",
+    "Next Order Induction",
+    "Recursive Function Rcpm(i;j;r)",
 
-
-    // "Addition",
-    // "Next Order Induction",
-    // "Theorems of Assign Operator",
-    // "Theorems of Delete Node Function Del(j)",
-    // "Theorems of Insert Node Function Ins(t;j)",
-    // "Axioms of Assign Operator",
-    // "Function Cpo(r)",
     // "Multiplication",
     // "paradox",
-    // "Recursive Function Rcpm(i;j;r)",
-    // "Recursive Function Rcpo(i;r)",
-    // "Rules of Assign Operator in Temporary Space",
-    // "Rules of Number More Than and Less Than Relationship",
 ]
 
 const parsedChapters = []
@@ -104,7 +103,8 @@ for (var i = 0; i < btns.length; i++)
             document.getElementById("section-name").innerHTML = this.innerHTML
             let parent = (this.parentElement.parentElement.parentElement)
             document.getElementById("chapterName").innerText = parent.firstChild.data
-
+            console.log(parent.firstChild.data)
+            console.log(this.innerHTML)
             
             init()         
         };
@@ -344,9 +344,7 @@ function handleFileData(fileData) {
 
     }
     //console.log("done")
-    // for(const o of theorems) {
-    //     console.log(o, o.length)
-    // }
+    // console.log(tempTable)
     return tempTable;
 }
 

@@ -11,9 +11,11 @@ import {Axiom, Expression} from "./UL_dataType.js"
 // and Rc(i;j)
 // also comments that starts with % needs to be parsed
 // comma incorrectly displayed w ith there are more than 2 braches
-// display ~ (\sim)
+// parse induction  (==>)
+// one rule taking up multiple lines 
 
 function isChar(str) {
+    // console.log(str)
     return str.length === 1 && str.match(/[a-z]/i);
 }
 
@@ -30,9 +32,25 @@ export class UL_kernel {
         this.functionTable;
         this.intermediate_theorems=[]
         this.numberOfLines;
-
+        this.FunctionNames = [
+            "R(",
+            "R_(" ,
+            "Rd(" ,
+            "Rc(" ,
+            "&Tm(",
+            "&Fam(",
+            "Del(",
+            "Ins(",
+            "Cpo(",
+            "Rcpo(",
+            "IsCpo(",
+            "&Tm(",
+            "Rcpm(",
+            "IsCpm("
+        ]
     }
     init() {
+        // console.log(this.axiomTable)
         console.log("Universal Language ")
         //this.parse_all_axiom_from_table(false)
 
@@ -285,6 +303,13 @@ export class UL_kernel {
         else return false
     }
 
+    includeFn(expr){
+        for(const name of this.FunctionNames){
+            if(expr.includes(name)) return true
+        }
+        return false
+    }
+
     parse_all_proof_from_table(debug) {
         const exprTable = [];
 
@@ -360,7 +385,11 @@ export class UL_kernel {
             const newAxiom = new Axiom()
             const [leftExps, rightExps] = line.split("\\Rq");
             var PleftExps = leftExps.split(',')
-            var PrightExps = rightExps.split(',')
+            // console.log(leftExps, rightExps)
+            if(rightExps !== undefined){
+                var PrightExps = rightExps.split(',')
+
+            }
 
             //remove meta character '\r'
             PrightExps[PrightExps.length-1] = PrightExps[PrightExps.length-1].replace('\r','')
@@ -417,7 +446,7 @@ export class UL_kernel {
 
     parse_expressions(ExprString, debug) {
         // console.log(ExprString)
-        console.log(ExprString)
+        // console.log(ExprString)
         //make sure to include comma at beginning and end of expression !!!
 
         var exprs = []
@@ -436,7 +465,7 @@ export class UL_kernel {
             // console.log(expr)
             //console.log(expr,newBranch,top,bot,curExpr)
 
-            var left = true;
+            // var left = true;
             if(expr === '') {
                 continue;
             }
@@ -453,16 +482,10 @@ export class UL_kernel {
                 bot = false;
                 newBranch = false;
                 let temp = curExpr
-                // console.log(temp)
-                // console.log("reset",curExpr)
+
                 curExpr = eqTable.pop();
-                let ret = curExpr;
 
-                // console.log(curExpr)
-                // console.log(curExpr, eqTable)
                 if(curExpr !== temp && (this.include_left_split(temp.Op) || this.include_right_split(temp.Op))){
-                    console.log("here", curExpr, temp)
-
                     if(curExpr.bot === undefined){
                         curExpr.bot = temp
                     }
@@ -473,146 +496,162 @@ export class UL_kernel {
                         }
                         botExp = temp
                     }
-                    console.log(curExpr)
                     
-                    // if(curExpr.bot === undefined){
-                        
-                    // }
-                    // curExpr = curExpr.bot;
-                    // while(last.next){
-                    //     last = last.next
-                    // }
-                    // botExp.next = temp
-
-                    // console.log(last)
-                    // returnBranch = false
                 }
                 continue;
             }
             const newExpr = new Expression();
             
-            //R
-
+            //Functions
             let n = 0
             var c = expr[n];
-            if(expr.includes("R(") || expr.includes("Rd(") || expr.includes("R_(") || expr.includes("Rc(")){
+            if(this.includeFn(expr)){
                 var temp = c
                 while(c !== "("){
                     c = expr[++n]
                     temp += c
                 }
                 newExpr.Op = temp + ")"
-            }
-            // console.log(expr)
-            while(n < expr.length) {
-
-                c = expr[n];
-                if(c === ' '){
-                    n++
-                    continue;
-                }
-
-                //if first detected character is alphabet, then its operand
-                //unless they are special functions like R Rcpo
-                if(isChar(c) || c === '\\'){
-
-                    var operand = "";
-                    operand = expr[n] + expr[n+1] + expr[n+2]
-
-                    if(operand === '\\In' || operand === "\\Ip" || operand === "\\It"){
-                        // console.log(operand)
-                    }else{
+                //parsing parameters of function expressions
+                var operand = "";
+                let pOffset = 0
+                while(n<expr.length){
+                    c = expr[n]
+                    if(c === ' '){
+                        n++
+                        continue;
+                    }
+                    if(c === ";" || c === ")"){
+                        newExpr.parameters.push(operand)
                         operand = ""
-
-                        if(isChar(c)) {
-                            while(c !== ' ' && c !== '}' && c !== '{' && c !== undefined && c !== '\\' && c !== ";" && c !== ")"){
-                                //console.log(c)
-                                operand += c
-                                c = expr[++n]
-                            }
-                        }                        
+                        pOffset += 1
+                    }else{
+                        operand += c
+                        c = expr[n]
                     }
-
-                    if(left){
-                        newExpr.LeftOperand = operand;
-                        left = false;
-                    }
-                    else{
-                        newExpr.RightOperand = operand;
-                        left = true;
-                    }
+                    n++
                 }
-                
-                //if first detected character is \\ , then its operator
-                if(c === '\\') {
-                    var op = ""
-                    while(c !== undefined && c !== ' ' && c !== '{'){
-                        op += c
-                        c = expr[++n]
+            }
+            else{
+                //normal expressions
+                while(n < expr.length) {
+
+                    c = expr[n];
+                    console.log(c)
+                    if(c === ' '){
+                        n++
+                        continue;
+                    }
+    
+                    //if first detected character is alphabet, then its operand
+                    //unless they are special functions like Rcpo
+                    if(isChar(c) || c === '\\'){
+    
+                        var operand = "";
+                        operand = expr[n] + expr[n+1] + expr[n+2]
+    
+                        if(operand === '\\In' || operand === "\\Ip" || operand === "\\It"){
+                            // console.log(operand)
+                        }else{
+                            operand = ""
+    
+                            if(isChar(c)) {
+                                while(c !== ' ' && c !== '}' && c !== undefined && c !== '\\' && c !== ";" && c !== ")"){
+                                    operand += c
+                                    c = expr[++n]
+                                }
+                            }                        
+                        }
+                        // console.log(operand)
+    
+                        // if(left){
+                        //     newExpr.LeftOperand = operand;
+                        //     left = false;
+                        // }
+                        // else{
+                        //     newExpr.RightOperand = operand;
+                        //     left = true;
+                        // }
+                        if(operand.length !== 0) newExpr.parameters.push(operand)
+                        // left = true;
                     }
                     
-                    //see function to see what is going on
-                    if(this.include_left_split(op)){
-                        left = true;
+                    //if first detected character is \\ , then its operator
+                    if(c === '\\') {
+                        var op = ""
+                        while(c !== undefined && c !== ' ' && c !== '{'){
+                            op += c
+                            c = expr[++n]
+                        }
                         
-                        while(c !== '}'){
-                            c = expr[n++]
-
-                            //parsing operand and operator in the branch function
-                            if(isChar(c) && left){
-                                let operand = "";
-                                while(c !== '}'  && c !== '{' && c !== '\\' && c !== undefined){
-                                    if(operand === 'if('){
-                                        operand = ""
-                                        newExpr.hasIf = true
+                        //see function to see what is going on
+                        if(this.include_left_split(op)){
+                            // left = true;
+                            
+                            while(c !== '}'){
+                                c = expr[n++]
+    
+                                //parsing operand and operator in the branch function
+                                if(isChar(c)){
+                                    let operand = "";
+                                    while(c !== '}'  && c !== '{' && c !== '\\' && c !== ')' && c !== undefined){
+                                        if(operand === 'if('){
+                                            operand = ""
+                                            newExpr.hasIf = true
+                                        }
+                                        // console.log(operand)
+                                        if(c!== " ") operand += c
+    
+                                        c = expr[n++]
                                     }
                                     // console.log(operand)
-                                    if(c!== " ") operand += c
+                                    // newExpr.LeftOperand = operand
+                                    // left = false
+                                    if(operand.length !== 0) newExpr.parameters.push(operand)
+                                }
+                                // else if(isChar(c) && !left) {
+                                //     let operand = "";
+                                //     while(c !== '}'  && c !== '{' && c !== '\\' && c!==')' && c !== undefined){
+                                //         if(c!== " ") operand += c
+                                //         c = expr[n++]
+                                //     }
+                                //     // newExpr.RightOperand = operand
+                                //     newExpr.parameters.push(operand)
 
-                                    c = expr[n++]
+                                // }
+                                if(c === "\\" || c === '}'){
+                                    while(c !== undefined && c !== ' ' && c !== '}' && c !==')'){
+                                        op += c
+                                        c = expr[n++]
+                                    }
+                                    
+                                    // console.log(op)
+                                    newExpr.Op = op;
                                 }
-                                // console.log(operand)
-                                newExpr.LeftOperand = operand
-                                left = false
-                            }else if(isChar(c) && !left) {
-                                let operand = "";
-                                while(c !== '}'  && c !== '{' && c !== '\\' && c!==')' && c !== undefined){
-                                    if(c!== " ") operand += c
-                                    c = expr[n++]
-                                }
-                                newExpr.RightOperand = operand
                             }
-                            if(c === "\\" || c === '}'){
-                                while(c !== undefined && c !== ' ' && c !== '}' && c !==')'){
-                                    op += c
-                                    c = expr[n++]
-                                }
-                                
-                                // console.log(op)
-                                newExpr.Op = op;
-                            }
+                            //signal for next expression to be top
+    
+                            eqTable.push(newExpr)
+                            newBranch = true;
+                            break;
+                        }else if(this.include_right_split(op)){
+                            newExpr.Op = op;
+                            eqTable.push(newExpr)
+                            newBranch = true;
+                            break;
                         }
-                        //signal for next expression to be top
-
-                        eqTable.push(newExpr)
-                        newBranch = true;
-                        break;
-                    }else if(this.include_right_split(op)){
                         newExpr.Op = op;
-                        eqTable.push(newExpr)
-                        newBranch = true;
-                        break;
+                        // left = false;
+                        
                     }
-                    newExpr.Op = op;
-                    left = false;
-                    
+                    n++;
                 }
-                n++;
             }
-            // console.log(newExpr)
-            // console.log(curExpr,newExpr, bot,top,add)
-            // console.log(newExpr,bot,top,add, eqTable[0],eqTable[1])
+   
 
+            // console.log(expr)
+           
+            
             if(!bot && !top && add ) {
                 exprs.push(newExpr)
                 // console.log(newExpr)
@@ -626,7 +665,6 @@ export class UL_kernel {
             }
             else if(top) {
                 if(newBranch){
-                    // console.log("here",newExpr, ExprString[j])
                     //if its a newly added branch exp
                     eqTable[eqTable.length-2].top = newExpr
 
@@ -636,7 +674,7 @@ export class UL_kernel {
                 top = false
             }
             else if(bot) {
-                if(newExpr.LeftOperand === undefined && newExpr.RightOperand === undefined && newExpr.Op === undefined)
+                if(newExpr.parameters.length=== 0 && newExpr.Op === undefined)
                 {
 
                 }

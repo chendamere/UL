@@ -1,5 +1,10 @@
 import {UL_kernel} from "./UL_kernel.js"
 
+
+//TODO:
+//
+// create function to skip extra white spaces between operand and operator
+
 function drawLine(ctx, begin, end, stroke = 'black', width = 1) {
     if (stroke) {
         ctx.strokeStyle = stroke;
@@ -61,6 +66,25 @@ export class Display {
             ,"\\nPu"
             ,"\\nPs"
             ,"\\nPe"
+            ,"\\Pnm"
+            ,"\\nPnm"
+
+        ]
+        this.FunctionNames = [
+            "R()",
+            "R_()" ,
+            "Rd()" ,
+            "Rc()" ,
+            "&Tm()",
+            "&Fam()",
+            "Del()",
+            "Ins()",
+            "Cpo()",
+            "Rcpo()",
+            "IsCpo()",
+            "&Tm()",
+            "Rcpm()",
+            "IsCpm()"
         ]
 
         this.images = {}
@@ -383,28 +407,33 @@ export class Display {
 
     }
 
-    padding(message){
+    padding(message, sub){
+        
         var extraScaling = 0.7
         var multiple = false
         for(const Char of message) {
             //console.log(Char)
-            if(Char === 'm' || Char ==='w' || Char === 'M' || Char ==='W' || Char === '_' || Char ==="&"){
-                if(multiple){
-                    this.pos += 30*this.textScale*extraScaling
-                }else{
+            if(Char === 'm' || Char ==='w' || Char === 'M' || Char ==='W' || Char === '_' || Char ==="&" || Char ==="C" || Char === "R"){
+                // console.log(Char)
+
+                // if(multiple){
+                //     this.pos += 30*this.textScale*extraScaling
+                // }else{
                     this.pos += 30*this.textScale
 
-                }
+                // }
             }
-            else if(Char === 'i' || Char === 'l' || Char === 'j' || Char === 'I' || Char === 'J' || Char ==="1"){
-                if(multiple){
-                    this.pos += 10*this.textScale*extraScaling
-                }else{
-                this.pos += 10*this.textScale
-                }
+            else if(Char === 'i' || Char === 'l' || Char === 'j' || Char === 'I' || Char === 'J' || Char ==="1" || Char === "2" || Char === "2"){
+                // console.log(Char)
+                // if(multiple){
+                //     this.pos += 10*this.textScale*extraScaling
+                // }else{
+                    this.pos += 10*this.textScale
+                // }
             }
             else{
                 //console.log(Char)
+                // console.log(Char)
                 if(multiple){
                     this.pos += 20*this.textScale*extraScaling
                 }else{
@@ -415,19 +444,23 @@ export class Display {
         }
     }
 
-    displaySubscriptMessage(message,curMessage){
+    displaySubscriptMessage(message,subMessage){
         var context = this.context
         context.fillText(message, this.pos, this.heightOffset + 50*this.textScale);
-        this.pos += 15 * this.textScale
+        // console.log(message)
+        this.pos += 10 * this.textScale
+
         let size = String(this.textScale * 30)
         context.font = size/2 + "px Helvetica, sans-serif ";
-        context.fillText(curMessage, this.pos, this.heightOffset + 55*this.textScale);
-        this.pos += 15 * this.textScale
+        context.fillText(subMessage, this.pos, this.heightOffset + 55*this.textScale);
+        this.padding(subMessage, true)
+
+        // this.pos += 10 * this.textScale
 
         context.font = size + "px Helvetica, sans-serif ";
     }
     subscript(message){
-        var curMessage = message;
+        var curMessage = "";
         for(let i = 0; i<message.length; i++){
             if(message[i] === '_'){
                 if(message[i+1] !== undefined)
@@ -435,18 +468,22 @@ export class Display {
                     if(Number.isInteger(parseInt(message[i+1]))){
                         curMessage = message.slice(i+1)
                         message = message.slice(0,i)
-                        // console.log(curMessage)
+                        // console.log("here",curMessage)
                         this.displaySubscriptMessage(message,curMessage)
+                        break
                     }
                     else if(message[i+1] === '{'){
-                        let j = i+1 
-                        while(j !== '}'){
+                        let j = i+2 
+                        while(message[j] !== '}' && j < message.length){
                             curMessage += message[j++]
+                            // console.log(curMessage)
                         }
                         message = message.slice(0,i)
+                        // console.log(message, curMessage)
                         this.displaySubscriptMessage(message,curMessage)
+                        break
                     }
-                    else{break}
+
                 }
                 else{break}
             }
@@ -454,7 +491,13 @@ export class Display {
     }
 
     isRfn(op){
-        return op === "R()" || op ==="R_()" || op === "Rd()" || op === "Rc()"
+        for(const name of this.FunctionNames)
+        {
+            if(op === name){
+                return true
+            }
+        }
+        return false
     }
 
     displayExpression(o){
@@ -463,10 +506,9 @@ export class Display {
         //console.log(this.pos, this.heightOffset)
         var context = this.context
         let OP = o.Op;
-        let leftOperand = o.LeftOperand 
-        let rightOperand = o.RightOperand
+        let leftOperand = o.parameters[0]
+        let rightOperand = o.parameters[1]
         var message = ""
-        var left = true;
         let bracket = false   
         let BackBracket = false    
         //console.log(o.Op)
@@ -515,6 +557,7 @@ export class Display {
             //sconsole.log(this.adjust)
             BackBracket = true
         }
+        // console.log(o.Op)
 
         if(this.isRfn(o.Op)){
             message = o.Op.slice(0, message.length-1)
@@ -554,7 +597,6 @@ export class Display {
                 this.padding(message)
             }
             
-            left = false;
         }
         //display operator
         for(const symbol of this.symbols){
@@ -599,7 +641,6 @@ export class Display {
                 this.padding(message)
             }
             
-            left = true
         }
 
         if(o.hasIf || this.isRfn(o.Op)) {

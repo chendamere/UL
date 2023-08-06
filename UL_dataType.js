@@ -9,6 +9,7 @@ export class Expression{
         this.prev;
         this.next;
         this.hasIf;
+        this.parameters = [];
     }
 };
 
