@@ -90,8 +90,6 @@ for(let i = 0; i <= chapterNames.length-1; i++){
 var testText = await test_asyn_subsection("./test.txt")
 // var latexText = await test_asyn_subsection("./latex.tex")
 
-console.log(testText)
-
 create_sections(parsedChapters)
 
 // let htmlChapterNames;
@@ -115,6 +113,7 @@ for (var i = 0; i < btns.length; i++)
 function init() {
 
     console.log("window loaded")
+    console.log(testText)
     
     //let parsed_strTable
     let htmlChapterName = document.getElementById("chapterName").firstChild.data
