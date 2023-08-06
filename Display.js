@@ -68,7 +68,6 @@ export class Display {
             ,"\\nPe"
             ,"\\Pnm"
             ,"\\nPnm"
-
         ]
         this.FunctionNames = [
             "R()",
@@ -84,7 +83,9 @@ export class Display {
             "IsCpo()",
             "&Tm()",
             "Rcpm()",
-            "IsCpm()"
+            "IsCpm()",
+            "+",
+            "\\times",
         ]
 
         this.images = {}
@@ -503,7 +504,6 @@ export class Display {
     displayExpression(o){
 
         if(o === undefined) return;
-        //console.log(this.pos, this.heightOffset)
         var context = this.context
         let OP = o.Op;
         let leftOperand = o.parameters[0]
@@ -511,8 +511,6 @@ export class Display {
         var message = ""
         let bracket = false   
         let BackBracket = false    
-        //console.log(o.Op)
-        // console.log(o)
 
         if(this.beginExprs){
             this.beginExprs = false
@@ -559,7 +557,7 @@ export class Display {
         }
         // console.log(o.Op)
 
-        if(this.isRfn(o.Op)){
+        if(this.isRfn(o.Op) && o.Op !== "+" && o.Op !== "\\times"){
             message = o.Op.slice(0, message.length-1)
             context.fillText(message, this.pos, this.heightOffset + 50*this.textScale);
             this.padding(message)
@@ -607,13 +605,11 @@ export class Display {
                     context.drawImage(image, this.pos, this.heightOffset + 15 * this.textScale, 60 * this.textScale, 36 * this.textScale);
                     this.pos += 52*this.textScale
                 }
-                else{
-                    // console.log(image)
-                    
+                else{                    
                     context.drawImage(image, this.pos, this.heightOffset + 15 * this.textScale, 36 * this.textScale, 36 * this.textScale);
                     this.pos += 40*this.textScale
-
                 }
+                
                 break;
             }
             else if(OP ==="\\sim"){
@@ -624,9 +620,20 @@ export class Display {
             }
         }
 
+        if(OP ==="+"){
+            // console.log("+")
+            context.fillText("+", this.pos, this.heightOffset + 50 * this.textScale);
+            this.pos += 20*this.textScale
+        }
+        else if(OP ==="\\times"){
+            // console.log("x")
+            context.fillText("x", this.pos, this.heightOffset + 50 * this.textScale);
+            this.pos += 20*this.textScale
+        }
+
         //display right operand
         if(rightOperand !== undefined){
-            if(this.isRfn(o.Op)){
+            if(this.isRfn(o.Op) && (o.Op !== "+" && o.Op !== "\\times")){
                 context.fillText(";", this.pos, this.heightOffset + 50*this.textScale);
                 this.pos += 10*this.textScale
             }
@@ -640,13 +647,31 @@ export class Display {
                 context.fillText(message, this.pos, this.heightOffset + 50*this.textScale);
                 this.padding(message)
             }
-            
+        }
+        if(o.parameters[2] !== undefined){
+            context.fillText(";", this.pos, this.heightOffset + 50*this.textScale);
+            this.pos += 10*this.textScale
+            message = o.parameters[2]
+            if(message.includes('_')){
+                this.subscript(message)
+            }
+            else{
+                context.fillText(message, this.pos, this.heightOffset + 50*this.textScale);
+                this.padding(message)
+            }
         }
 
-        if(o.hasIf || this.isRfn(o.Op)) {
+        if(o.ret !== undefined){
+            message = ": " + o.ret
+            context.fillText(message, this.pos, this.heightOffset + 50*this.textScale);
+            this.padding(":"+o.ret)
+        }
+
+        if((o.hasIf || this.isRfn(o.Op))  && o.Op !== "+" && o.Op !== "\\times") {
             context.fillText(")", this.pos, this.heightOffset + 50*this.textScale);
             this.pos += 10*this.textScale
         }
+
         if(bracket){
             this.pos += 40*this.textScale
             this.drawBracket(this.pos, this.heightOffset + 45*this.textScale, this.bracketSize);

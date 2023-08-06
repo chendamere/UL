@@ -75,9 +75,8 @@ var chapterNames = [
     "Addition",
     "Next Order Induction",
     "Recursive Function Rcpm(i;j;r)",
-
-    // "Multiplication",
-    // "paradox",
+    "Multiplication",
+    "paradox",
 ]
 
 const parsedChapters = []
@@ -88,8 +87,10 @@ for(let i = 0; i <= chapterNames.length-1; i++){
 }
 // console.log(parsedChapters)
 
-// var testText = await test_asyn_subsection("./test.txt")
+var testText = await test_asyn_subsection("./test.txt")
 // var latexText = await test_asyn_subsection("./latex.tex")
+
+console.log(testText)
 
 create_sections(parsedChapters)
 
