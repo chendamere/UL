@@ -123,7 +123,7 @@ export class Display {
         //window.innerHeight = height
         this.context.canvas.height = height;
 
-        this.context.fillStyle = "rgb(255, 255, 255)";
+        this.context.fillStyle = "#f4eeee";
         this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
         console.log(this.canvas.width,this.canvas.height)
 

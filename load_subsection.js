@@ -97,14 +97,14 @@ create_sections(parsedChapters)
 let btns = document.getElementsByTagName("button")
 for (var i = 0; i < btns.length; i++)
 {
-    if(btns[i].classList.contains("section_btn"))
+    if(btns[i].classList.contains("section-btn"))
         btns[i].onclick = function()
         {
+            console.log(this)
             document.getElementById("section-name").innerHTML = this.innerHTML
             let parent = (this.parentElement.parentElement.parentElement)
-            document.getElementById("chapterName").innerText = parent.firstChild.innerText            
+            document.getElementById("chapterName").innerText = parent.children[1].innerText            
 
-            // console.log(parent.firstChild.innerText)
             // console.log(this.innerHTML)
             
             init()         
@@ -241,8 +241,8 @@ function init() {
         }
     }
 
-    // console.log(UL.subsectionsIndex,UL.subsubsectionsIndex)
-    // console.log(parsedChapters)
+    console.log(UL.subsectionsIndex,UL.subsubsectionsIndex)
+    console.log(parsedChapters)
     //display title
     document.title = UL.title
     document.getElementById('title').innerHTML = UL.title
@@ -396,12 +396,13 @@ function create_sections(parsed_chapters){
                 //create section name button
                 var section = document.createElement("div");
                 section.classList.add("dropdown-content")
+                section.style.visibility = "hidden"
                 section.style.display = "none"
             
                 var button = document.createElement("button");
                 button.innerText = sectionName;
                 button.classList.add("center")
-                button.classList.add("section_btn")
+                button.classList.add("section-btn")
                 section.appendChild(button)
 
                 //append to chapter span
@@ -416,26 +417,36 @@ function create_sections(parsed_chapters){
         testBtn.onclick = function(){
             //get css of span 
 
-            let spanChildren = this.parentElement.children[1].children
-            // console.log(spanChildren[0])
+            let spanChildren = this.parentElement.children[2].children
+            let icon = this.parentElement.children[0]
             for(let i = 0; i < spanChildren.length; i++){
                 // console.log(spanChildren[i].style.display)
-                if(spanChildren[i].style.display === "none"){
+                if(spanChildren[i].style.visibility === "hidden"){
+                    spanChildren[i].style.visibility = "visible"
                     spanChildren[i].style.display = "block"
+                    icon.style.transform = "rotate(-90deg)"
+                    // transform: rotate(90deg);
                     
                 }
-                else if(spanChildren[i].style.display === "block"){
+                else if(spanChildren[i].style.visibility === "visible"){ 
+                    spanChildren[i].style.visibility = "hidden"
                     spanChildren[i].style.display = "none"
-                    spanChildren[i].style.backgroundColor = "rgb(209, 209, 209)"
-
+                    icon.style.transform = "rotate(0deg)"
                 }
             }
             // span.style.display = "block"
         }
         testBtn.classList.add("chapter-btn")
+        var icon = document.createElement("i")
+        icon.classList.add("fa")
+        icon.classList.add("fa-caret-down")
+        drop_down.appendChild(icon)
+        // <i class="fa-solid fa-caret-down"></i>
+
         drop_down.appendChild(testBtn)
         drop_down.appendChild(span)
         console.log(drop_down)
+        // console.log(drop_down)
 
     
     
