@@ -52,7 +52,7 @@ export class UL_kernel {
         ]
     }
     init() {
-        // console.log(this.axiomTable)
+        console.log(this.axiomTable)
         console.log("Universal Language ")
         //this.parse_all_axiom_from_table(false)
 

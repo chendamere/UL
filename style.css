@@ -206,6 +206,7 @@ html, body {
 /* Hero Section CSS */
 
 .main {
+    height: 100%;
     background-color: #585050;
 }
 
@@ -214,23 +215,22 @@ html, body {
     grid-template-columns: 1fr 1fr;
     align-items: center;
     margin: 0 auto;
-    height: 100vh;
+    height: 100%;
     background-color: #ffffff;
     z-index: 1;
     width: 100%;
     /* max-width: 1500px; */
-    padding: 200px;
+    padding: 0px;
 }
 
 .main__demo{
     grid-template-columns: 1fr 1fr;
     margin: 0 auto;
-    max-height: 400vh;
     height: 100%;
     background-color: #ffffff;
     z-index: 1;
     width: 100%;
-    padding: 30px;
+    padding: 0px;
 }
 
 .main__content h1 {
@@ -244,17 +244,6 @@ html, body {
     -moz-text-fill-color: transparent;
     padding-left: 5%;
 }
-
-/* .main__content h2 {
-    font-size: 4rem;
-    background-color: #ff8177;
-    background-image: linear-gradient(to top, #b721ff 0%, #21d4fd 100%);
-    background-size: 100%;
-    -webkit-background-clip: text;
-    -moz-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    -moz-text-fill-color: transparent;
-} */
 
 .main__content p {
     margin-top: 1rem;
@@ -620,7 +609,8 @@ html, body {
     }
 }
 
-.smaller_box{ overflow-y:auto; overflow-x:auto; border:10px ridge rgb(212, 212, 212); }
+#smaller_box{height: 100%; overflow-y:scroll; border:3px solid rgb(63, 57, 57); }
+/* #smaller_box:hover{overflow-y: scroll;}  */
 
 .symbol_display{width: 100px; height: 100px;}
 
@@ -630,49 +620,68 @@ html, body {
     height: 100%;    
 }
 
-  
-.toc {
-    background-color:  rgb(217, 217, 217);
-    position: relative;
-    min-width: 60vh;
+
+#toc_container{
+    position: inherit;
+    width: 50vh;
+    height: 100%;
+    overflow-y: scroll;
+}
+.main__demo ::-webkit-scrollbar{
+    display: none;
 }
 
-.toc ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    background: rgb(34, 27, 27);
+.toc {
+    background-color:  rgb(209, 209, 209);
+    position:inherit;
+    width: 100%;
 }
 
 .toc li {
     display: block;
 }
 
-.toc a {
+#title{
+    position: relative;
+    padding: 5vh;
+    display: block;
+    font-size: 3vh;
+    text-align: center;
+    background-color: #c8c8c8;
+}
+
+#toc-title  {
+    position: relative;
     color: rgb(209, 209, 209);
+    width: 50vh;
     display: block;
     padding: 10px 20px;
-    font-size: 4vh;
+    font-size: 2vh;
     text-decoration: none;
     background-color: #585858;
-    text-align: center;
+    text-align:left;
+    z-index: 2;
 }
 
-.toc li button {
-    color: rgb(0, 0, 0);
-    background-color:  rgb(207, 207, 207);;
-    display: block;
-    padding: 10px 20px;
-    text-decoration: none;
-    border: #000000;
+#toc-ul{
+    width: 50vh;
 }
 
-.toc li .dropdown {
+.toc .dropdown {
     color: rgb(0, 0, 0);
-    background-color:  rgb(217, 217, 217);
     display: block;
-    padding: 10px 10px;
+    padding: 0px 0px 0px 30px;
+    font-size: 100%;
+    width: 100%;
     text-decoration: none;
+}
+.dropdown .chapter-btn{
+    width: 50vh;
+    background-color:rgb(209, 209, 209);
+    padding: 5px 5px 5px 5px;
+    text-align: left;
+    border: none;
+    font-size:100%;
 }
 
 /* Style the dropdown menu */
@@ -683,53 +692,53 @@ html, body {
 }
 
 /* Change the background color of dropdown links on hover */
-.toc ul li button:hover {
-    background-color:  rgb(214, 214, 214);
+.toc button:hover {
+    background-color:  rgb(187, 187, 187);
 }   
+.toc .dropdown-content button {
+    color: rgb(0, 0, 0);
+    background-color:rgb(209, 209, 209);
+    display: block;
+    padding: 2px 2px;
+    text-decoration: none;
+    text-align: left;
+    border: #000000;
+    font-size: 70%;
+}
+.toc .dropdown-content button:hover {
+    background-color:  rgb(187, 187, 187);
+
+}
   
 .dropdown-content {
-    display: none;
+    /* display: none; */
     position: relative;
-    left: 20px;
-    color: rgb(0, 0, 0);
-    background-color:  rgb(159, 150, 150);
-    min-width: 100px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    left: 10%;
+    min-width: 100%;
     /* padding: 10px 16px; */
+    text-align: left;
+    /* font-size:1vh; */
     z-index: 1;
 }
   
-.dropdown:hover .dropdown-content {
+/* .dropdown:hover .dropdown-content {
     display: block;
-    
-}
+} */
 
 .dropdown span{
     position: none;
-    padding: 20px 0px 0px 0px;
-
+    padding: 0px 0px 0px 0px;
     display: block;
-    align-items: center;
-    text-align: center;
+    align-items: left;
+    text-align: left;
+    width: 100%;
+    font-size:2vh;
 }
 
-.container {
-	display: flex;
-	justify-content: center;
-}
 
 .flex-row {
     display: flex;
     justify-content: center;
 }
 
-.div7 {
-    justify-self: start;
-    height:100%;
-}
 
-.div8 {
-    justify-self: end;
-    margin: 2vh;
-
-}

@@ -97,13 +97,15 @@ create_sections(parsedChapters)
 let btns = document.getElementsByTagName("button")
 for (var i = 0; i < btns.length; i++)
 {
+    if(btns[i].classList.contains("section_btn"))
         btns[i].onclick = function()
         {
             document.getElementById("section-name").innerHTML = this.innerHTML
             let parent = (this.parentElement.parentElement.parentElement)
-            document.getElementById("chapterName").innerText = parent.firstChild.data
-            console.log(parent.firstChild.data)
-            console.log(this.innerHTML)
+            document.getElementById("chapterName").innerText = parent.firstChild.innerText            
+
+            // console.log(parent.firstChild.innerText)
+            // console.log(this.innerHTML)
             
             init()         
         };
@@ -357,6 +359,7 @@ function create_sections(parsed_chapters){
     for(let i = 0; i < parsed_chapters.length;i++) {
         let chapter = parsed_chapters[i]
         var drop_down;
+        let chapterName=""
         //look for chapter name if not found return error
         for(let j = 0 ; j < chapter.length; j++ ) {
             let name = chapter[j]
@@ -364,9 +367,6 @@ function create_sections(parsed_chapters){
             //console.log(name)
             var span;
             var span2;
-
-            let chapterName = ""
-
             //dectect chapter name
             if(name[0] === "@"){
                 chapterName = name.slice(1,name.length)
@@ -377,8 +377,10 @@ function create_sections(parsed_chapters){
                 drop_down.classList.add("dropdown")
             
                 span = document.createElement("span")
-                span2 = document.createElement("span")
-                span2.innerText = chapterName                
+                // span2 = document.createElement("span")
+                
+                // span2.innerText = chapterName 
+                // console.log(span2)
             }
 
             //detect section name
@@ -388,27 +390,53 @@ function create_sections(parsed_chapters){
                 var sectionName = name.slice(1,name.length)
                 // console.log(sectionName)
 
-                if(span === undefined || span2 === undefined || drop_down ===undefined) {
+                if(span === undefined || drop_down ===undefined) {
                     console.log("chapter name not found!")
                 }
                 //create section name button
                 var section = document.createElement("div");
                 section.classList.add("dropdown-content")
+                section.style.display = "none"
             
                 var button = document.createElement("button");
                 button.innerText = sectionName;
                 button.classList.add("center")
-
+                button.classList.add("section_btn")
                 section.appendChild(button)
 
                 //append to chapter span
                 span.appendChild(section)
-                span2.appendChild(span)
-                drop_down.appendChild(span2)
+                // span2.appendChild(span)
 
                 sub_section_index[sectionName] = String(i) + "_" + String(j)
             }
         }
+        let testBtn = document.createElement("button")
+        testBtn.innerText = chapterName
+        testBtn.onclick = function(){
+            //get css of span 
+
+            let spanChildren = this.parentElement.children[1].children
+            // console.log(spanChildren[0])
+            for(let i = 0; i < spanChildren.length; i++){
+                // console.log(spanChildren[i].style.display)
+                if(spanChildren[i].style.display === "none"){
+                    spanChildren[i].style.display = "block"
+                    
+                }
+                else if(spanChildren[i].style.display === "block"){
+                    spanChildren[i].style.display = "none"
+                    spanChildren[i].style.backgroundColor = "rgb(209, 209, 209)"
+
+                }
+            }
+            // span.style.display = "block"
+        }
+        testBtn.classList.add("chapter-btn")
+        drop_down.appendChild(testBtn)
+        drop_down.appendChild(span)
+        console.log(drop_down)
+
     
     
         if(drop_down === undefined) {

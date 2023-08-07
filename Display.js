@@ -31,7 +31,7 @@ export class Display {
         this.canvas = canvas;
         //this.StringTable = this.kernel.parsedRules;
         this.axiomTable = this.kernel.axiomTable;
-        this.proof = this.kernel.proofTable
+        this.proof = this.kernel.proofTable;
 
         this.symbols = [
             "\\Oa"
@@ -91,7 +91,7 @@ export class Display {
         this.images = {}
         this.beginLine = true;
         this.context = this.canvas.getContext("2d");
-        this.context.canvas.width  = window.innerWidth/1.5;
+        this.context.canvas.width  = 1000;
 
         // console.log(this.context.canvas.height)
         this.heightOffset = 40;
@@ -120,13 +120,17 @@ export class Display {
 
         var height = (50 + this.kernel.subsectionsIndex.length*100) + (this.kernel.subsubsectionsIndex.length*100) + (this.axiomTable.length - numSplit)*25 + (numSplit * 100) 
         // height *= this.textScale
-        window.innerHeight = height
-        this.context.canvas.height = window.innerHeight;
+        //window.innerHeight = height
+        this.context.canvas.height = height;
+
+        this.context.fillStyle = "rgb(255, 255, 255)";
+        this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        console.log(this.canvas.width,this.canvas.height)
 
         if(this.axiomTable.length !== 0) {
             this.display_from_table();
         }
-        console.log(this.axiomTable)
+        console.log(this.kernel)
         
     }
 
