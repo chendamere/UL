@@ -76,7 +76,7 @@ var chapterNames = [
     "Next_Order_Induction",
     "Recursive_Function_Rcpm(i;j;r)",
     "Multiplication",
-    "paradox",
+    "Paradox",
 ]
 
 const parsedChapters = []
