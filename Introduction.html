@@ -48,25 +48,72 @@
         
         <div class="main__container ">
 
-            <div style="text-align: center; display: block; padding-top: 10%;">
+            <div style="color: #2c2525; text-align: center; display: block; padding-top: 10%;">
+                <h1>Introduction</h1>
+                <p style="margin: 3% 20%; text-align: left;">
+                    In order to achieve machine thinking, or create a program that can deduce logical relation,
+                    "understand" fundamental definitions, and make decision base on observations
+                    in the data, there needs to be a sementically closed language equipped with as finite set of
+                    symbol manipulation operations to describe these paradigm.<br>
+                    <br>
+                    For this purpose, the natural language has many weakness in describing logical relation, like
+                    the existence of paradox, which is still a major issue in any formal system, as demonstrated by
+                    Godel and many logicians after his famous incompleteness theorems. Readers are recommended to 
+                    learn more about the this on the official stanford computer science website.<br>
+                    <br>
+                    Therefore, a language for machine thinking needs to be constructed as a closed system
+                    that recognizes self-definitions and self-explanations. In fact, viewers browsing through
+                    the chapters will realize that the language does not rely on any
+                    natural language for its deduction and proofs. This sets a high learning curve 
+                    for the language, since readers are expected to learn many components before reaching the 
+                    later chapters on the construction of numbers and their basic operations.<br>
+                    <br>
+                    Definitions, axioms, theorems, and proofs are the entire content of the first volume of the book.
+                    To simplify, the easier theorems will omit proofs. At the same time, theorems that can be
+                    proved using similar methods are no longer listed. Finally, in the more complex proof
+                    process, frequently occurring steps, especially the recovery process, will be omitted.
+                    For the arrangement of the chapters, some basic propositional concepts are defined to
+                    explain the basic principles of data structure and operation, at the same time, to prove a
+                    series of important theorems. Later chapters will define the concepts of number, addition,
+                    and multiplication, and demonstrate the fundamental laws of arithmetic. Finally, the
+                    last chapter defines paradox and proves that a paradox cannot lead to a contradiction.
+                    The concepts of infinity, abstraction, composition, and deeper mathematical concepts
+                    will be covered in the next volume.<br>
+                    <br>
+                    This website will serve as a database and an assistance tool for learning about UL.
+                </p>
 
                 <h1>Data Structure</h1>
 
-                <img style="border: 1px solid rgb(0,0,0);" id='UL_Oe' alt="UL_Oe"  src="./images/UL_datastrcuture.png" width="800px"/>
-                <p style="margin: 2% 30%; text-align: left;">Universal language is designed to describe and manipulate data structure that qualifies as tree-like multidimensional structure with doubly linked list in each dimension.
+                <img style="border: 1px solid rgb(0,0,0);" id='UL_Oe' alt="UL_Oe"  src="./images/UL_datastrcuture.png" width="600px"/>
+                <p style="margin: 3% 30%; text-align: left;">Universal language is designed to describe and manipulate data structure that qualifies as tree-like multidimensional structure with doubly linked list in each dimension.
                 </p>
-                
-                <h1>Node</h1>
-                <img style="border: 1px solid rgb(0,0,0);" id='UL_Oe' alt="UL_Oe"  src="./images/UL_node.png" width="800px"/>
-                <p style="margin: 2% 30%; text-align: left;">The basic element of data structure is
-                    node. A node consists of data value, unique node id, and links pointing to the next node, previous node, and child node.</p>
 
-                
+                <h1>Node</h1>
+                <img style="border: 1px solid rgb(0,0,0);" id='UL_Oe' alt="UL_Oe"  src="./images/UL_node.png" width="600px"/>
+                <p style="margin: 3% 30%; text-align: left;">The basic element of data structure is
+                    node. A node consists of data value, unique node id, and links pointing to the next node, previous node, and child node.
+                    The empty node is represented with ϕ. There is exactly one empty node in one dimension. An empty
+                    node is used to identify the start and end of a one-dimensional loop. An empty node
+                    has no child node, so it points to itself</p>
 
             </div>
 
 
-            <h1 style=" padding-top: 5%; padding-left: 15%;"> Syntax Table </h1>
+            <div style="text-align: center; display: block; padding-top: 0%;">
+                <h1 style=" padding-top: 2%;"> Syntax</h1>
+                <p style="margin: 2% 30%; text-align: left;">
+                    An operand is a variable expressed in conjunction with operators, it can be
+                    interpreted as a pointer to a node within a data structure.<br>
+                    <br>
+                    An operation consists of an operator and several operands. For example, given:<br>
+                    i <img id='UL_Oe' alt="UL_Oe"  src="./images/Op_svg/UL_Oe.svg" width="20" height="20" /> j , 
+                    i and j are operands and
+                     <img id='UL_Oe' alt="UL_Oe"  src="./images/Op_svg/UL_Oe.svg" width="20" height="20" /> 
+                     is the operator.
+
+                </p>
+            </div>
             
             <div class="grid-container">
                 <div class="grid-item">
