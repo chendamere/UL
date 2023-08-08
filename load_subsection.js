@@ -1,16 +1,18 @@
 import {UL_kernel} from "./UL_kernel.js";
 import {Display} from "./Display.js"
 
-var UL = new UL_kernel();
+var UL
 var display;
-const canvas = document.getElementById('UL_kernel');
-
-// window.onload = function(){
-//     // init()
-// }
+var canvas;
+const parsedChapters = []
+var sub_section_index = {}
 
 window.addEventListener('load', function () {
+    UL  = new UL_kernel();
+    canvas = document.getElementById('UL_kernel');
+    
     init()
+    
 
 })
 
@@ -79,9 +81,6 @@ var chapterNames = [
     "Paradox",
 ]
 
-const parsedChapters = []
-var sub_section_index = {}
-
 for(let i = 0; i <= chapterNames.length-1; i++){
     parsedChapters.push(await asyn_subsection("./database/latex/" +chapterNames[i]+".tex"))
 }
@@ -100,7 +99,7 @@ for (var i = 0; i < btns.length; i++)
     if(btns[i].classList.contains("section-btn"))
         btns[i].onclick = function()
         {
-            console.log(this)
+            // console.log(this)
             document.getElementById("section-name").innerHTML = this.innerHTML
             let parent = (this.parentElement.parentElement.parentElement)
             document.getElementById("chapterName").innerText = parent.children[1].innerText            
@@ -109,7 +108,7 @@ for (var i = 0; i < btns.length; i++)
             
             init()         
         };
-}
+}   
 
 
 function init() {
@@ -445,7 +444,7 @@ function create_sections(parsed_chapters){
 
         drop_down.appendChild(testBtn)
         drop_down.appendChild(span)
-        console.log(drop_down)
+        // console.log(drop_down)
         // console.log(drop_down)
 
     

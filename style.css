@@ -206,7 +206,6 @@ html, body {
 /* Hero Section CSS */
 
 .main {
-    height: 100%;
     background-color: #2c2525;
 }
 
@@ -221,7 +220,38 @@ html, body {
     z-index: 1;
     width: 100%;
     max-width: 1500px;
+    /* min-height: 200vh; */
     padding: 0px;
+}
+
+.main__container .img__container{
+    background-color: none;
+    font-size: 1.5rem;
+    display: inline
+}
+
+.img__container img{
+    padding-top: 15%;
+}
+
+.op__description{
+    /* padding-left: 30%; */
+    text-align: left;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: auto auto;
+    /* background-color: #2196F3; */
+    padding: 1% 15% 1% 15%;
+  }
+
+.grid-item {
+    background-color: none;
+    border: 0.5px dotted rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    /* font-size: 30px; */
+    text-align: center;
 }
 
 .main__demo{
