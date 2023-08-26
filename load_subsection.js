@@ -1,22 +1,62 @@
 import {UL_kernel} from "./UL_kernel.js";
 import {Display} from "./Display.js"
+import { Proof_Display } from "./Proof_Display.js";
 
 var UL
 var display;
 var canvas;
+var highlightCanvas;
 const parsedChapters = []
+const parsedProofs = []
 var sub_section_index = {}
 
+var chapterNames = [
+    "Testing",
+    "Testing",
+    "Rules_of_Operators",
+    // "Rules_of_Three_Fundamental_Relationships",
+    // "Theorems_of_Relationship_of_Node_Null_Comparison",
+    // "Theorems_of_Relationship_of_Node_Value_Comparison",
+    // "Theorems_of_Relationship_of_Identical_Node_Comparison",
+    // "Rules_of_Empty_Branch_Function",
+    // "Swap_Theorems_of_the_Same_Operand",
+    // "Theorems_of_Operators_and_Relationships",
+    // "Next_Order_Induction",
+    // "Recursive_Function_R(i)",
+    // "Previous_Order_Induction",
+    // "Recursive_Function_R_(i)",
+    // "Rules_of_Node_Ring",
+    // "Rules_of_Relationship_of_Node_Connectivity",
+    // "Rules_of_Relationship_of_Node_Continuity",
+    // "Rules_of_Relationship_of_Subnode",
+    // "Tree_Order_Induction",
+    // "Recursive_Function_Rc(i;j)",
+    // "Rules_of_Number_Equal_Relationship",
+    // "Rules_of_Number_More_Than_and_Less_Than_Relationship",
+    // "Rules_of_Assign_Operator_in_Temporary_Space",
+    // "Axioms_of_Assign_Operator",
+    // "Theorems_of_Insert_Node_Function_Ins(t;j)",
+    // "Theorems_of_Delete_Node_Function_Del(j)",
+    // "Theorems_of_Assign_Operator",
+    // "Function_Cpo(r)",
+    // "Recursive_Function_Rcpo(i;r)",
+    // "Addition",
+    // "Next_Order_Induction",
+    // "Recursive_Function_Rcpm(i;j;r)",
+    // "Multiplication",
+    // "Paradox",
+]
 window.addEventListener('load', function () {
     UL  = new UL_kernel();
     canvas = document.getElementById('UL_kernel');
-    
-    init()
+    highlightCanvas = document.getElementById('highlight_canvas')
     
 
+    init()
 })
 
-const asyn_subsection = async (path) => {
+
+const Parse = async (path) => {
     return new Promise((resolve) => {
         setTimeout(() => {
             //console.log(path)
@@ -26,72 +66,14 @@ const asyn_subsection = async (path) => {
     });
 };
 
-const test_asyn_subsection = async (path) => {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            //console.log(path)
-            var ret = doGET(path).then(test_parsing)
-            resolve(ret)
-        });
-    });
-};
-
-function test_parsing(fileData){
-    
-    if(!fileData){
-        return;
-    }
-    return fileData
-}
-
-
-var chapterNames = [
-    "Testing",
-    "Rules_of_Operators",
-    "Rules_of_Three_Fundamental_Relationships",
-    "Theorems_of_Relationship_of_Node_Null_Comparison",
-    "Theorems_of_Relationship_of_Node_Value_Comparison",
-    "Theorems_of_Relationship_of_Identical_Node_Comparison",
-    "Rules_of_Empty_Branch_Function",
-    "Swap_Theorems_of_the_Same_Operand",
-    "Theorems_of_Operators_and_Relationships",
-    "Next_Order_Induction",
-    "Recursive_Function_R(i)",
-    "Previous_Order_Induction",
-    "Recursive_Function_R_(i)",
-    "Rules_of_Node_Ring",
-    "Rules_of_Relationship_of_Node_Connectivity",
-    "Rules_of_Relationship_of_Node_Continuity",
-    "Rules_of_Relationship_of_Subnode",
-    "Tree_Order_Induction",
-    "Recursive_Function_Rc(i;j)",
-    "Rules_of_Number_Equal_Relationship",
-    "Rules_of_Number_More_Than_and_Less_Than_Relationship",
-    "Rules_of_Assign_Operator_in_Temporary_Space",
-    "Axioms_of_Assign_Operator",
-    "Theorems_of_Insert_Node_Function_Ins(t;j)",
-    "Theorems_of_Delete_Node_Function_Del(j)",
-    "Theorems_of_Assign_Operator",
-    "Function_Cpo(r)",
-    "Recursive_Function_Rcpo(i;r)",
-    "Addition",
-    "Next_Order_Induction",
-    "Recursive_Function_Rcpm(i;j;r)",
-    "Multiplication",
-    "Paradox",
-]
 
 for(let i = 0; i <= chapterNames.length-1; i++){
-    parsedChapters.push(await asyn_subsection("./database/latex/" +chapterNames[i]+".tex"))
+    let ret = await Parse("./database/latex/" +chapterNames[i]+".tex")
+    // console.log(parsedProofs, parsedChapters)
+    parsedChapters.push(ret[0])
+    parsedProofs.push(ret[1])
 }
-// console.log(parsedChapters)
-
-// var testText = await test_asyn_subsection("./test.txt")
-// var latexText = await test_asyn_subsection("./latex.tex")
-
 create_sections(parsedChapters)
-
-// let htmlChapterNames;
 
 let btns = document.getElementsByTagName("button")
 for (var i = 0; i < btns.length; i++)
@@ -111,14 +93,78 @@ for (var i = 0; i < btns.length; i++)
 }   
 
 
+function getMousePos(canvas, evt) {
+    // console.log(canvas);
+    var rect = canvas.getBoundingClientRect();
+    return {
+        x: evt.clientX - rect.left,
+        y: evt.clientY - rect.top
+    };
+
+}
+
+// highlight
+canvas.addEventListener("mousemove", function (evt) {
+    var mousePos = getMousePos(canvas, evt);
+    let ctx = document.getElementById("highlight_canvas").getContext("2d")
+
+    if((display !== undefined || display !== null)){
+        let allPos = display.exprPosition;
+        for(const key in allPos){
+            allPos = display.exprPosition;
+            let [x0,y0,x1,y1,isHighlighted] = allPos[key]
+            // console.log(ctx.canvas.style.zIndex,isHighlighted, mousePos)
+
+            if((mousePos.x < x1 && mousePos.x > x0) && (mousePos.y < y1 && mousePos.y > y0)){
+                if(!isHighlighted){
+                    ctx.clearRect(x0, y0, ctx.canvas.width, ctx.canvas.height)
+                    ctx.globalAlpha = 0.2;
+                    ctx.fillStyle = "red";
+                    ctx.fillRect(x0, y0, x1 - x0, y1 - y0);
+                    ctx.globalAlpha = 1.0;
+                    (display.exprPosition[key])[4] = true;
+                    ctx.canvas.style.zIndex = "2";
+                    display.MouseUpdate(x1, y0);
+                    break;
+                }
+            }
+
+        }
+    }
+}, false);
+
+//remove highlight
+highlightCanvas.addEventListener("mousemove", function (evt) {
+    var mousePos = getMousePos(highlightCanvas, evt);
+    let ctx = document.getElementById("highlight_canvas").getContext("2d")
+
+    if((display !== undefined || display !== null) && ctx.canvas.style.zIndex === "2"){
+        let allPos = display.exprPosition;
+        for(const key in allPos){
+            allPos = display.exprPosition;
+            let [x0,y0,x1,y1,isHighlighted] = allPos[key]
+            // console.log(ctx.canvas.style.zIndex,isHighlighted, mousePos)
+
+            if(isHighlighted){
+                if(!((mousePos.x < x1 && mousePos.x > x0) && (mousePos.y < y1 && mousePos.y > y0)))
+                {
+                    ctx.clearRect(x0, y0, ctx.canvas.width, ctx.canvas.height)
+                    ctx.canvas.style.zIndex = "0";
+                    (display.exprPosition[key])[4] = false;    
+
+                    break;
+                }
+            }
+        }
+    }
+}, false);
+
+
 function init() {
 
     console.log("window loaded")
-    // console.log(testText)
     
-    //let parsed_strTable
     let htmlChapterName = document.getElementById("chapterName").firstChild.data
-    // console.log(htmlChapterName)
     let btnTitle = document.getElementById("section-name").innerHTML
 
     //extract subsection to parsed_strTable
@@ -128,6 +174,8 @@ function init() {
     UL.StringTable = []
     UL.subsectionsIndex = []
     UL.subsubsectionsIndex = []
+    UL.proofString = []
+    UL.proofTable = []
     let numSubSec = 0
     let numSubSubSec = 0
 
@@ -149,15 +197,12 @@ function init() {
 
             if(line[0] === "@"){
                 if(line.includes(htmlChapterName)){
-                    
                     chapterFound = true;
                 }
             }
             offset = numSubSubSec+numSubSec+1
             if(line[0] === "#" && chapterFound){
-                // console.log(line)
                 if(line.includes(btnTitle)){
-                    // console.log(line)
                     UL.title = line.slice(1,line.length)
                     //detect section title
                     add = true
@@ -166,14 +211,12 @@ function init() {
                     continue
                 }
                 if(add){
-                    // console.log("break")
                     //if already adding, then finished parsing section
                     break;
                 }
             }
             else if(subSectionFound){
                 if(line[0] === "%"){
-                    // console.log(line,subsubsection)
                     numSubSubSec += 1
                     if(subsubsection.length===0){
                         subsubsection.push(line.slice(1,line.length))
@@ -191,13 +234,12 @@ function init() {
                     }
                 }
                 else if(line[0] === "$"){
-                    // console.log(numSubSubSec,numSubSec)
                     numSubSec += 1
                     if(subsection.length===0){
                         //should -2 because chapter name and section name
                         subsection.push(line.slice(1,line.length))
                         subsection.push(index-(offset))
-                        console.log(line, subsection)
+                        // console.log(line, subsection)
 
                     }
                     else if(subsection.length===2){
@@ -214,19 +256,15 @@ function init() {
                     }
                 }
                 else if(add) {
-                    //console.log("here")
-                    // console.log(line)
+
                     UL.StringTable.push(line)
                 }
             }
-            else{
-                //console.log("not found")
-            }
+
         }
         if(subSectionFound){
             //edge cases
             if(subsection.length === 2) {
-                // console.log(subsection)
                 subsection.push(index-(offset))
                 UL.subsectionsIndex.push(subsection)
                 subsection = []
@@ -240,16 +278,42 @@ function init() {
         }
     }
 
-    console.log(UL.subsectionsIndex,UL.subsubsectionsIndex)
-    console.log(parsedChapters)
+    // console.log(parsedProofs)
+    for(let i = 0; i< parsedProofs.length; i++) {
+        let line = (parsedProofs[i])[0]
+        let list = []
+        
+        if(line.includes("@"))
+        {
+            let chapterName = document.getElementById("chapterName").innerText
+
+            if(line.includes(chapterName))
+            {
+                for(let j = 1; j<parsedProofs[i].length;j++){
+                    list.push((parsedProofs[i])[j])
+                }
+                UL.proofString = list
+            }
+
+        }            
+    }
+    // console.log(UL.proofString)
+
+    // console.log(UL.subsectionsIndex,UL.subsubsectionsIndex)
+    // console.log(parsedChapters)
     //display title
     document.title = UL.title
     document.getElementById('title').innerHTML = UL.title
+
+    //reset highlight layer
+    document.getElementById("highlight_canvas").getContext("2d").canvas.style.zIndex = "0"
+
 
     UL.init()
     display = new Display(UL, canvas)
     display.init()    
 }
+
 
 async function doGET(path) {
     const promise = new Promise((resolve, reject) => {
@@ -264,10 +328,8 @@ async function doGET(path) {
                     xhr.onload = () => {
                         resolve(xhr.responseText)
                     }
-                    //var a = callback(xhr.responseText);                        
                 } else {
                     // ***No, tell the callback the call failed***
-                    //callback(null);
                 }
             }
         };
@@ -279,17 +341,18 @@ async function doGET(path) {
 
 
 function handleFileData(fileData) {
-    //console.log("handling data")
 
     let beginMath = false
+    let beginProof = false;
     
     if (!fileData) {
         // Show error
         return;
     }
     const tempTable = []
+    const proofTable = []
     const theorems = fileData.split('\n')
-    // console.log(theorems)
+    let prev;
     for(const line of theorems) {
         // console.log(line)
         var parsed_line = ""
@@ -300,6 +363,7 @@ function handleFileData(fileData) {
         }
         if(line.includes("\\end{math}")) {
             beginMath = false
+            beginProof = false
             continue
         }
 
@@ -313,7 +377,9 @@ function handleFileData(fileData) {
             j++
         }
         parsed_line = parsed_line.slice(j,i+1)
-        //console.log(parsed_line)
+        // console.log(parsed_line)
+
+        if(parsed_line.includes("proof")) beginProof = true;
 
         if(parsed_line.length <= 1) {continue}
         else if((parsed_line.includes("\\[") && parsed_line.includes("\\]"))){
@@ -322,6 +388,8 @@ function handleFileData(fileData) {
         else if(parsed_line.toLowerCase().includes("chapter")){
             parsed_line = parsed_line.replace("\\chapter","@").replace("{","").replace("}","")
             tempTable.push(parsed_line)
+            proofTable.push(parsed_line);
+
             //console.log(parsed_line)
         }
         else if(parsed_line.toLowerCase().includes("subsubsection")){
@@ -336,17 +404,17 @@ function handleFileData(fileData) {
             parsed_line = parsed_line.replace("\\section","#").replace("{","").replace("}","")
             tempTable.push(parsed_line)
         }
-        else if(beginMath){
+        else if(beginMath && beginProof){
             //add in \\[\\]
-            // parsed_line = "\\[" + parsed_line + "\\]"
-            // tempTable.push(parsed_line)
+
+            proofTable.push(parsed_line);
+
         }
-        else {continue}
+        prev = parsed_line;
 
     }
-    //console.log("done")
-    // console.log(tempTable)
-    return tempTable;
+    //console.log(proofTable)
+    return [tempTable,proofTable];
 }
 
 function create_sections(parsed_chapters){
@@ -363,23 +431,18 @@ function create_sections(parsed_chapters){
         for(let j = 0 ; j < chapter.length; j++ ) {
             let name = chapter[j]
             
-            //console.log(name)
             var span;
             var span2;
             //dectect chapter name
             if(name[0] === "@"){
                 chapterName = name.slice(1,name.length)
-                //console.log(chapterName)
 
                 //create chapter name span 
                 drop_down = document.createElement("div");
                 drop_down.classList.add("dropdown")
             
                 span = document.createElement("span")
-                // span2 = document.createElement("span")
-                
-                // span2.innerText = chapterName 
-                // console.log(span2)
+
             }
 
             //detect section name
@@ -387,7 +450,6 @@ function create_sections(parsed_chapters){
 
                 //somehow section name cannot include &
                 var sectionName = name.slice(1,name.length)
-                // console.log(sectionName)
 
                 if(span === undefined || drop_down ===undefined) {
                     console.log("chapter name not found!")
@@ -406,7 +468,6 @@ function create_sections(parsed_chapters){
 
                 //append to chapter span
                 span.appendChild(section)
-                // span2.appendChild(span)
 
                 sub_section_index[sectionName] = String(i) + "_" + String(j)
             }
@@ -419,13 +480,10 @@ function create_sections(parsed_chapters){
             let spanChildren = this.parentElement.children[2].children
             let icon = this.parentElement.children[0]
             for(let i = 0; i < spanChildren.length; i++){
-                // console.log(spanChildren[i].style.display)
                 if(spanChildren[i].style.visibility === "hidden"){
                     spanChildren[i].style.visibility = "visible"
                     spanChildren[i].style.display = "block"
-                    icon.style.transform = "rotate(-90deg)"
-                    // transform: rotate(90deg);
-                    
+                    icon.style.transform = "rotate(-90deg)"                    
                 }
                 else if(spanChildren[i].style.visibility === "visible"){ 
                     spanChildren[i].style.visibility = "hidden"
@@ -433,21 +491,14 @@ function create_sections(parsed_chapters){
                     icon.style.transform = "rotate(0deg)"
                 }
             }
-            // span.style.display = "block"
         }
         testBtn.classList.add("chapter-btn")
         var icon = document.createElement("i")
         icon.classList.add("fa")
         icon.classList.add("fa-caret-down")
         drop_down.appendChild(icon)
-        // <i class="fa-solid fa-caret-down"></i>
-
         drop_down.appendChild(testBtn)
         drop_down.appendChild(span)
-        // console.log(drop_down)
-        // console.log(drop_down)
-
-    
     
         if(drop_down === undefined) {
             console.log("no chapter!")

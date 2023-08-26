@@ -19,6 +19,7 @@ function isChar(str) {
     return str.length === 1 && str.match(/[a-z]/i);
 }
 
+
 export class UL_kernel {
 
     constructor(){
@@ -28,6 +29,7 @@ export class UL_kernel {
         this.StringTable = [];
         this.proofString = [];
         this.proofTable = [];
+        this.tempProofTable = [];
         this.axiomTable = [];
         this.functionTable;
         this.intermediate_theorems=[]
@@ -52,12 +54,14 @@ export class UL_kernel {
         ]
     }
     init() {
-        console.log(this.axiomTable)
+        // console.log(this.axiomTable)
         console.log("Universal Language ")
         //this.parse_all_axiom_from_table(false)
 
         this.parse_all_axiom_from_table(false)
-        //console.log(this.axiomTable)
+        this.parse_all_proofs_from_table(false)
+        // console.log(this.proofTable)
+
         // this.communtative_induction(this.axiomTable[this.axiomTable.length-1], false)
         // this.transitive_induction(this.axiomTable[this.axiomTable.length-1], this.axiomTable[this.axiomTable.length-2], false)
         // console.log(this.Ruletext_equal(this.axiomTable[this.axiomTable.length-1], this.axiomTable[this.axiomTable.length-2]))
@@ -220,9 +224,15 @@ export class UL_kernel {
 
         for(let i = 0; i < rt1.length; i++) {
             if(rt1[i] === undefined || rt1[i] === null) continue;
-            else if(rt1[i].Op !== rt2[i].Op) {
-                console.log(rt1[i].Op, " is different from ", rt2[i].Op)
-                return false
+            else if(rt1[i].Op !== undefined) {
+                if(rt2[i] === undefined) return false
+                if(rt2[i].Op !== undefined){
+                    if(rt1[i].Op !== rt2[i].Op){
+                        //console.log(rt1[i].Op, " is different from ", rt2[i].Op)
+                        return false
+
+                    }
+                }
             }
         }
 
@@ -278,11 +288,13 @@ export class UL_kernel {
             if(debug) {
                 console.log(e1_var_sequence[i], e2_var_sequence[i]);
             }
-            if(e1_var_sequence[i] != e2_var_sequence[i]) {
-                console.log("FAIL! Expressions are not equivalent")
+            if(e1_var_sequence[i] !== e2_var_sequence[i]) {
+                if (debug) {
+                    console.log("FAIL! Expressions are not equivalent")
+                }
                 return false;
             }
-            if((e1_var_sequence[i] == e2_var_sequence[i]) && (e1_var_sequence[i] == 0))
+            if((e1_var_sequence[i] === e2_var_sequence[i]) && (e1_var_sequence[i] === 0))
             {
                 if (debug) {
                     console.log("PASS! Expressions are equivalent")
@@ -292,9 +304,113 @@ export class UL_kernel {
         }
         return true;
     }
+    
+    Ruletext_equal2(rt1, rt2, debug){
+        //has to check entired rule text because need to consider naming conflict of entire rule text
+        let e1_var_sequence = []
+        let e2_var_sequence = []
+
+        let NameTable1 = {}
+        let NameTable2 = {}
+
+        if(debug){
+            console.log("begin checking expression")
+        }
+
+        for(let i = 0; i < rt1.length; i++) {
+            if(rt1[i] === undefined || rt1[i] === null) continue;
+            else if(rt1[i].Op !== undefined) {
+                if(rt2[i] === undefined) return false
+                if(rt2[i].Op !== undefined){
+                    if(rt1[i].Op !== rt2[i].Op){
+                        //console.log(rt1[i].Op, " is different from ", rt2[i].Op)
+                        return false
+
+                    }
+                }
+            }
+        }
+
+        if(debug) console.log("Operators are the same")
+
+        //left expression variables
+        let varCount = 0
+        for(let i = 0; i < rt1.length; i ++) {
+            if(rt1[i].Op === undefined) continue;
+            var exp = rt1[i]
+            var left = exp.parameters[0]
+            var right = exp.parameters[1]
+            var third = exp.parameters[2]
+
+            if(NameTable1[left] === undefined) {
+                varCount ++;
+                NameTable1[left] = left;
+            } 
+            if(NameTable1[left])
+                e1_var_sequence.push(NameTable1[left]);
+    
+            if(NameTable1[right] === undefined) {
+                varCount ++;
+                NameTable1[right] = right;
+            }
+            if(NameTable1[right])
+                e1_var_sequence.push(NameTable1[right]);
+        }
+
+        //right expression variables
+        varCount = 0
+        for(let i = 0; i < rt2.length; i ++) {
+            if(rt2[i].Op === undefined) continue;
+            var exp = rt2[i]
+            var left = exp.parameters[0]
+            var right = exp.parameters[1]
+            var third = exp.parameters[2]
+
+            if(NameTable2[left] === undefined) {
+                varCount ++;
+                NameTable2[left] = left;
+            } 
+            if(NameTable2[left])
+                e2_var_sequence.push(NameTable2[left]);
+    
+            if(NameTable2[right] === undefined) {
+                varCount ++;
+                NameTable2[right] = right;
+            }
+            if(NameTable2[right])
+                e2_var_sequence.push(NameTable2[right]);
+        } 
+        if(debug) {
+            console.log("Comparing variable sequence: ")
+        }
+        console.log(e1_var_sequence,e2_var_sequence)
+        for(let i = 0; i < e1_var_sequence.length; i++) {
+            if(debug) {
+                console.log(e1_var_sequence[i], e2_var_sequence[i]);
+            }
+            if(e1_var_sequence[i] !== e2_var_sequence[i]) {
+                if (debug) {
+                    console.log("FAIL! Expressions are not equivalent")
+                }
+                return false;
+            }
+            //?
+            // if((e1_var_sequence[i] === e2_var_sequence[i]) && (e1_var_sequence[i] === 0))
+            // {
+            //     if (debug) {
+            //         console.log("PASS! Expressions are equivalent")
+            //     }
+            //     return true;
+            // } 
+        }
+        return true;
+    }
 
     include_left_split(expression){
+        // console.log(expression)
+
         if(expression.includes('\\eq') || expression.includes('\\Bls') || expression.includes('\\Blb') || expression.includes('\\Bb') || expression.includes('\\Bs')){
+            // console.log(expression)
             return true
         }
         else return false
@@ -314,57 +430,56 @@ export class UL_kernel {
         return false
     }
 
-    parse_all_proof_from_table(debug) {
-        const exprTable = [];
+    parse_all_proofs_from_table(debug) {
 
-        console.log("Begin parsing axioms from file ")
+        if(this.proofString === undefined || this.proofString ===0) return;
+        const proofTable = [];
+        console.log("Begin parsing proofs from file ")
+        // console.log(this.proofString)
         for(let i = 0; i < this.proofString.length; i++){
-            
-            var line = this.proofString[i]
-            if(line === ''){continue}
-            
-            //ignore \[ \]
-
-            line = line.replace('\\Rq','').replace('proof:','')
-            var PExps = line.split(',')
-            PExps[PExps.length - 1] = PExps[PExps.length - 1].replace('\r','')
-            //console.log(PExps)
-            for(let i = 0; i < PExps.length-1;i++) {
-                let expression = PExps[i]                
-                if(expression === '') continue
-
-                if(expression[0] === ' '){
-                    expression = expression.slice(1,expression.length)
-                }
-                if(expression[expression.length] === ' '){
-                    console.log(expression)
-                    expression = expression.slice(0,expression.length)
-                }
-                if(this.include_left_split(expression)|| this.include_right_split(expression)){
-                    //remove } at the end
-                    expression = expression.slice(0,expression.length-1)
-                }
-
-                PExps[i] = expression
+            let chapter = []
+            var exps = this.proofString[i]
+            // console.log(exps)
+            if(exps === ''){continue}
+            let parsed_line = exps.split(",")
+            // console.log(parsed_line)
+            if(parsed_line[0] === "") parsed_line.shift()
+            if(parsed_line[0] === " ") parsed_line.shift()
+            if(parsed_line[0].includes("\\Rq") && !parsed_line[0].includes("\\Brs")){ 
+                parsed_line.shift()
             }
-            // console.log(PExps)
-            var exprs = this.parse_expressions(PExps, false)
-            //console.log(exprs)
-            exprTable.push(exprs)
+            if(parsed_line[parsed_line.length-1]==="") parsed_line.pop()
+            if(parsed_line[parsed_line.length-1]===" ") parsed_line.pop()
+            // console.log(parsed_line)
+            for(let x =0; x< parsed_line.length; x++){
+                let l = parsed_line[x]
 
+                if( l[0] === ' ') {
+                    l = l.slice(1,l.length);
+                }
+                if(this.include_left_split(l)|| this.include_right_split(l)){
+                    //remove } at the end
+                    parsed_line[x] = l.slice(0,l.length-1)
+                }
+            }
+            let proof = this.parse_expressions(parsed_line)
+            chapter.push(proof)
+
+            
+            proofTable.push(chapter)
         }
-        // finished parsing
-        this.proofTable = exprTable;
-
+        //finished parsing
+        this.proofTable = proofTable;
         if(debug) {
             console.log(this.proofTable)
         }
-    }   
+    } 
     
     parse_all_axiom_from_table(debug) {
 
         const axiomTable = [];
         console.log("Begin parsing axioms from file ")
+        // console.log(this.StringTable)
         for(let i = 0; i < this.StringTable.length; i++){
             var line = this.StringTable[i]
           
@@ -434,6 +549,7 @@ export class UL_kernel {
                 }
             }
            
+            // console.log(PleftExps,PrightExps)
             newAxiom.left = this.parse_expressions(PleftExps, true)
             newAxiom.right = this.parse_expressions(PrightExps, false)
             if(debug) {
@@ -450,7 +566,6 @@ export class UL_kernel {
 
     parse_expressions(ExprString, debug) {
         // console.log(ExprString)
-
         //make sure to include comma at beginning and end of expression !!!
 
         var exprs = []
@@ -551,7 +666,6 @@ export class UL_kernel {
     
                         //special flag object
                         if(operand === '\\In' || operand === "\\Ip" || operand === "\\It"){
-                            // console.log(operand)
                         }else{
                             operand = ""
     
@@ -570,8 +684,6 @@ export class UL_kernel {
                         newExpr.ret = c
                         n++
                     }
-
-
                     
                     //if first detected character is \\ , then its operator
                     if(c === '+'){
@@ -583,7 +695,7 @@ export class UL_kernel {
                             op += c
                             c = expr[++n]
                         }
-                        
+                        // console.log(op)
                         //see function to see what is going on
                         if(this.include_left_split(op)){
                             
@@ -627,7 +739,7 @@ export class UL_kernel {
                         }
                         newExpr.Op = op;
                         
-                        //make code variable and rule text variable parameter strating on the second one 
+                        //make code variable and rule text variable parameter starting on the second one 
                         if(op === '\\Tc' || op === '\\Tt'){
                             newExpr.parameters.push(newExpr[0])
                             newExpr[0] === ""
@@ -645,7 +757,11 @@ export class UL_kernel {
             //last expression.next === undefined
             newExpr.prev = curExpr
             if(!bot && !top){
-                curExpr.next = newExpr
+                if(newExpr.parameters.length === undefined && newExpr.Op === undefined)
+                {
+                    // console.log(newExpr, newExpr.length,newExpr.Op)
+                    curExpr.next = newExpr
+                }
             }
             else if(top) {
                 if(newBranch){
@@ -658,7 +774,7 @@ export class UL_kernel {
                 top = false
             }
             else if(bot) {
-                if(newExpr.parameters.length=== 0 && newExpr.Op === undefined)
+                if((newExpr.parameters.length=== 0 && newExpr.Op === undefined))
                 {
                     //ignore empty expression at the end, happens when branch parsing returns to root branch
                 }
@@ -780,5 +896,40 @@ export class UL_kernel {
                 return false
             }
         }
+    }
+
+    ExtractProofsFromTable(start, end, proofs){
+        let table = []
+        let found = false
+        // console.log(proofs)
+        // console.log(start, end, proofs)
+        // console.log(proofs.length)
+        for(let i =0; i < proofs.length; i++){
+            console.log("here")
+            let rt = (proofs[i])[0]
+            if(this.Ruletext_equal2(rt, start)){
+                // console.log(rt, start)
+                found = true;
+            }
+            if(found){
+                table.push(rt)
+                if(this.Ruletext_equal2(rt, end))
+                {
+                    // console.log(rt, end)
+
+                    // console.log(table)
+                    // console.log("found")
+                    return table            
+                }
+            }
+            else{
+                // console.log("no start found")
+            }
+        }
+       
+        if(table.length > 0){
+            console.log("no end found")
+        }
+        return table
     }
 }

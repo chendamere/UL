@@ -1,9 +1,9 @@
-import {UL_kernel} from "./UL_kernel.js"
-
-
 //TODO:
 //
 // create function to skip extra white spaces between operand and operator
+
+import {Proof_Display} from "./Proof_Display.js";
+
 
 function drawLine(ctx, begin, end, stroke = 'black', width = 1) {
     if (stroke) {
@@ -20,18 +20,16 @@ function drawLine(ctx, begin, end, stroke = 'black', width = 1) {
     ctx.stroke();
 }
 
-function hasNumber(myString) {
-    return /\d/.test(myString);
-}
+
+
 export class Display {
 
     constructor(UL_kernel, canvas){
 
         this.kernel = UL_kernel
         this.canvas = canvas;
-        //this.StringTable = this.kernel.parsedRules;
         this.axiomTable = this.kernel.axiomTable;
-        this.proof = this.kernel.proofTable;
+        this.proofTable = this.kernel.proofTable;
 
         this.symbols = [
             "\\Oa"
@@ -105,6 +103,12 @@ export class Display {
         this.adjust = true;
         this.beginExprs = true;
 
+
+        this.exprPosition = {}
+        this.highlight_canvas = document.getElementById("highlight_canvas");
+        this.highlightContext = this.highlight_canvas.getContext("2d")
+        this.ProofDisplay;
+
         //handling image src
         for(const symbol of this.symbols){
             const id = "UL_" + String(symbol).slice(1, this.symbols.length)
@@ -117,21 +121,58 @@ export class Display {
     init() {
 
         var numSplit = this.count_splits_in_table()
-
+        // console.log(numSplit)
         var height = (50 + this.kernel.subsectionsIndex.length*100) + (this.kernel.subsubsectionsIndex.length*100) + (this.axiomTable.length - numSplit)*25 + (numSplit * 100) 
         // height *= this.textScale
         //window.innerHeight = height
         this.context.canvas.height = height;
 
         this.context.fillStyle = "#f4eeee";
+
+        // this.highlight_canvas.height = this.context.canvas.height
+        // this.highlight_canvas.width = this.context.canvas.width
+        this.highlight_canvas.width = window.innerWidth
+        this.highlight_canvas.height = this.canvas.height + (400)
+        // console.log(this.canvas, this.highlight_canvas)
+        if(this.highlight_canvas.height < 500){
+            this.highlight_canvas.height = 500
+        }
         this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
-        console.log(this.canvas.width,this.canvas.height)
 
         if(this.axiomTable.length !== 0) {
             this.display_from_table();
         }
-        console.log(this.kernel)
-        
+    
+    }
+
+    MouseUpdate(mouseX,mouseY) {
+        for(const key in this.exprPosition){
+            
+            if((this.exprPosition[key])[4]){
+                // console.log("here", this.ProofDisplay)
+                let start = this.axiomTable[key].left
+                let target =this.axiomTable[key].right
+                // console.log(start, target)
+                // console.log(this.proofTable)
+                let proofs = this.kernel.ExtractProofsFromTable(start, target, this.proofTable)
+                // console.log(proofs)
+
+                //delete the previous table
+                if(this.ProofDisplay !== null && this.ProofDisplay !== undefined){
+                    if(this.ProofDisplay.key !== undefined){
+                        if(this.ProofDisplay.key !== key){
+                            this.ProofDisplay = null
+                            // console.log("here")
+                        }
+                    }
+                }
+                // console.log(proofs)
+                //display when found first line that is highlighted
+                this.ProofDisplay = new Proof_Display(start, proofs, mouseX, mouseY, this.kernel)
+                this.ProofDisplay.init()
+                this.ProofDisplay.key = key
+            }
+        }
     }
 
     count_splits_in_table(){
@@ -177,10 +218,10 @@ export class Display {
             //resset x pos every line
             this.pos = 20*this.textScale
 
-            for(const subsec of this.kernel.subsectionsIndex){
+
                 //display subsection title
+            for(const subsec of this.kernel.subsectionsIndex){
                 if(i === subsec[1]){
-                    // console.log(i,subsec)
                     context.font = size*2 + "px Helvetica, sans-serif ";
                     this.pos = 120*this.textScale
                     context.fillText(subsec[0], this.pos, this.heightOffset + 50 * this.textScale);
@@ -192,14 +233,12 @@ export class Display {
                 }
 
                 if(i === subsec[2]){
-                    // console.log(subsec)
-                    this.heightOffset += 50 
-                    
+                    this.heightOffset += 50                     
                 }
             }
 
-            for(const subsubsec of this.kernel.subsubsectionsIndex){
                 //display subsubsection title 
+            for(const subsubsec of this.kernel.subsubsectionsIndex){
                 if(i === subsubsec[1]){
                     //console.log(i,subsubsec)
                     context.font = size*1.5 + "px Helvetica, sans-serif ";
@@ -212,10 +251,7 @@ export class Display {
                     break
                 }
                 if(i === subsubsec[2]){
-                    // console.log(subsubsec)
-
                     this.heightOffset += 50 
-                    
                 }
             }
 
@@ -225,6 +261,10 @@ export class Display {
             if(InSubSubSection){
                 this.pos += 150*this.textScale
             }
+            //record rule position
+            let position = []
+            position.push(this.pos)
+            position.push(this.heightOffset)
 
             for(const EXPS of [this.axiomTable[i].left, this.axiomTable[i].right]){
                 for(const o of EXPS){
@@ -238,8 +278,6 @@ export class Display {
             }
             
             for(const EXPS of [this.axiomTable[i].left, this.axiomTable[i].right]){
-                // console.log(EXPS)
-
                 this.bracketSize = 1.0
                 if(this.beginLine){
                     context.fillText(String(i+1)+": ", this.pos, this.heightOffset + 50 * this.textScale);
@@ -257,7 +295,6 @@ export class Display {
                     
                     //parse line if expression has \eq
                     if(o === undefined) continue;
-                    //console.log(o)
                     if(this.include_right_split(o.Op)||this.include_left_split(o.Op)){
                         if(this.adjust) {
                             this.adjust = false
@@ -281,69 +318,14 @@ export class Display {
 
             this.beginLine = true;
             this.heightOffset += 50*this.textScale+this.numEq*50
-            // console.log(this.heightOffset)
-        }
 
-        // console.log(this.context.canvas.height, this.heightOffset)
-
-
-    }
-
-    display_from_proof(){
-        //console.log(this.axiomTable.length)
-        let context = this.context
-        let size = String(this.textScale * 30)
-        context.font = size+ "px Helvetica, sans-serif ";
-        context.textAlign = "start";
-        context.textBaseline = "bottom";
-        context.fillStyle = "#000000"; //color
-        
-        for(let i = 0; i < this.proof.length; i++) {
-
-            this.returnY = undefined
-            this.numEq = 0;
-            this.adjust = true;
-            var eqSkipLine = true
-
-            //resset x pos every line
-            this.pos = 20*this.textScale
-
-            for(const EXPS of [this.proof[i]]){
-                this.bracketSize = 1.0
-                for(const o of EXPS){
-                    if((this.include_right_split(o.Op)||this.include_left_split(o.Op)) && eqSkipLine){
-                        this.heightOffset += 50 * this.textScale
-                        eqSkipLine = false
-                        break
-                    }
-                }
-                if(this.beginLine){
-                    context.fillText(String(i+1)+": ", this.pos, this.heightOffset + 50 * this.textScale);
-                    this.pos += 60* this.textScale
-                    context.fillText(",", this.pos, this.heightOffset + 50 * this.textScale);
-                    this.beginLine = false
-                    this.pos += 20*this.textScale
-                }    
-                for(const o of EXPS){
-                    //parse line if expression has \eq
-                    if(o === undefined) continue;
-                    if(this.include_right_split(o.Op)||this.include_left_split(o.Op)){
-                        if(this.adjust) {
-                            this.adjust = false
-                            this.returnY = this.heightOffset;
-                            this.numEq += 1;
-                        }
-                    }
-                    //console.log(o)
-                    this.displayExpression(o)
-                }
-            }
-
-            this.beginLine = true;
-            this.heightOffset += 50*this.textScale+this.numEq*30
+            //record display position
+            position.push(this.pos)
+            position.push(this.heightOffset)
+            position.push(false)
+            this.exprPosition[i] = (position);
         }
     }
-
     displayRQ(){
         const id = "UL_Rq"
         const image = document.getElementById(id);
@@ -686,7 +668,6 @@ export class Display {
 
             if(BackBracket){
                 this.drawBackBracket(this.pos, this.heightOffset + 45*this.textScale, this.bracketSize)
-                // this.pos+=20*this.textScale
             }
         }
         else if(BackBracket){
@@ -743,3 +724,4 @@ export class Display {
         else return false
     }
 }
+

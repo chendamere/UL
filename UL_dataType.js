@@ -19,3 +19,12 @@ export class Axiom{
         this.right = [];
     }
 };
+
+export class Proof{
+    constructor(){
+        this.id;
+        this.exprs = [];
+        this.firstPremise;
+        this.conclusion;
+    }
+}

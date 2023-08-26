@@ -678,7 +678,7 @@ html, body {
     }
 }
 
-#smaller_box{height: 100%; overflow-y:scroll; border:3px solid rgb(63, 57, 57); }
+#smaller_box{min-height: 150vh; max-height: 200vh; overflow-y:scroll; border:3px solid rgb(63, 57, 57); }
 /* #smaller_box:hover{overflow-y: scroll;}  */
 
 .symbol_display{width: 100px; height: 100px;}
@@ -822,3 +822,13 @@ html, body {
     transition: transform .1s;
     transform: none;
 }
+
+.overlay {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+  
+  .overlay canvas {
+   grid-row-start: 1;
+   grid-column-start: 1;
+  }
