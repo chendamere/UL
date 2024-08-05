@@ -504,10 +504,9 @@ export class UL_kernel {
             const newAxiom = new Axiom()
             const [leftExps, rightExps] = line.split("\\Rq");
             var PleftExps = leftExps.split(',')
-            // console.log(leftExps, rightExps)
+
             if(rightExps !== undefined){
                 var PrightExps = rightExps.split(',')
-
             }
 
             //remove meta character '\r'

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Rules</title>
+        <link rel="stylesheet" href="./styles.css">
+    
+      </head>
+     
+<body>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/demo">Demo</a>
+    </nav>
+    <script type="module" src="./js/LoadRules.js"></script>
+    <div id="output" class="hide"></div>
+
+  
+
+    <div class="box">
+    <!-- set up proof box -->
+      <div class="chat-box">
+        <div class="last-command" id="lastStatement"></div>
+        <div class="messages" id="messages"></div>
+        <input type="text" id="chatInput" placeholder="Enter an proof statement" autocomplete="off"/>
+        <button id ="delExpbtn">clear last expression</button>
+      </div>
+
+      <button id ="get-rules-btn">get all rules</button>
+      <button id ="clearbtn">clear</button>
+
+      <table class="text-table">
+        <thead>
+            <!-- <tr>
+                <th> All Rules </th>
+            </tr> -->
+        </thead>
+        <tbody id="tableBody">
+            <!-- Rows will be dynamically added here -->
+        </tbody>
+      </table>    
+    
+    </div>
+     
+    
+
+    <!-- main logic -->
+    <script type = "module" src="./js/main.js"></script>
+    
+</body>
+
+</html>

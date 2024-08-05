@@ -2,6 +2,11 @@ import {UL_kernel} from "./UL_kernel.js";
 import {Display} from "./Display.js"
 import { Proof_Display } from "./Proof_Display.js";
 
+import AnalyseCode from './UL_Interpreter/lexer-analyser.js'
+import ParseTokens from './UL_Interpreter/parser-analyser.js'
+
+import {LatexChapters, Parser, LatexExps} from './UL_Interpreter/latex-chapters.js'
+
 var UL
 var display;
 var canvas;
