@@ -1,17 +1,3 @@
-# Express Crash Course
-
-This is the code for the [YouTube crash course](https://youtu.be/CnH3kAXSrmU)
-
-Install dependencies
-
-```bash
-npm install
-```
-
-Run server
-
-```bash
-npm run dev
-```
-
-This is just a sandbox for learning Express. There is a full CRUD api at http://localhost:8000/api/posts
+# Universal Language
+This project contains the parser and proof assistance of UL, a thoertical programming language 
+created for proving properties of data-strcture.

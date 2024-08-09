@@ -78,7 +78,7 @@ app.listen(port, () => console.log(`Server is running on port ${port}`));
 // const alltheorems_exps = LatexExps(fs, './public/js/UL_Interpreter/theorems')
 // const checker = new ProofAssistant(ret, parser, alltheorems_exps)
 
-const database = await getAllData()
+// const database = await getAllData()
 // let ret = []
 // const checker = new ProofAssistant(ret, parser, alltheorems_exps)
 // updateDatabase(checker, database)
