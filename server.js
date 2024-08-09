@@ -14,14 +14,7 @@ import ProofAssistant from './public/js/UL_Interpreter/ProofAssistant.js'
 import ReadFiles from './public/js/UL_Interpreter/fileReader.js'
 import {getData, getAllData, updateData, createData, deleteData, deleteAllData} from './database.js'
 
-const d = await getAllData()
-const allRules = []
-for(const r of d) {
-    // console.log(r)
-    const a = r.contents
-    // console.log(a)
-    allRules.push(a)
-}
+
 // console.log(allRules)
 
 const port = process.env.PORT || 8000;
@@ -66,7 +59,14 @@ app.use(notFound);
 app.use(errorHandler);
 
 app.listen(port, () => console.log(`Server is running on port ${port}`));
-
+const d = await getAllData()
+const allRules = []
+for(const r of d) {
+    // console.log(r)
+    const a = r.contents
+    // console.log(a)
+    allRules.push(a)
+}
 
 
 //set up theorem prover stuff
