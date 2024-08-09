@@ -15,7 +15,7 @@ import ReadFiles from './public/js/UL_Interpreter/fileReader.js'
 import {getData, getAllData, updateData, createData, deleteData, deleteAllData} from './database.js'
 
 
-import {showRules} from './public/js/helper.js'
+import {showRules} from './helper.js'
 
 
 const d = await getAllData()
