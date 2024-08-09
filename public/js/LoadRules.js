@@ -1,6 +1,4 @@
 
-import {showRules} from './helper.js'
-
 const a = document.getElementById('output')
 const rules = await showRules()
 const ret = []

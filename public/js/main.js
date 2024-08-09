@@ -2,7 +2,6 @@
 import AnalyseCode from './UL_Interpreter/lexer-analyser.js'
 import ParseTokens from './UL_Interpreter/parser-analyser.js';
 import ProofAssistant from './UL_Interpreter/ProofAssistant.js'
-import {showRules, addRule, beginProof} from './helper.js'
 import {RuleNormalize, expsNormalize, Parser} from './UL_Interpreter/latex-chapters.js';
 
 // console.log(output)
