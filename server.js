@@ -15,6 +15,18 @@ import ReadFiles from './public/js/UL_Interpreter/fileReader.js'
 import {getData, getAllData, updateData, createData, deleteData, deleteAllData} from './database.js'
 
 
+import {showRules} from './public/js/helper.js'
+
+
+const d = await getAllData()
+const allRules = []
+for(const r of d) {
+    // console.log(r)
+    const a = r.contents
+    // console.log(a)
+    allRules.push(a)
+}
+// console.log(allRules)
 
 const port = process.env.PORT || 8000;
 
@@ -31,11 +43,12 @@ app.set('view engine', 'ejs')
 //home
 app.get('/', (req,res) => { 
     res.render("index")
+    // console.log('get')
 })
 
-//demo
-app.get('/demo', (req,res) => { 
-    res.render("demo")
+//about
+app.get('/about', (req,res) => { 
+    res.render("about", {allRules : allRules})
 })
 
 // Body parser middleware
@@ -59,14 +72,17 @@ app.use(errorHandler);
 app.listen(port, () => console.log(`Server is running on port ${port}`));
 
 
+
 //set up theorem prover stuff
-const parser = Parser(AnalyseCode, ParseTokens)
-const fs = ReadFiles(Parse_rules_and_titles)
-const allaxioms = LatexChapters(fs, './public/js/UL_Interpreter/axiom', parser)
-const alltheorems_exps = LatexExps(fs, './public/js/UL_Interpreter/theorems')
 // console.log(allaxioms)
 // await deleteAllData()
-// const database = await getAllData()
+// const parser = Parser(AnalyseCode, ParseTokens)
+// const fs = ReadFiles(Parse_rules_and_titles)
+// const allaxioms = LatexChapters(fs, './public/js/UL_Interpreter/axiom', parser)
+// const alltheorems_exps = LatexExps(fs, './public/js/UL_Interpreter/theorems')
+// const checker = new ProofAssistant(ret, parser, alltheorems_exps)
+
+const database = await getAllData()
 // let ret = []
 // const checker = new ProofAssistant(ret, parser, alltheorems_exps)
 // updateDatabase(checker, database)

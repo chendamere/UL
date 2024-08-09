@@ -2,7 +2,7 @@
 
 // Get and show rules
 export async function showRules() {
-    const output = document.getElementById('output');
+    // const output = document.getElementById('output');
     // console.log(output)
     let ret = []
     try {
@@ -12,7 +12,7 @@ export async function showRules() {
       }
   
       const posts = await res.json();
-      output.innerHTML = '';
+      Allrules.innerHTML = '';
       // console.log(output)
 
       posts.forEach((post) => {

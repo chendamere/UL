@@ -325,13 +325,17 @@
 
   <h1>About</h1>
 
-<p>test test</p>
-
+<!-- set up output with ejs -->
+<div hidden ="false" id="output">
+  <% for (var i = 0; i< allRules.length; i++) { %>    
+    <div ><%= allRules[i]%></div>
+  <% } %>
+</div>
+                       
+<!-- code for proof assistance -->
 <link rel="stylesheet" href="./styles.css">
 
-<script type="module" src="../js/LoadRules.js"></script>
-    <div id="output" class="hide"></div>
-
+    <!-- <div id="output" class="hide"></div> -->
   
 
     <div class="box">
