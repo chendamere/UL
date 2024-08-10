@@ -41,6 +41,7 @@ const dir = [
 ]
 
 
+//get tex files and read them from embedded files
 var allLines = document.getElementById('allLines')
 if(!allLines){
     allLines = document.createElement('div');
@@ -122,6 +123,30 @@ document.body.appendChild(allLines)
         '!': ``
     };
 
+    const uniOp = [
+        '#1',
+        '#2',
+        '#3',
+        '#4',
+        '#5'
+    ]
+    const binOp = [
+        '#6',
+        '#7',
+        '#8',
+        '#9'
+    ]
+
+    const nOp = [
+        '#11'
+    ]
+
+    const br = [
+        '#12',
+        '#14'
+    ]
+
+
     var prevExp = document.getElementById('prevExp')
     var endExps = document.getElementById('endExps')
     var AllExp = document.getElementById('AllExp')
@@ -145,6 +170,119 @@ document.body.appendChild(allLines)
         }
     }
 
+    function isNumeric(str) {
+        if (typeof str != "string") return false // we only process strings!  
+        return !isNaN(str) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
+               !isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
+      }
+
+    //turn data into display
+    function DisplayNormalize(string){
+        let rule = string 
+        let oprtable = {}
+        let delimiter = [' ', '{', '}', '(',')',',']
+        var i = 0
+        let ret = ''
+        let offset = 0
+
+        // display after the operand has been displayed
+        let oflag = false
+        let op = ''
+
+        while(i < rule.length){
+            if(rule[i] == ' ')
+            {
+                i+= 1 
+                continue
+            }
+            let c = rule[i]
+
+            //detect operation
+            if(c == '#'){
+                while(!delimiter.includes(c) && i < rule.length)
+                {
+                    op += c
+                    i+= 1
+                    c = rule[i]
+                }
+                op = op.trim()
+                // console.log(op, binOp.includes(op))
+                if(uniOp.includes(op)){
+                    //add first
+                    if(op === '#1' || op === '#2'){
+                        oflag = true
+                    }
+                    else[
+                        ret += op + ' '
+                    ]
+                }
+                else if(binOp.includes(op)){
+                    oflag = true
+                }
+                else if(br.includes(op)){
+                }
+                else{
+                    console.log('not detected')
+                    ret += op + ' '
+                }
+                if(!oflag) op =''
+            }
+
+            //detect operand
+            if(isNumeric(c) || c == '&')
+            {
+                let opr = ''
+
+                while(!delimiter.includes(c) && i < rule.length)
+                {
+                    opr += c
+                    i+= 1
+                    c = rule[i]
+                }  
+                if(!oprtable[opr]){
+                    oprtable[opr] = String.fromCharCode(97 + offset)
+                    offset += 1
+                }
+
+                if(oflag){
+                    oflag = false 
+                    ret += oprtable[opr] + ' '+ op + ' '
+                    opr = ''
+                }
+                else{
+                    
+                    ret += oprtable[opr] + ' '
+                }
+                opr = ''
+            }
+
+            //edge cases
+            if(rule[i] == ',')
+            {
+                ret += ','
+                oflag = false
+                op = ''
+
+            }
+
+            if(rule[i] == '@'){
+                ret += '@'
+                oflag = false
+                op = ''
+
+            }
+            i+= 1
+        }
+
+        // console.log(oprtable)
+        return ret
+    }
+
+    
+    var test = document.createElement('div')
+    test.id = 'test'
+    test.innerHTML = DisplayNormalize('!, #6 1 2, @ , #6 1 3 , #6 1 4 , #6 2 2 ,')
+    // console.log(test.innerHTML)
     // enter rules in box
     chatInput.addEventListener('keypress', function(event) {
         if (event.key === 'Enter') {
@@ -202,10 +340,13 @@ document.body.appendChild(allLines)
 
                 //checking logic
                 if(pf.isRule(parsed_newrule)){
-                    console.log('1')                       
+                    // console.log('1')                       
                 }
                 else if(pf.trim_and_check(parsed_newrule)){
-                    console.log('2')
+                    // console.log('2')
+                    if(pf.Same(parsed_newrule.rightexps, )){
+
+                    }
                 }
                 else{
                     console.log(parsed_newrule)
@@ -213,22 +354,25 @@ document.body.appendChild(allLines)
                     return
                 }
 
-
+                // console.log(parsed_newrule.rightexps, endExps.innerText)
+                let checks = pf.genRule('!' + s + '@' + endExps.innerText + '\n')[0]
                 //exist condition
-                if(pf.Same(parsed_newrule.rightexps, endExps.innerText)){
+                if(pf.Same(checks.leftexps, checks.rightexps)){
                     alert('proof complete!')
-                    return
+                    const nr = document.createElement('div')
+                    nr.innerHTML = prevExp.innerText
+                    AllExp.appendChild(nr)
+                    
                 }
                 else{
                     //assign prev
                     const nr = document.createElement('div')
                     nr.innerHTML = prevExp.innerText
                     AllExp.appendChild(nr)
-
                     prevExp.innerText = s
                     // console.log('valid expression!')
                 }
-                console.log('here')
+                // console.log('here')
             }
             else{
                 console.log('statement incoming')
@@ -253,7 +397,7 @@ document.body.appendChild(allLines)
                     const nr = document.createElement('div')
                     nr.innerText = prevExp.innerText
                     AllExp.appendChild(nr)
-                    endExps.innerText = r.rightexps
+                    endExps.innerText = pf.ExpToString(r.rightexps)
                 }
                 catch{
                     alert('rule syntax error');

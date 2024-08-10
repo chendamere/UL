@@ -4,7 +4,8 @@ body {
 }
 
 .chat-box {
-    width: 500px;
+    width: 100%;
+    height: 80%;
     border: 1px solid #ccc;
     padding: 20px;
     margin: 50px auto;
@@ -16,7 +17,7 @@ body {
 }
 
 .messages {
-    height: 400px;
+    height: 500px;
     overflow-y: auto;
     border: 1px solid #ccc;
     padding: 10px;
@@ -65,15 +66,19 @@ body {
     justify-content: center;
 }
 
-#get-rules-btn, #clearbtn{
+#get-rules-btn, #clearbtn, #delExpbtn, .expand-btn{
+    background-color: rgb(93, 142, 140);
+    padding: 5px;
+
+    border-radius: 3%;
     position: inherit;
-    width: 100px;
-    height: 40px;
+    width: 10%;
+    height: 50%;
 }
 
 .text-table th {
-    border: 1px solid #ddd;
-    padding: 2px;
+    border: 1px solid #7f8684;
+    padding: 15px;
     text-align: left;
     /* overflow vs textoverflow? */
     text-overflow:ellipsis;
@@ -86,7 +91,11 @@ body {
 } */
 .text-table td {
     border: 1px solid #ddd;
-    padding: 2px;
+    padding: 10px;
+    
+    background-color: rgb(95, 129, 122);
+    border: 3px solid #7c977b; /* Border color */
+
     text-align: left;
     /* overflow vs textoverflow? */
     text-overflow:ellipsis;
@@ -94,22 +103,7 @@ body {
     position: relative; /* For potential positioning */
 }
 
-.text-table td {
-    max-width: 550px; /* Adjust width as needed */
-    overflow: hidden;
-    text-overflow: ellipsis;
-    /* overflow vs textoverflow? */
-    overflow: ellipsis;
-    white-space: nowrap;
-}
 
-.expand-btn {
-    display: inline-block;
-    margin-top: 5px;
-    cursor: pointer;
-    color: blue;
-    text-decoration: underline;
-}
 
 .full-text {
     display: none;
@@ -122,20 +116,4 @@ body {
 
 .hide {
     display:none;
-}
-
-
-/* expand-btn */
-.expand-btn {
-    display: inline-block;
-    margin-top: 5px;
-    cursor: pointer;
-    color: #555; /* Grey color for the button text */
-    background-color: #f0f0f0; /* Light grey background */
-    border: 1px solid #ddd; /* Border color */
-    border-radius: 3px; /* Rounded corners */
-    padding: 2px 5px; /* Smaller padding */
-    font-size: 0.9em; /* Smaller font size */
-    text-decoration: none;
-    user-select: none; /* Prevent text selection */
 }

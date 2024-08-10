@@ -63,12 +63,12 @@ export const ParseRules = (chapters, parser) => {
 
     for (const chapter of chapters) {
         let rules = chapter.rules
-        console.log(rules)
+        // console.log(rules)
         for (const rule of rules) {
             i += 1
             let pcode = rule + '\n'
             let [retrule] = parser(pcode)
-            console.log(retrule)
+            // console.log(retrule)
             AllRules.push(retrule)
 
         }
