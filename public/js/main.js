@@ -2,21 +2,110 @@
 import AnalyseCode from './UL_Interpreter/lexer-analyser.js'
 import ParseTokens from './UL_Interpreter/parser-analyser.js';
 import ProofAssistant from './UL_Interpreter/ProofAssistant.js'
-import {RuleNormalize, expsNormalize, Parser} from './UL_Interpreter/latex-chapters.js';
+import {RuleNormalize, expsNormalize, Parser, ParseRules, Parse_rules_and_titles} from './UL_Interpreter/latex-chapters.js';
+const parse = Parser(AnalyseCode,ParseTokens)
 
-// console.log(output)
+const dir = [
+    // 'Addition.tex',
+    // 'Axioms_of_Assign_operator.tex',
+    // 'Function_Cpo(r).tex',
+    // 'Multiplication.tex',
+    // 'Next_Order_Induction.tex',
+    // 'Paradox.tex',
+    // 'Previous_Order_Induction.tex',
+    // 'Recursive_Function_R_(i).tex',
+    // 'Recursive_Function_R(i).tex',
+    // 'Recursive_Function_Rc(i_j).tex',
+    // 'Recursive_Function_Rc(i;j).tex',
+    // 'Recursive_Function_Rcpm(i_j_r).tex',
+    // 'Recursive_Function_Rcpm(i;j;r).tex',
+    // 'Rules_of_Assign_Operator_in_Temporary_Space.tex',
+    // 'Rules_of_Node_ring.tex',
+    // 'Rules_of_Empty_Branch_Function.tex',
+    // 'Rules_of_Number_Equal_Relationship.tex',
+    // 'Rules_of_Number_More_Than_and_Less_Than_Relationship.tex',
+    // 'Rules_of_Relationship_of_Node_Connectivity.tex',
+    // 'Rules_of_Relationship_of_Node_Continuity.tex',
+    // 'Rules_of_Relationship_of_Subnode.tex',
+    // 'Rules_of_Three_Fundamental_Relationships.tex',
+    // 'Swap_Theorems_of_the_Same_Operand.tex',
+    // 'Theorems_of_Assign_Operator.tex',
+    // 'Theorems_of_Delete_Node_Function_Del(j).tex',
+    // 'Theorems_of_Insert_Node_Function_Ins(t;j).tex',
+    // 'Theorems_of_Insert_Node_Function_Ins(t_j).tex',
+    // 'Theorems_of_Operators_and_Relationships.tex',
+    // 'Theorems_of_Relationship_Of_Node_Null_Comparison.tex',
+    // 'Theorems_of_Relationship_Of_Node_Value_Comparison.tex',
+    // 'Tree_Order_Induction.tex'
+    'axioms.tex'
+]
 
-document.addEventListener("DOMContentLoaded", function() {
+
+var allLines = document.getElementById('allLines')
+if(!allLines){
+    allLines = document.createElement('div');
+    allLines.id = 'allLines'
+    allLines.hidden = 'false'
+} 
+
+for(const f of dir) {
+ 
+    const text = await (await fetch("../../../public/js/UL_Interpreter/axiom/" + f)).text();
+    
+    let lines = []
+    let line = ''
+    for(const char of text){
+        if(char === '\n'){
+            if(line.length > 1){
+                lines.push(line)
+            }
+            line = ''
+        }
+        else{line += char}
+    }
+    for(const l of lines){
+        var lineDiv = document.createElement('div')
+        lineDiv.innerHTML = l
+        allLines.appendChild(lineDiv)
+    }
+
+}
+document.body.appendChild(allLines)
+
+
+{
     const chatInput = document.getElementById('chatInput');
     const messagesDiv = document.getElementById('messages');
     const lastStatementDiv = document.getElementById('lastStatement');
     const Addbutton = document.getElementById('get-rules-btn');
     const delExpbtn = document.getElementById('delExpbtn')
     const clearbutton = document.getElementById('clearbtn');
-    const allrules = document.getElementById('output')
+    const allLinesdiv = document.getElementById('allLines')
     const tableBody = document.getElementById('tableBody');
 
-    const parse = Parser(AnalyseCode,ParseTokens)
+
+    const output = document.createElement('div')
+    output.id = 'output'
+    output.hidden = 'true'
+
+    var allLines = []
+
+    for(var i =0; i < allLinesdiv.children.length; i ++){
+        var d = allLinesdiv.children[i].innerHTML
+        allLines.push(d)
+    }
+
+    var parsed_chapter = Parse_rules_and_titles(allLines)
+
+    for(const l of parsed_chapter.rules) {
+        const newDiv = document.createElement('div')
+        newDiv.innerHTML = l 
+        output.appendChild(newDiv)
+    } 
+    document.body.appendChild(output)
+    let pr = ParseRules([parsed_chapter], parse)
+    const pf = new ProofAssistant(pr, parse, [])
+
     const svgMap = {
         '#10': `<svg cache-id="e49b5b6fb703408e8f9dd5e61f1ce45a" id="e4n1Xm3WGuO1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width='20' height = '20'  viewBox="0 0 300 300" shape-rendering="geometricPrecision" text-rendering="geometricPrecision"><path d="M24.24878,150C24.24878,79.46997,80.54952,22.29409,150,22.29409s125.75122,57.17588,125.75122,127.70591-56.30074,127.70591-125.75122,127.70591-125.75122-57.17588-125.75122-127.70591Z" opacity="0.96" fill="rgba(255,255,255,0)" stroke="#000" stroke-width="20"/><line x1="0" y1="-63.852955" x2="0" y2="63.852955" transform="matrix(0-1-.881338 0 150 120.658471)" stroke="#020202" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/><line x1="0" y1="-63.852955" x2="0" y2="63.852955" transform="matrix(0-1-.881338 0 150 176.98888)" stroke="#020202" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/><ellipse rx="30.808191" ry="30.808191" transform="translate(210.904886 207.797071)" fill="rgba(210,219,237,0)" stroke-width="0"/></svg>`,
         '#11': `<svg id="eAIbe1sHOYm1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 300 300" shape-rendering="geometricPrecision" text-rendering="geometricPrecision"><path d="M24.24878,150C24.24878,79.46997,80.54952,22.29409,150,22.29409s125.75122,57.17588,125.75122,127.70591-56.30074,127.70591-125.75122,127.70591-125.75122-57.17588-125.75122-127.70591Z" opacity="0.96" fill="rgba(255,255,255,0)" stroke="#000" stroke-width="20"/><line x1="0" y1="-63.852955" x2="0" y2="63.852955" transform="matrix(-.707107 0.707107-1.328777-1.328777 150.000005 149.999994)" stroke="#020202" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/><line x1="0" y1="-63.852955" x2="0" y2="63.852955" transform="matrix(-.707107-.707107 1.330011-1.330011 150.078803 149.921208)" stroke="#020202" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/><ellipse rx="30.808191" ry="30.808191" transform="translate(210.904886 207.797071)" fill="rgba(210,219,237,0)" stroke-width="0"/></svg>`,
@@ -44,15 +133,7 @@ document.addEventListener("DOMContentLoaded", function() {
         endExps.id = 'endExps'
         AllExp = document.createElement('AllExp')
         AllExp.id = 'AllExp'
-
     }
-    let Pfret = []
-    for(const a of allrules.children){
-        let p = parse('!'+ a.innerHTML + '\n')
-        Pfret.push(p[0])
-    }
-
-    const pf = new ProofAssistant(Pfret, parse, [])
 
     let statementEntered = false;
 
@@ -68,6 +149,7 @@ document.addEventListener("DOMContentLoaded", function() {
     chatInput.addEventListener('keypress', function(event) {
         if (event.key === 'Enter') {
             const messageText = chatInput.value;
+            // console.log(messageText)
 
             //check if empty
             if(messageText.trim().length === 0) {
@@ -154,9 +236,12 @@ document.addEventListener("DOMContentLoaded", function() {
                 try{
                     //remove the first character because it is '!'
                     const s = RuleNormalize(formattedMessage.slice(1,formattedMessage.length)) 
-                    
+                    console.log(s)
                     let r = pf.genRule(s + '\n')[0]
+                    console.log(r)
+
                     let flag = pf.isRule(r) 
+                    console.log(pf)
                     // if rule already exists in database
                     if(flag){
                         alert('rule exists')
@@ -236,7 +321,7 @@ document.addEventListener("DOMContentLoaded", function() {
         while (tableBody.firstChild) {
             tableBody.removeChild(tableBody.firstChild);
         } 
-
+        
 
         const output = document.getElementById('output');
         const messages = []
@@ -299,5 +384,4 @@ document.addEventListener("DOMContentLoaded", function() {
         }        
     });
 
-});
-
+}

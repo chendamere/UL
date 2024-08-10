@@ -57,18 +57,19 @@ export const expsNormalize = (line) => {
     return ret
 }
 // parse string to rules
-const ParseRules = (chapters, parser) => {
+export const ParseRules = (chapters, parser) => {
     let AllRules = []
     let i=0
 
     for (const chapter of chapters) {
-        let code = chapter.rules
-        for (const c of code) {
+        let rules = chapter.rules
+        console.log(rules)
+        for (const rule of rules) {
             i += 1
-            let pcode = c + '\n'
-            let [rule] = parser(pcode)
-
-            AllRules.push(rule)
+            let pcode = rule + '\n'
+            let [retrule] = parser(pcode)
+            console.log(retrule)
+            AllRules.push(retrule)
 
         }
     }
@@ -698,4 +699,4 @@ const Extract = (line,begin,end) => {
     return '';
 }
 
-export default {LatexChapters, Parser, LatexExps, RuleNormalize,expsNormalize, Parse_rules_and_titles}
+export default {LatexChapters, Parser, LatexExps, RuleNormalize,expsNormalize, Parse_rules_and_titles, ParseRules}

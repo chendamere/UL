@@ -1,6 +1,6 @@
 
 
-import fs from 'fs'
+import {fs} from 'fs';
 export const ReadFiles = Parse_rules_and_titles =>( folder, flag) => {
     // Create character reader for our code.
     let chapters = [];
