@@ -50,7 +50,7 @@ if(!allLines){
 
 for(const f of dir) {
  
-    const text = await (await fetch("../../../public/js/UL_Interpreter/axiom/" + f)).text();
+    const text = await (await fetch("../js/UL_Interpreter/axiom/" + f)).text();
     
     let lines = []
     let line = ''
